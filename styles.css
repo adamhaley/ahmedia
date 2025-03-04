@@ -1,0 +1,179 @@
+:root {
+    --neon-pink: #ff00ff;
+    --neon-blue: #00ffff;
+    --neon-purple: #bc13fe;
+    --dark-bg: #005e5e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dark-bg);
+    min-height: 200vh;
+    font-family: 'Arial', sans-serif;
+}
+
+.splash-container {
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    padding: 0;
+}
+
+.text-section {
+    flex: 1;
+    padding-left: 10vw;
+    padding-top: 15vh;
+}
+
+h1 {
+    font-size: clamp(3rem, 8vw, 8rem);
+    color: white;
+    text-shadow: 0 0 10px var(--neon-blue),
+                 0 0 20px var(--neon-blue),
+                 0 0 40px var(--neon-blue);
+    white-space: nowrap;
+}
+
+.accent {
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue),
+                 0 0 20px var(--neon-blue),
+                 0 0 40px var(--neon-blue);
+}
+
+.graphics-section {
+    flex: 1;
+    position: relative;
+    height: 100%;
+    padding-top: 15vh;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    border: 2px solid;
+    background: transparent !important;
+    filter: none;
+}
+
+.circle-1 {
+    width: 20vmin;
+    height: 20vmin;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px var(--neon-blue),
+                inset 0 0 15px var(--neon-blue);
+    top: 12%;
+    right: 25%;
+    transform: scale(0.4);
+}
+
+.circle-2 {
+    width: 35vmin;
+    height: 35vmin;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px var(--neon-blue),
+                inset 0 0 15px var(--neon-blue);
+    top: 5%;
+    right: 55%;
+    transform: scale(0.4);
+}
+
+.circle-3 {
+    width: 45vmin;
+    height: 45vmin;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px var(--neon-blue),
+                inset 0 0 15px var(--neon-blue);
+    top: 0%;
+    right: 15%;
+    transform: scale(0.4);
+}
+
+@media (max-width: 768px) {
+    .splash-container {
+        flex-direction: column;
+    }
+    
+    .text-section {
+        padding-left: 5vw;
+        padding-top: 0;
+    }
+    
+    .graphics-section {
+        transform: scale(0.8);
+    }
+}
+
+/* Line styles */
+.line-container {
+    position: absolute;
+    z-index: -1;
+}
+
+.upper-right {
+    top: 0;
+    right: 0;
+}
+
+.lower-left {
+    bottom: 0;
+    left: 0;
+}
+
+/* Add these keyframe definitions */
+@keyframes pulse {
+    0% { opacity: 0.2; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.2; }
+}
+
+.line {
+    background: var(--neon-blue);
+    position: absolute;
+    box-shadow: 0 0 10px var(--neon-blue);
+    opacity: 0.4;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Give each line a different animation timing */
+.line-1 {
+    width: 150px;
+    height: 2px;
+    right: 0;
+    top: 20px;
+    animation-duration: 1.8s;
+}
+
+.line-2 {
+    width: 250px;
+    height: 2px;
+    right: 0;
+    top: 28px;
+    animation-duration: 2.2s;
+}
+
+.line-3 {
+    width: 200px;
+    height: 2px;
+    left: 0;
+    bottom: 20px;
+    animation-duration: 2.4s;
+}
+
+.line-4 {
+    width: 300px;
+    height: 2px;
+    left: 0;
+    bottom: 28px;
+    animation-duration: 1.6s;
+} 
