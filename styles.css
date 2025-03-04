@@ -57,6 +57,13 @@ h1 {
     padding-top: 15vh;
 }
 
+/* Update the keyframes to use a smaller scale range */
+@keyframes circlePulse {
+    0% { transform: scale(var(--base-scale)); }
+    50% { transform: scale(calc(var(--base-scale) + 0.02)); }
+    100% { transform: scale(var(--base-scale)); }
+}
+
 .circle {
     position: absolute;
     border-radius: 50%;
@@ -64,8 +71,11 @@ h1 {
     border: 2px solid;
     background: transparent !important;
     filter: none;
+    --base-scale: 0.4;
+    animation: circlePulse 4s ease-in-out infinite;
 }
 
+/* Update individual circle timings to be slower */
 .circle-1 {
     width: 20vmin;
     height: 20vmin;
@@ -74,7 +84,7 @@ h1 {
                 inset 0 0 15px var(--neon-blue);
     top: 12%;
     right: 25%;
-    transform: scale(0.4);
+    animation-duration: 4.2s;
 }
 
 .circle-2 {
@@ -85,7 +95,7 @@ h1 {
                 inset 0 0 15px var(--neon-blue);
     top: 5%;
     right: 55%;
-    transform: scale(0.4);
+    animation-duration: 4.8s;
 }
 
 .circle-3 {
@@ -96,7 +106,7 @@ h1 {
                 inset 0 0 15px var(--neon-blue);
     top: 0%;
     right: 15%;
-    transform: scale(0.4);
+    animation-duration: 4.5s;
 }
 
 @media (max-width: 768px) {

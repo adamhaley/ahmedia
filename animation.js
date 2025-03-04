@@ -23,9 +23,12 @@ gsap.to('.circle-1', {
         trigger: '.splash-container',
         start: 'top top',
         end: 'bottom top',
-        scrub: 1
+        scrub: 1,
+        onUpdate: (self) => {
+            const scale = 0.4 + (self.progress * 0.4); // Scale from 0.4 to 0.8
+            document.querySelector('.circle-1').style.setProperty('--base-scale', scale);
+        }
     },
-    scale: 0.8,
     rotation: 180
 });
 
@@ -34,9 +37,12 @@ gsap.to('.circle-2', {
         trigger: '.splash-container',
         start: 'top top',
         end: 'bottom top',
-        scrub: 1
+        scrub: 1,
+        onUpdate: (self) => {
+            const scale = 0.4 + (self.progress * 0.4);
+            document.querySelector('.circle-2').style.setProperty('--base-scale', scale);
+        }
     },
-    scale: 0.8,
     rotation: -180
 });
 
@@ -45,9 +51,12 @@ gsap.to('.circle-3', {
         trigger: '.splash-container',
         start: 'top top',
         end: 'bottom top',
-        scrub: 1
+        scrub: 1,
+        onUpdate: (self) => {
+            const scale = 0.4 + (self.progress * 0.4);
+            document.querySelector('.circle-3').style.setProperty('--base-scale', scale);
+        }
     },
-    scale: 0.8,
     rotation: 360
 });
 
