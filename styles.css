@@ -31,7 +31,7 @@ body {
 .text-section {
     flex: 1;
     padding-left: 10vw;
-    padding-top: 15vh;
+    padding-top: 5vh;
 }
 
 h1 {
@@ -82,7 +82,7 @@ h1 {
     border-color: var(--neon-blue);
     box-shadow: 0 0 15px var(--neon-blue),
                 inset 0 0 15px var(--neon-blue);
-    top: 12%;
+    top: 2%;
     right: 25%;
     animation-duration: 4.2s;
 }
@@ -93,7 +93,7 @@ h1 {
     border-color: var(--neon-blue);
     box-shadow: 0 0 15px var(--neon-blue),
                 inset 0 0 15px var(--neon-blue);
-    top: 5%;
+    top: -5%;
     right: 55%;
     animation-duration: 4.8s;
 }
@@ -104,7 +104,7 @@ h1 {
     border-color: var(--neon-blue);
     box-shadow: 0 0 15px var(--neon-blue),
                 inset 0 0 15px var(--neon-blue);
-    top: 0%;
+    top: -10%;
     right: 15%;
     animation-duration: 4.5s;
 }
