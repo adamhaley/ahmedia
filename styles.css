@@ -3,6 +3,7 @@
     --neon-blue: #00ffff;
     --neon-purple: #bc13fe;
     --dark-bg: #005e5e;
+    --darker-bg: #004444;
 }
 
 * {
@@ -12,60 +13,26 @@
 }
 
 body {
+    background-color: var(--dark-bg);
     min-height: 200vh;
     font-family: 'Arial', sans-serif;
-
-    background-color: rgba(0, 68, 68, 1);
 }
 
 .splash-container {
     height: 100vh;
     display: flex;
     align-items: flex-start;
+    position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     padding: 0;
 }
 
-.top-container {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 24vh;
-    display: flex;
-    border-bottom: 2px solid var(--neon-blue);
-    background-color: var(--dark-bg);
-}
-
-.bottom-container {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 20vh;
-    display: flex;
-    border-top: 2px solid var(--neon-blue);
-    background-color: var(--dark-bg);
-}
-
 .text-section {
     flex: 1;
     padding-left: 10vw;
     padding-top: 5vh;
-}
-
-.content-section {
-    background-color: rgba(0, 68, 68, 0.8);
-    width: 100%;
-    top: 25vh;
-    transform: none;
-    padding: 0vh 10vw;
-    color: white;
-}
-
-.text-content {
-    color: white;
-    padding-top: 27vh;
 }
 
 h1 {
@@ -85,8 +52,10 @@ h1 {
 }
 
 .graphics-section {
-    display: flex;
+    flex: 1;
     position: relative;
+    height: 100%;
+    padding-top: 5vh;
 }
 
 /* Update the keyframes to use a smaller scale range */
@@ -218,4 +187,50 @@ h1 {
     left: 0;
     bottom: 28px;
     animation-duration: 1.6s;
+}
+
+.content-container {
+    width: 100%;
+    height: 60vh;
+    position: fixed;
+    top: 55%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: rgba(0, 68, 68, 0.8);
+    border-top: 2px solid var(--neon-blue);
+    border-bottom: 2px solid var(--neon-blue);
+    box-shadow: none;
+    padding: 2rem 10vw;
+    color: white;
+    z-index: 1;
+    overflow-y: auto;
+}
+
+/* Style the scrollbar */
+.content-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-container::-webkit-scrollbar-track {
+    background: var(--darker-bg);
+}
+
+.content-container::-webkit-scrollbar-thumb {
+    background: var(--neon-blue);
+    border-radius: 4px;
+}
+
+/* Add some basic content styling */
+.content-container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* Update mobile styles */
+@media (max-width: 768px) {
+    .content-container {
+        padding: 1rem 5vw;
+        top: 45%;
+        height: 70vh;
+    }
 } 
