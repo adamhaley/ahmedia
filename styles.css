@@ -249,10 +249,13 @@ h1 {
     justify-content: center;
     text-align: center;
     cursor: pointer;
+    will-change: transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .service-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-3px) translateZ(0);
     box-shadow: 0 0 20px var(--neon-blue),
                 inset 0 0 20px var(--neon-blue);
 }
@@ -278,10 +281,14 @@ h1 {
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
     text-align: center;
-    text-shadow: 0 0 10px var(--neon-blue),
-                 0 0 20px var(--neon-blue),
-                 0 0 40px var(--neon-blue);
-}
+
+    text-shadow: 0 0 5px var(--neon-blue),
+                 0 0 10px var(--neon-blue);
+    will-change: text-shadow;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    }
 
 .service-card p {
     color: var(--neon-blue);
