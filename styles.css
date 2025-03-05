@@ -32,7 +32,7 @@ body {
 .text-section {
     flex: 1;
     padding-left: 10vw;
-    padding-top: 5vh;
+    padding-top: 1rem;
 }
 
 h1 {
