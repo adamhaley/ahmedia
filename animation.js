@@ -1,5 +1,6 @@
 gsap.registerPlugin(ScrollTrigger);
 
+
 // Initial animation
 gsap.from('.text-section h1', {
     duration: 1.5,
