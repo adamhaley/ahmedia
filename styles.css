@@ -74,6 +74,7 @@ h1 {
     filter: none;
     --base-scale: 0.4;
     animation: circlePulse 4s ease-in-out infinite;
+    opacity: 0.5;
 }
 
 /* Update individual circle timings to be slower */
