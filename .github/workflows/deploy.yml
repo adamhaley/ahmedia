@@ -19,4 +19,4 @@ jobs:
           key: ${{ secrets.SSHKEY }}
           script: |
             cd /home/ahmedia/public_html
-            ./.scripts/deploy.sh
+            .scripts/deploy.sh
