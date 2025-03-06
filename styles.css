@@ -52,7 +52,6 @@ h1 {
 
 .graphics-section {
     flex: 1;
-    position: relative;
     height: 100%;
     padding-top: 15vh;
 }
@@ -120,7 +119,6 @@ h1 {
     }
     
     .graphics-section {
-        transform: scale(0.8);
     }
 }
 
