@@ -1,5 +1,6 @@
 gsap.registerPlugin(ScrollTrigger);
 
+
 // Initial animation
 gsap.from('.text-section h1', {
     duration: 1.5,
@@ -107,4 +108,26 @@ gsap.to('.line-4', {
     scaleX: 0,
     transformOrigin: 'left',
     opacity: 0.2
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait a bit for initial page render
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.service-card');
+        let delay = 0;
+
+        cards.forEach((card, index) => {
+            // Trigger hover effect
+            setTimeout(() => {
+                card.classList.add('animate-hover');
+                
+                // Remove the class after animation
+                setTimeout(() => {
+                    card.classList.remove('animate-hover');
+                }, 200);
+            }, delay);
+            
+            delay += 240;
+        });
+    }, 100);
 }); 
