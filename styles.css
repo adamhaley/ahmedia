@@ -14,7 +14,7 @@
 
 body {
     background-color: var(--dark-bg);
-    min-height: 100vh;
+    min-height: 200vh;
     font-family: 'Arial', sans-serif;
 }
 
