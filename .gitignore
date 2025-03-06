@@ -1,1 +1,4 @@
 cgi-bin
+.htaccess
+*.swp
+*.swo
