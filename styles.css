@@ -121,9 +121,8 @@ h1 {
         padding-top: 0;
     }
     .content-container {
-        border: 1px solid red;
-        margin-top: 2rem;
-    }   
+        margin-top: 5vh;
+    } 
     .graphics-section {
         transform: scale(0.8);
     }
