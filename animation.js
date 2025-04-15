@@ -157,7 +157,7 @@ document.getElementById('email-form')?.addEventListener('submit', async (e) => {
             
             // Show success message
             button.textContent = 'Success! ✓';
-            button.style.backgroundColor = '#00ff00';
+            button.style.backgroundColor = 'var(--neon-blue)';
             
             // Reset button after 3 seconds
             setTimeout(() => {
