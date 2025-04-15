@@ -130,4 +130,54 @@ document.addEventListener('DOMContentLoaded', () => {
             delay += 240;
         });
     }, 100);
+});
+
+document.getElementById('email-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.querySelector('input[type="email"]').value;
+    const button = form.querySelector('button');
+    
+    // Disable the button during submission
+    button.disabled = true;
+    button.textContent = 'Sending...';
+    
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
+        
+        if (response.ok) {
+            // Clear the input
+            form.querySelector('input[type="email"]').value = '';
+            
+            // Show success message
+            button.textContent = 'Success! ✓';
+            button.style.backgroundColor = '#00ff00';
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                button.textContent = 'Keep Me Updated!';
+                button.style.backgroundColor = '';
+                button.disabled = false;
+            }, 3000);
+        } else {
+            throw new Error('Submission failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        button.textContent = 'Error - Try Again';
+        button.style.backgroundColor = '#ff0000';
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            button.textContent = 'Keep Me Updated!';
+            button.style.backgroundColor = '';
+            button.disabled = false;
+        }, 3000);
+    }
 }); 
