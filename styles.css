@@ -311,7 +311,7 @@ h1 {
 
 .email-capture {
     position: fixed;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
@@ -383,4 +383,51 @@ h1 {
     .email-box h2 {
         font-size: 1.4rem;
     }
+}
+
+.drop-zone {
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.drop-zone.dragover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.drop-zone i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--neon-blue);
+    opacity: 0.8;
+}
+
+.drop-zone p {
+    margin: 0.5rem 0;
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: var(--neon-blue);
+    border-radius: 5px;
+    color: var(--dark-bg);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    opacity: 0.8;
+}
+
+.upload-button:hover {
+    background: white;
+    opacity: 1;
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.upload-status {
+    margin-top: 1rem;
+    color: white;
 } 
