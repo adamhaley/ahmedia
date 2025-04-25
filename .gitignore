@@ -2,3 +2,5 @@ cgi-bin
 .htaccess
 *.swp
 *.swo
+*.wav
+*.sh
