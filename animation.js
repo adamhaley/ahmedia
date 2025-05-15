@@ -190,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         status.textContent = `Uploading ${file.name}...`;
         uploadStatus.appendChild(status);
 
+
         let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
 
         try {

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reopenButton = document.querySelector('.reopen-chat-button');
     
     // Replace this with your actual webhook URL
-    const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook-test/245a2818-056b-4f66-b730-116528e44bf7';
+    const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/245a2818-056b-4f66-b730-116528e44bf7';
 
     // Handle close button click
     closeButton.addEventListener('click', () => {
