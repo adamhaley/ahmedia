@@ -199,6 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                const data = await response.json();
+
+                //set localstorage key namespace to data.namespace
+                localStorage.setItem('namespace', data.namespace);
+                console.log('Data received:', data);
                 status.textContent = `${file.name} uploaded successfully!`;
                 status.style.color = '#00ff00';
             } else {

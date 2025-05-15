@@ -1,0 +1,71 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const chatInput = document.getElementById('chat-input');
+    const sendButton = document.getElementById('send-button');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatContainer = document.querySelector('.chat-container');
+    const closeButton = document.querySelector('.close-button');
+    const reopenButton = document.querySelector('.reopen-chat-button');
+    
+    // Replace this with your actual webhook URL
+    const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook-test/245a2818-056b-4f66-b730-116528e44bf7';
+
+    // Handle close button click
+    closeButton.addEventListener('click', () => {
+        chatContainer.style.display = 'none';
+        reopenButton.style.display = 'flex';
+    });
+
+    // Handle reopen button click
+    reopenButton.addEventListener('click', () => {
+        chatContainer.style.display = 'flex';
+        reopenButton.style.display = 'none';
+    });
+
+    function addMessage(message, isUser = true) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage(message) {
+        if (!message.trim()) return;
+
+        // Add user message to chat
+        addMessage(message, true);
+
+        try {
+            // Send message to webhook
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            }
+
+            // Clear input after successful send
+            chatInput.value = '';
+        } catch (error) {
+            console.error('Error sending message:', error);
+            addMessage('Failed to send message. Please try again.', false);
+        }
+    }
+
+    // Handle send button click
+    sendButton.addEventListener('click', () => {
+        sendMessage(chatInput.value);
+    });
+
+    // Handle Enter key press
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage(chatInput.value);
+        }
+    });
+}); 
