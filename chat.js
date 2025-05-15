@@ -47,6 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 throw new Error('Failed to send message');
+            }else{
+                const data = await response.json();
+                console.log(data.output);
+                //add the response to the chat
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message bot-message`;
+                messageDiv.textContent = data.output;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            
             }
 
             // Clear input after successful send
