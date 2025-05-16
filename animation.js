@@ -197,13 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.className = 'progress-bar';
         progressContainer.appendChild(progressBar);
         
-        // Add initial status text with spinner and progress bar
-        const statusText = document.createElement('span');
-        statusText.textContent = `Processing ${file.name}`;
-        const spinner = document.createElement('i');
-        spinner.className = 'fas fa-circle-notch fa-spin processing-spinner';
-        status.appendChild(statusText);
-        status.appendChild(spinner);
+        // Add initial status text and progress bar
+        status.textContent = `Processing ${file.name}...`;
         status.appendChild(progressContainer);
         uploadStatus.appendChild(status);
 
@@ -222,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Remove progress bar and show success message
                 status.removeChild(progressContainer);
-                status.removeChild(spinner);
                 status.textContent = `${file.name} uploaded successfully!`;
                 status.classList.add('success');
             } else {
@@ -231,11 +225,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             // Remove progress bar and show error message
             status.removeChild(progressContainer);
-            status.removeChild(spinner);
             status.textContent = `Failed to upload ${file.name}`;
             status.classList.add('error');
             console.error('Error:', error);
         }
-
     }
 }); 
