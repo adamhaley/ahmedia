@@ -434,16 +434,6 @@ h1 {
     padding: 0.5rem;
     border-radius: 5px;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.processing-spinner {
-    color: var(--neon-blue);
-    text-shadow: 0 0 10px var(--neon-blue);
-    font-size: 1.2rem;
-    margin-left: 0.5rem;
 }
 
 .upload-status.success {
