@@ -502,6 +502,7 @@ h1 {
 .chat-messages {
     flex: 1;
     padding: 20px;
+    padding-top: 50px;
     overflow-y: auto;
     background: rgba(0, 0, 0, 0.2);
 }
