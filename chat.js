@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendMessage(message) {
         if (!message.trim()) return;
 
+        // Disable input while processing
+        chatInput.disabled = true;
+        sendButton.disabled = true;
+
         // Add user message to chat
         addMessage(message, true);
 
@@ -58,29 +62,44 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Remove typing indicator
-            chatMessages.removeChild(typingIndicator);
+            if (typingIndicator && typingIndicator.parentNode) {
+                chatMessages.removeChild(typingIndicator);
+            }
 
             if (!response.ok) {
                 throw new Error('Failed to send message');
-            }else{
-                const data = await response.json();
-                console.log(data.output);
-                //add the response to the chat
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message bot-message`;
-                messageDiv.textContent = data.output;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            
+            }
+
+            const data = await response.json();
+            console.log(data.output);
+            //add the response to the chat
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message bot-message`;
+            messageDiv.textContent = data.output;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;          
+
+
+            // Add bot response if available
+            if (data.response) {
+                addMessage(data.response, false);
             }
 
             // Clear input after successful send
             chatInput.value = '';
         } catch (error) {
-            // Remove typing indicator
-            chatMessages.removeChild(typingIndicator);
+            // Remove typing indicator if it exists
+            if (typingIndicator && typingIndicator.parentNode) {
+                chatMessages.removeChild(typingIndicator);
+            }
+            
             console.error('Error sending message:', error);
             addMessage('Failed to send message. Please try again.', false);
+        } finally {
+            // Re-enable input
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+            chatInput.focus();
         }
     }
 
@@ -103,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle Enter key press
     chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
             sendMessage(chatInput.value);
         }
     });
