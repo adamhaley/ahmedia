@@ -44,12 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Send message to webhook
+            //set namespage. check localStorage if it exists and set to '__default__' if not
+            let namespace = localStorage.getItem('namespace');
+            if (!namespace) {
+                namespace = '__default__';
+            }
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ namespace: localStorage.getItem('namespace'), message: message })
+                body: JSON.stringify({ namespace: namespace, message: message })
             });
 
             // Remove typing indicator
