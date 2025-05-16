@@ -186,10 +186,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        const status = document.createElement('p');
-        status.textContent = `Uploading ${file.name}...`;
+        const status = document.createElement('div');
+        status.className = 'upload-status';
+        
+        // Create progress container and bar
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressContainer.appendChild(progressBar);
+        
+        // Add initial status text with spinner and progress bar
+        const statusText = document.createElement('span');
+        statusText.textContent = `Processing ${file.name}`;
+        const spinner = document.createElement('i');
+        spinner.className = 'fas fa-circle-notch fa-spin processing-spinner';
+        status.appendChild(statusText);
+        status.appendChild(spinner);
+        status.appendChild(progressContainer);
         uploadStatus.appendChild(status);
-
 
         let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
 
@@ -201,18 +216,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const data = await response.json();
-
-                //set localstorage key namespace to data.namespace
                 localStorage.setItem('namespace', data.namespace);
                 console.log('Data received:', data);
+                
+                // Remove progress bar and show success message
+                status.removeChild(progressContainer);
+                status.removeChild(spinner);
                 status.textContent = `${file.name} uploaded successfully!`;
-                status.style.color = '#00ff00';
+                status.classList.add('success');
             } else {
                 throw new Error('Upload failed');
             }
         } catch (error) {
+            // Remove progress bar and show error message
+            status.removeChild(progressContainer);
+            status.removeChild(spinner);
             status.textContent = `Failed to upload ${file.name}`;
-            status.style.color = '#ff0000';
+            status.classList.add('error');
             console.error('Error:', error);
         }
     }
