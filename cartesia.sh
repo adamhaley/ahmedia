@@ -1,6 +1,6 @@
 curl -X POST https://api.cartesia.ai/tts/bytes \
 -H "Cartesia-Version: 2024-06-10" \
--H "X-API-Key: sk_car_FEPKyLLq2FihfqZ3G1aHyA" \
+-H "X-API-Key: $CARTESIA_API_KEY" \
 -H "Content-Type: application/json" \
 -d '{
   "model_id": "sonic-2",
