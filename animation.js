@@ -130,54 +130,112 @@ document.addEventListener('DOMContentLoaded', () => {
             delay += 240;
         });
     }, 100);
-});
 
-document.getElementById('email-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.querySelector('input[type="email"]').value;
-    const button = form.querySelector('button');
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadStatus = document.getElementById('upload-status');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone when dragging over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
     
-    // Disable the button during submission
-    button.disabled = true;
-    button.textContent = 'Sending...';
-    
-    try {
-        const response = await fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        });
+    // Handle file input change
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    function highlight(e) {
+        dropZone.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        uploadStatus.innerHTML = '';
+        ([...files]).forEach(uploadFile);
+    }
+
+    async function uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const status = document.createElement('div');
+        status.className = 'upload-status';
         
-        if (response.ok) {
-            // Clear the input
-            form.querySelector('input[type="email"]').value = '';
-            
-            // Show success message
-            button.textContent = 'Success! ✓';
-            button.style.backgroundColor = 'var(--neon-blue)';
-            
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                button.textContent = 'Keep Me Updated!';
-                button.style.backgroundColor = '';
-                button.disabled = false;
-            }, 3000);
-        } else {
-            throw new Error('Submission failed');
+        // Create progress container and bar
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        progressContainer.appendChild(progressBar);
+        
+        // Add initial status text with spinner and progress bar
+        const statusText = document.createElement('span');
+        statusText.textContent = `Processing ${file.name}`;
+        const spinner = document.createElement('i');
+        spinner.className = 'fas fa-circle-notch fa-spin processing-spinner';
+        status.appendChild(statusText);
+        status.appendChild(spinner);
+        status.appendChild(progressContainer);
+        uploadStatus.appendChild(status);
+
+        let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
+
+        try {
+            const response = await fetch(postUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('namespace', data.namespace);
+                console.log('Data received:', data);
+                
+                // Remove progress bar and show success message
+                status.removeChild(progressContainer);
+                status.removeChild(spinner);
+                status.textContent = `${file.name} uploaded successfully!`;
+                status.classList.add('success');
+            } else {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            // Remove progress bar and show error message
+            status.removeChild(progressContainer);
+            status.removeChild(spinner);
+            status.textContent = `Failed to upload ${file.name}`;
+            status.classList.add('error');
+            console.error('Error:', error);
         }
-    } catch (error) {
-        console.error('Error:', error);
-        button.textContent = 'Error - Try Again';
-        button.style.backgroundColor = '#ff0000';
-        
-        // Reset button after 3 seconds
-        setTimeout(() => {
-            button.textContent = 'Keep Me Updated!';
-            button.style.backgroundColor = '';
-            button.disabled = false;
-        }, 3000);
+
     }
 }); 

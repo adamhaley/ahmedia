@@ -31,15 +31,38 @@
 
     <div class="email-capture">
         <div class="email-box">
-            <!-- <h2>Stay Updated</h2> -->
-            <!-- <p>Join our newsletter for the latest updates</p> -->
-            <form id="email-form" method="post" action="https://n8n.ahmedia.ai/webhook/b6bd19c7-f753-4f34-8516-60d1a0f9a302">
-                <input type="email" placeholder="email" required>
-                <button type="submit">Keep Me Updated!</button>
-            </form>
+
+            <div id="drop-zone" class="drop-zone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag & Drop files here</p>
+                <p>or</p>
+                <label for="file-input" class="upload-button">Choose Files</label>
+                <input type="file" id="file-input" multiple hidden>
+            </div>
+            <div id="upload-status" class="upload-status"></div>
+
         </div>
     </div>
 
+    <div class="chat-container">
+        <button class="close-button">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Type your message..." class="chat-input">
+            <button id="send-button" class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <button class="reopen-chat-button">
+        <i class="fas fa-comments"></i>
+    </button>
+
     <script src="animation.js"></script>
+    <script src="chat.js"></script>
+
 </body>
 </html> 
