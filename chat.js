@@ -9,17 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Replace this with your actual webhook URL
     const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/245a2818-056b-4f66-b730-116528e44bf7';
 
-    // Handle close button click
-    closeButton.addEventListener('click', () => {
-        chatContainer.style.display = 'none';
-        reopenButton.style.display = 'flex';
-    });
-
-    // Handle reopen button click
-    reopenButton.addEventListener('click', () => {
-        chatContainer.style.display = 'flex';
-        reopenButton.style.display = 'none';
-    });
+    function createTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        
+        // Create three dots
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'typing-dot';
+            indicator.appendChild(dot);
+        }
+        
+        return indicator;
+    }
 
     function addMessage(message, isUser = true) {
         const messageDiv = document.createElement('div');
@@ -35,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add user message to chat
         addMessage(message, true);
 
+        // Show typing indicator
+        const typingIndicator = createTypingIndicator();
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
         try {
             // Send message to webhook
             const response = await fetch(WEBHOOK_URL, {
@@ -44,6 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ namespace: localStorage.getItem('namespace'), message: message })
             });
+
+            // Remove typing indicator
+            chatMessages.removeChild(typingIndicator);
 
             if (!response.ok) {
                 throw new Error('Failed to send message');
@@ -62,10 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clear input after successful send
             chatInput.value = '';
         } catch (error) {
+            // Remove typing indicator
+            chatMessages.removeChild(typingIndicator);
             console.error('Error sending message:', error);
             addMessage('Failed to send message. Please try again.', false);
         }
     }
+
+    // Handle close button click
+    closeButton.addEventListener('click', () => {
+        chatContainer.style.display = 'none';
+        reopenButton.style.display = 'flex';
+    });
+
+    // Handle reopen button click
+    reopenButton.addEventListener('click', () => {
+        chatContainer.style.display = 'flex';
+        reopenButton.style.display = 'none';
+    });
 
     // Handle send button click
     sendButton.addEventListener('click', () => {
