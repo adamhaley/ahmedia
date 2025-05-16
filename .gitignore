@@ -1,4 +1,7 @@
 cgi-bin
 .htaccess
+*.env
 *.swp
 *.swo
+*.wav
+*.sh

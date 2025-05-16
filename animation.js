@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, 100);
 
+
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const uploadStatus = document.getElementById('upload-status');
@@ -235,5 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
             status.classList.add('error');
             console.error('Error:', error);
         }
+
     }
 }); 
