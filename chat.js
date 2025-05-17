@@ -26,7 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function addMessage(message, isUser = true) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-        messageDiv.textContent = message;
+        
+        // Parse the message text
+        const parsedMessage = message
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+            
+        messageDiv.innerHTML = parsedMessage;
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -72,18 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             console.log(data.output);
-            //add the response to the chat
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message bot-message`;
-            messageDiv.textContent = data.output;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;          
-
-
-            // Add bot response if available
-            if (data.response) {
-                addMessage(data.response, false);
-            }
+            
+            // Add the response to the chat with parsed formatting
+            addMessage(data.output, false);
 
             // Clear input after successful send
             chatInput.value = '';
