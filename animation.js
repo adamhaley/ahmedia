@@ -187,6 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append('file', file);
 
+        if(localStorage.getItem('namespace')) {
+            formData.append('namespace', localStorage.getItem('namespace'));
+        }
+
         const status = document.createElement('div');
         status.className = 'upload-status';
         
@@ -204,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
 
+        //let postUrl = 'https://n8n.ahmedia.ai/webhook-test/fded596d-4a61-4fd2-90a4-006df43136bf';
         try {
             const response = await fetch(postUrl, {
                 method: 'POST',
@@ -212,7 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('namespace', data.namespace);
+                if(data.namespace) {
+                    localStorage.setItem('namespace', data.namespace);
+                }
                 console.log('Data received:', data);
                 
                 // Remove progress bar and show success message
