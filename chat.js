@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!namespace) {
                 namespace = '__default__';
             }
-            const response = await fetch(RESTAURANT_WEBHOOK_URL, {
+            const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
