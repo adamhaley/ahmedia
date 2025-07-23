@@ -1,0 +1,16 @@
+Who am I?
+Adam Haley, an AI automator and consultant
+
+Things I specialize in:
+
+n8n AI automations and workflows
+Smart and responsive RAG-Chatbots trained on YOUR data
+Local and On-prem AI installations using Ollama
+adapt existing workflows (in no-code tools like n8n / make etc) to more robust code-based production-grade solution in python
+
+
+Things that differentiate me:
+
+I have over two decades of real world development experience and not only will you be leveraging my AI skills, but also my deep technical knowledge from years spent in the field delivering value.
+
+
