@@ -1,0 +1,68 @@
+{
+  "services": [
+    {
+      "category": "AI Consulting",
+      "items": [
+        {
+          "name": "AI Strategy Assessment",
+          "description": "Comprehensive evaluation of AI opportunities for your business",
+          "price": "Starting at $2,500",
+          "duration": "1-2 weeks"
+        },
+        {
+          "name": "Technical Architecture Review",
+          "description": "Deep-dive analysis of existing systems and AI integration possibilities",
+          "price": "Starting at $3,500",
+          "duration": "2-3 weeks"
+        }
+      ]
+    },
+    {
+      "category": "Custom AI Development",
+      "items": [
+        {
+          "name": "Automation Solutions",
+          "description": "Custom workflow automation using AI and machine learning",
+          "price": "Project-based pricing",
+          "duration": "4-8 weeks"
+        },
+        {
+          "name": "AI Chatbots & Assistants",
+          "description": "Intelligent conversational interfaces for customer service and support",
+          "price": "Starting at $5,000",
+          "duration": "3-6 weeks"
+        },
+        {
+          "name": "Data Analytics & RAG Systems",
+          "description": "Advanced data processing and retrieval-augmented generation solutions",
+          "price": "Starting at $7,500",
+          "duration": "6-10 weeks"
+        }
+      ]
+    },
+    {
+      "category": "Implementation & Support",
+      "items": [
+        {
+          "name": "System Integration",
+          "description": "Seamless integration of AI solutions with existing infrastructure",
+          "price": "Starting at $2,000",
+          "duration": "2-4 weeks"
+        },
+        {
+          "name": "Training & Documentation",
+          "description": "Comprehensive team training and system documentation",
+          "price": "Starting at $1,500",
+          "duration": "1-2 weeks"
+        },
+        {
+          "name": "Ongoing Support & Maintenance",
+          "description": "Monthly support and system optimization services",
+          "price": "Starting at $500/month",
+          "duration": "Ongoing"
+        }
+      ]
+    }
+  ],
+  "note": "All prices are estimates and may vary based on project complexity and specific requirements. Contact us for a detailed quote tailored to your needs."
+}
