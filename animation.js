@@ -206,9 +206,9 @@ document.addEventListener('DOMContentLoaded', () => {
         status.appendChild(progressContainer);
         uploadStatus.appendChild(status);
 
-        let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
+        //let postUrl = 'https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf';
 
-        //let postUrl = 'https://n8n.ahmedia.ai/webhook-test/fded596d-4a61-4fd2-90a4-006df43136bf';
+        let postUrl = 'https://n8n.ahmedia.ai/webhook-test/fded596d-4a61-4fd2-90a4-006df43136bf';
         try {
             const response = await fetch(postUrl, {
                 method: 'POST',
