@@ -1,10 +1,10 @@
 [
   {
     "id": "analyse-impressum",
-    "title": "Website Legal Compliance Analysis",
+    "title": "AI Enrichment Workflow",
     "image": "images/analyse-impressum.png",
-    "description": "Automated analysis and compliance checking for website legal requirements and impressum validation.",
-    "writeup": "This case study demonstrates how we implemented an automated system to analyze website legal compliance, particularly focusing on impressum requirements for European markets. The solution streamlines legal review processes and ensures regulatory compliance."
+    "description": "Automated analysis and enrichment of leads. Deterministic email capture, AI personalization and enrichment.",
+    "writeup": "This case study demonstrates how we optimized a lead enrichment system, taking advantage of the Impressum standard in european markets."
   },
   {
     "id": "booking-follow-up-automation",
@@ -18,28 +18,28 @@
     "title": "AI-Powered Invoice Generator",
     "image": "images/invoice-generator.png",
     "description": "Intelligent invoice generation system that automates billing processes and integrates with existing accounting workflows.",
-    "writeup": "Our AI-powered invoice generator transforms how businesses handle billing. By leveraging machine learning algorithms, the system automatically extracts relevant billing information and generates professional invoices with 99.7% accuracy."
+    "writeup": "A system that.."
   },
   {
     "id": "runpod-comfyui",
     "title": "Cloud-Based AI Image Processing",
     "image": "images/runpod-comfyui.png",
     "description": "Scalable cloud infrastructure for AI image processing using RunPod and ComfyUI integration.",
-    "writeup": "This project showcases our expertise in building scalable cloud-based AI solutions. We implemented a robust image processing pipeline that can handle thousands of requests simultaneously while maintaining cost-effectiveness through intelligent resource management."
+    "writeup": "."
   },
   {
     "id": "voice-photo-text-ai-agent",
     "title": "Multimodal AI Assistant",
     "image": "images/voice-photo-text-ai-agent.png",
     "description": "Advanced AI agent capable of processing voice, images, and text inputs for comprehensive user interaction.",
-    "writeup": "Our multimodal AI assistant represents the cutting edge of conversational AI technology. The system seamlessly processes voice commands, analyzes uploaded images, and maintains context across different input modalities to provide intelligent, contextual responses."
+    "writeup": "multimodal AI assistant that represents the cutting edge of conversational AI technology. The system seamlessly processes voice commands, analyzes uploaded images, and maintains context across different input modalities to provide intelligent, contextual responses."
   },
   {
     "id": "webinar-faq-rag",
     "title": "Webinar FAQ RAG System",
     "image": "images/webinar-faq-rag.png",
     "description": "Retrieval-Augmented Generation system for automatically answering webinar-related questions.",
-    "writeup": "We built an intelligent FAQ system that uses RAG technology to provide accurate answers to webinar participants. The system dramatically reduces moderator workload while ensuring attendees receive immediate, relevant responses to their questions."
+    "writeup": "An intelligent FAQ system that uses RAG technology to provide accurate answers to webinar participants. The system dramatically reduces moderator workload while ensuring attendees receive immediate, relevant responses to their questions."
   },
   {
     "id": "wordpress-blog-generator",
