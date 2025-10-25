@@ -91,10 +91,10 @@ export default function FileUpload() {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300 ${
+        className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-300 backdrop-blur-sm ${
           isDragOver
-            ? 'border-neon-blue bg-neon-blue/10'
-            : 'border-neon-blue/30 bg-dark-bg/30'
+            ? 'border-neon-blue bg-neon-blue/20'
+            : 'border-neon-blue/50 bg-dark-bg/80'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -102,7 +102,7 @@ export default function FileUpload() {
       >
         <div className="mb-4">
           <svg
-            className="mx-auto h-16 w-16 text-neon-blue opacity-80"
+            className="mx-auto h-16 w-16 text-neon-blue"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -116,8 +116,8 @@ export default function FileUpload() {
           </svg>
         </div>
 
-        <p className="text-white text-lg mb-2">Drag & Drop files here</p>
-        <p className="text-white/60 mb-4">or</p>
+        <p className="text-white text-lg mb-2 font-semibold">Drag & Drop files here</p>
+        <p className="text-white/80 mb-4">or</p>
 
         <label
           htmlFor="file-input"
@@ -140,12 +140,12 @@ export default function FileUpload() {
           {uploadStatus.map((status, index) => (
             <div
               key={index}
-              className={`p-3 rounded-lg ${
+              className={`p-3 rounded-lg backdrop-blur-sm ${
                 status.includes('✓')
-                  ? 'bg-neon-blue/10 border border-neon-blue/30 text-neon-blue'
+                  ? 'bg-neon-blue/20 border border-neon-blue text-neon-blue'
                   : status.includes('✗')
-                  ? 'bg-red-500/10 border border-red-500/30 text-red-400'
-                  : 'bg-dark-bg/50 border border-neon-blue/20 text-white/70'
+                  ? 'bg-red-500/20 border border-red-500 text-red-400'
+                  : 'bg-dark-bg/80 border border-neon-blue/40 text-white'
               }`}
             >
               {status}
