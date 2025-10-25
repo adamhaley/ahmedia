@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+:root {
+  --neon-pink: #ff00ff;
+  --neon-blue: #00ffff;
+  --neon-purple: #bc13fe;
+  --dark-bg: #005e5e;
+  --background: #005e5e;
+  --foreground: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-blue: var(--neon-blue);
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-purple: var(--neon-purple);
+  --color-dark-bg: var(--dark-bg);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--dark-bg);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Neon glow text utilities */
+.neon-text {
+  text-shadow: 0 0 10px var(--neon-blue),
+               0 0 20px var(--neon-blue),
+               0 0 40px var(--neon-blue);
+}
+
+.neon-glow {
+  box-shadow: 0 0 15px var(--neon-blue),
+              inset 0 0 15px var(--neon-blue);
+}
+
+/* Circle animation */
+@keyframes circlePulse {
+  0% { transform: scale(var(--base-scale, 0.4)); }
+  50% { transform: scale(calc(var(--base-scale, 0.4) + 0.02)); }
+  100% { transform: scale(var(--base-scale, 0.4)); }
+}
+
+/* Line pulse animation */
+@keyframes pulse {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0.2; }
+}
+
+/* Progress animation */
+@keyframes progress-animation {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Typing animation */
+@keyframes typing-animation {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
