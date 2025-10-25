@@ -8,9 +8,10 @@ export default function Services() {
     gsap.from('.service-card', {
       duration: 0.8,
       opacity: 0,
-      y: 50,
-      stagger: 0.2,
-      ease: 'power3.out'
+      y: 30,
+      stagger: 0.15,
+      ease: 'power3.out',
+      clearProps: 'all'
     })
   }, [])
 
@@ -84,14 +85,14 @@ export default function Services() {
   ]
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen py-20 bg-dark-bg">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
             Our <span className="text-neon-blue neon-text">Services</span>
           </h1>
-          <p className="text-xl text-white/70">
+          <p className="text-xl text-white">
             Comprehensive AI solutions designed to transform your business operations
           </p>
         </div>
@@ -101,15 +102,15 @@ export default function Services() {
           {services.map((service, index) => (
             <div
               key={index}
-              className="service-card p-8 border border-neon-blue/30 rounded-lg hover:border-neon-blue/60 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,255,0.2)] bg-dark-bg/30"
+              className="service-card p-8 border border-neon-blue/40 rounded-lg hover:border-neon-blue/70 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,255,0.3)] bg-dark-bg/80 backdrop-blur-sm"
             >
               <div className="text-5xl mb-4">{service.icon}</div>
               <h3 className="text-2xl font-bold text-white mb-3">{service.title}</h3>
-              <p className="text-white/60 mb-6">{service.description}</p>
+              <p className="text-white/90 mb-6">{service.description}</p>
 
               <ul className="space-y-2">
                 {service.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-2 text-white/70">
+                  <li key={featureIndex} className="flex items-start gap-2 text-white/85">
                     <span className="text-neon-blue mt-1">•</span>
                     <span>{feature}</span>
                   </li>
@@ -124,7 +125,7 @@ export default function Services() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Get Started?
           </h2>
-          <p className="text-lg text-white/70 mb-8">
+          <p className="text-lg text-white mb-8">
             Contact us to discuss how we can help transform your business with AI
           </p>
           <a
