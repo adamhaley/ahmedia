@@ -5,3 +5,4 @@ cgi-bin
 *.swo
 *.wav
 *.sh
+n8n-inspect.json
