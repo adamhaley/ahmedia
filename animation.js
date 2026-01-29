@@ -18,97 +18,35 @@ gsap.from('.circle', {
     ease: 'power4.out'
 });
 
-// Scroll-based animations
-gsap.to('.circle-1', {
+// Pinned scroll-based animations
+// The splash-container stays fixed while the user scrolls through the animation,
+// then unpins and normal scrolling resumes.
+const splashTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: '.splash-container',
         start: 'top top',
-        end: 'bottom top',
+        end: '+=150%',
+        pin: true,
         scrub: 1,
         onUpdate: (self) => {
-            const scale = 0.4 + (self.progress * 0.4); // Scale from 0.4 to 0.8
+            const scale = 0.4 + (self.progress * 0.4);
             document.querySelector('.circle-1').style.setProperty('--base-scale', scale);
-        }
-    },
-    rotation: 180
-});
-
-gsap.to('.circle-2', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        onUpdate: (self) => {
-            const scale = 0.4 + (self.progress * 0.4);
             document.querySelector('.circle-2').style.setProperty('--base-scale', scale);
-        }
-    },
-    rotation: -180
-});
-
-gsap.to('.circle-3', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        onUpdate: (self) => {
-            const scale = 0.4 + (self.progress * 0.4);
             document.querySelector('.circle-3').style.setProperty('--base-scale', scale);
         }
-    },
-    rotation: 360
+    }
 });
 
-// Line animations
-gsap.to('.line-1', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1
-    },
-    scaleX: 0,
-    transformOrigin: 'right',
-    opacity: 0.2
-});
+// Circle animations (all start at position 0 — simultaneous)
+splashTimeline.to('.circle-1', { rotation: 180 }, 0);
+splashTimeline.to('.circle-2', { rotation: -180 }, 0);
+splashTimeline.to('.circle-3', { rotation: 360 }, 0);
 
-gsap.to('.line-2', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1.5
-    },
-    scaleX: 0,
-    transformOrigin: 'right',
-    opacity: 0.2
-});
-
-gsap.to('.line-3', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1
-    },
-    scaleX: 0,
-    transformOrigin: 'left',
-    opacity: 0.2
-});
-
-gsap.to('.line-4', {
-    scrollTrigger: {
-        trigger: '.splash-container',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1.5
-    },
-    scaleX: 0,
-    transformOrigin: 'left',
-    opacity: 0.2
-});
+// Line animations (lines 2 & 4 start slightly later for a staggered feel)
+splashTimeline.to('.line-1', { scaleX: 0, transformOrigin: 'right', opacity: 0.2 }, 0);
+splashTimeline.to('.line-2', { scaleX: 0, transformOrigin: 'right', opacity: 0.2 }, 0.1);
+splashTimeline.to('.line-3', { scaleX: 0, transformOrigin: 'left', opacity: 0.2 }, 0);
+splashTimeline.to('.line-4', { scaleX: 0, transformOrigin: 'left', opacity: 0.2 }, 0.1);
 
 document.addEventListener('DOMContentLoaded', () => {
     // Wait a bit for initial page render

@@ -13,7 +13,6 @@
 
 body {
     background-color: var(--dark-bg);
-    min-height: 200vh;
     font-family: 'Arial', sans-serif;
 }
 
@@ -21,10 +20,8 @@ body {
     height: 100vh;
     display: flex;
     align-items: flex-start;
-    position: fixed;
+    position: relative;
     width: 100%;
-    top: 0;
-    left: 0;
     padding: 0;
 }
 
@@ -311,13 +308,12 @@ h1 {
 }
 
 .email-capture {
-    position: fixed;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 1000;
     width: 90%;
     max-width: 400px;
+    margin: 0 auto;
+    padding: 4rem 0;
 }
 
 .email-box {
