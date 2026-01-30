@@ -324,7 +324,19 @@ h1 {
 
 .section-inner {
     max-width: 600px;
-    text-align: center;
+    text-align: left;
+    width: 100%;
+}
+
+.content-section:nth-child(odd) .section-inner {
+    margin-right: auto;
+    margin-left: 10vw;
+}
+
+.content-section:nth-child(even) .section-inner {
+    margin-left: auto;
+    margin-right: 10vw;
+    text-align: right;
 }
 
 .section-icon {
@@ -382,6 +394,13 @@ h1 {
 
     .content-section p {
         font-size: 1rem;
+    }
+
+    .content-section:nth-child(odd) .section-inner,
+    .content-section:nth-child(even) .section-inner {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
     }
 }
 

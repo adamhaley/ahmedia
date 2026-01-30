@@ -25,7 +25,7 @@ const splashTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: '.splash-container',
         start: 'top top',
-        end: '+=150%',
+        end: '+=40%',
         pin: true,
         scrub: 1,
         onUpdate: (self) => {
