@@ -142,20 +142,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fullContent += parsed.progress.delta;
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
-                            // Direct content field
-                            else if (parsed.content) {
+                            // Direct content field (but not if it's an output summary)
+                            else if (parsed.content && !parsed.output) {
                                 fullContent += parsed.content;
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
-                            // Fallback: use output field (original format)
-                            else if (parsed.output) {
-                                fullContent = parsed.output;
+                            // Ignore "output" field - it's a summary of streamed content
+                            // Ignore "begin" and other metadata types
+                        } catch (e) {
+                            // Not valid JSON - only append if it doesn't look like JSON
+                            if (!line.trim().startsWith('{')) {
+                                fullContent += line;
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
-                        } catch (e) {
-                            // Not valid JSON, might be raw text chunk
-                            fullContent += line;
-                            updateBotMessage(botMessageDiv, fullContent);
                         }
                     }
                 }
@@ -172,13 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 fullContent += parsed.content;
                             } else if (parsed.progress?.delta) {
                                 fullContent += parsed.progress.delta;
-                            } else if (parsed.content) {
+                            } else if (parsed.content && !parsed.output) {
                                 fullContent += parsed.content;
-                            } else if (parsed.output) {
-                                fullContent = parsed.output;
                             }
+                            // Ignore "output" field - it's a summary
                         } catch (e) {
-                            fullContent += line;
+                            // Only append non-JSON looking text
+                            if (!line.trim().startsWith('{')) {
+                                fullContent += line;
+                            }
                         }
                     }
                     updateBotMessage(botMessageDiv, fullContent);
