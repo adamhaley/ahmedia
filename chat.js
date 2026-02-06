@@ -100,17 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Failed to send message');
             }
 
-            const contentType = response.headers.get('content-type') || '';
-            const isStreaming = contentType.includes('text/event-stream') ||
-                               contentType.includes('application/x-ndjson') ||
-                               contentType.includes('text/plain');
-
             // Remove typing indicator before showing response
             if (typingIndicator && typingIndicator.parentNode) {
                 chatMessages.removeChild(typingIndicator);
             }
 
-            if (isStreaming && response.body) {
+            // Always try streaming first - n8n returns application/json even for NDJSON streams
+            if (response.body) {
                 // Handle streaming response
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
@@ -125,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (done) break;
 
                     buffer += decoder.decode(value, { stream: true });
+                    // Handle both newline-delimited and concatenated JSON objects
+                    buffer = buffer.replace(/\}\s*\{/g, '}\n{');
                     const lines = buffer.split('\n');
                     buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
@@ -164,24 +162,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Process any remaining buffer
                 if (buffer.trim()) {
-                    try {
-                        const parsed = JSON.parse(buffer);
-                        if (parsed.type === 'item' && parsed.content) {
-                            fullContent += parsed.content;
-                        } else if (parsed.progress?.delta) {
-                            fullContent += parsed.progress.delta;
-                        } else if (parsed.content) {
-                            fullContent += parsed.content;
-                        } else if (parsed.output) {
-                            fullContent = parsed.output;
+                    // Handle multiple concatenated JSON objects in remaining buffer
+                    const remainingLines = buffer.replace(/\}\s*\{/g, '}\n{').split('\n');
+                    for (const line of remainingLines) {
+                        if (!line.trim()) continue;
+                        try {
+                            const parsed = JSON.parse(line);
+                            if (parsed.type === 'item' && parsed.content) {
+                                fullContent += parsed.content;
+                            } else if (parsed.progress?.delta) {
+                                fullContent += parsed.progress.delta;
+                            } else if (parsed.content) {
+                                fullContent += parsed.content;
+                            } else if (parsed.output) {
+                                fullContent = parsed.output;
+                            }
+                        } catch (e) {
+                            fullContent += line;
                         }
-                        updateBotMessage(botMessageDiv, fullContent);
-                    } catch (e) {
-                        fullContent += buffer;
-                        updateBotMessage(botMessageDiv, fullContent);
                     }
+                    updateBotMessage(botMessageDiv, fullContent);
                 }
 
+                // If no content was received, show a fallback message
+                if (!fullContent.trim()) {
+                    updateBotMessage(botMessageDiv, 'No response received.');
+                }
                 console.log('Streaming complete:', fullContent);
             } else {
                 // Fallback to non-streaming JSON response
