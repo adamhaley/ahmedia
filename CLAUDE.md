@@ -20,7 +20,7 @@ This is a frontend web application for AH Media.ai that provides:
 
 ### Backend Integration
 - **n8n webhooks**: All backend processing handled through n8n automation workflows
-  - File uploads: `https://n8n.ahmedia.ai/webhook/fded596d-4a61-4fd2-90a4-006df43136bf`
+  - File uploads: `https://n8n.ahmedia.ai/webhook/ingest_file`
   - Chat messages: `https://n8n.ahmedia.ai/webhook/245a2818-056b-4f66-b730-116528e44bf7`
   - Test endpoints available with `-test` suffix
 
