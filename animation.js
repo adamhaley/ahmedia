@@ -219,6 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 if(data.namespace) {
                     localStorage.setItem('namespace', data.namespace);
+                    // Notify chat.js that namespace is now available
+                    window.dispatchEvent(new Event('namespaceUpdated'));
                 }
                 console.log('Data received:', data);
                 

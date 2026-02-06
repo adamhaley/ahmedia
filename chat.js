@@ -5,11 +5,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.querySelector('.chat-container');
     const closeButton = document.querySelector('.close-button');
     const reopenButton = document.querySelector('.reopen-chat-button');
-    
+
     // Replace this with your actual webhook URL
     const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/rag_chat';
     const RESTAURANT_WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/edfc23ee-48e4-4d8e-a51a-30be223586f7';
     const WEBHOOK_URL_TEST = 'https://n8n.ahmedia.ai/webhook-test/edfc23ee-48e4-4d8e-a51a-30be223586f7';
+
+    // Check if namespace exists and update chat state accordingly
+    function checkNamespaceAndUpdateChat() {
+        const namespace = localStorage.getItem('namespace');
+        if (!namespace) {
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+            chatInput.placeholder = 'Please upload a file first to start chatting...';
+            return false;
+        } else {
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+            chatInput.placeholder = 'Type your message...';
+            return true;
+        }
+    }
+
+    // Initial check
+    checkNamespaceAndUpdateChat();
+
+    // Listen for storage changes (when file upload sets namespace)
+    window.addEventListener('storage', checkNamespaceAndUpdateChat);
+
+    // Also check periodically in case storage event doesn't fire (same-tab updates)
+    window.addEventListener('namespaceUpdated', checkNamespaceAndUpdateChat);
     function createTypingIndicator() {
         const indicator = document.createElement('div');
         indicator.className = 'typing-indicator';
@@ -70,6 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function sendMessage(message) {
         if (!message.trim()) return;
 
+        // Check namespace before sending
+        const namespace = localStorage.getItem('namespace');
+        if (!namespace) {
+            addMessage('Please upload a file first to start chatting.', false);
+            return;
+        }
+
         // Disable input while processing
         chatInput.disabled = true;
         sendButton.disabled = true;
@@ -83,11 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
         try {
-            // Send message to webhook
-            let namespace = localStorage.getItem('namespace');
-            if (!namespace) {
-                namespace = '__default__';
-            }
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
                 headers: {
@@ -150,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Ignore "output" field - it's a summary of streamed content
                             // Ignore "begin" and other metadata types
                         } catch (e) {
-                            // Not valid JSON - only append if it doesn't look like JSON
-                            if (!line.trim().startsWith('{')) {
+                            // Not valid JSON - only append if it doesn't look like JSON or output summary
+                            const trimmed = line.trim();
+                            if (!trimmed.startsWith('{') && !trimmed.includes('"output"')) {
                                 fullContent += line;
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
@@ -177,7 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Ignore "output" field - it's a summary
                         } catch (e) {
                             // Only append non-JSON looking text
-                            if (!line.trim().startsWith('{')) {
+                            const trimmed = line.trim();
+                            if (!trimmed.startsWith('{') && !trimmed.includes('"output"')) {
                                 fullContent += line;
                             }
                         }
@@ -185,11 +214,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateBotMessage(botMessageDiv, fullContent);
                 }
 
-                // If no content was received, show a fallback message
-                if (!fullContent.trim()) {
+                // Clean up any output summary JSON that leaked into the content
+                const outputIndex = fullContent.indexOf('{"output"');
+                if (outputIndex > 0) {
+                    fullContent = fullContent.substring(0, outputIndex).trim();
+                }
+
+                // Final update with cleaned content
+                if (fullContent.trim()) {
+                    updateBotMessage(botMessageDiv, fullContent);
+                } else {
                     updateBotMessage(botMessageDiv, 'No response received.');
                 }
-                console.log('Streaming complete:', fullContent);
             } else {
                 // Fallback to non-streaming JSON response
                 const data = await response.json();
