@@ -127,11 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Failed to send message');
             }
 
-            // Remove typing indicator before showing response
-            if (typingIndicator && typingIndicator.parentNode) {
-                chatMessages.removeChild(typingIndicator);
-            }
-
             // Always try streaming first - n8n returns application/json even for NDJSON streams
             if (response.body) {
                 // Handle streaming response
@@ -139,9 +134,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const decoder = new TextDecoder();
                 let buffer = '';
                 let fullContent = '';
+                let firstChunkReceived = false;
 
-                // Create message element for streaming updates
+                // Create message element for streaming updates (hidden until first content)
                 const botMessageDiv = createBotMessageElement();
+                botMessageDiv.style.display = 'none';
+
+                function showFirstContent() {
+                    if (!firstChunkReceived) {
+                        firstChunkReceived = true;
+                        if (typingIndicator && typingIndicator.parentNode) {
+                            chatMessages.removeChild(typingIndicator);
+                        }
+                        botMessageDiv.style.display = '';
+                    }
+                }
 
                 while (true) {
                     const { done, value } = await reader.read();
@@ -162,16 +169,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             // N8N NDJSON format: {"type":"item","content":"text"}
                             if (parsed.type === 'item' && parsed.content) {
                                 fullContent += parsed.content;
+                                showFirstContent();
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
                             // SSE Progress format: {"progress":{"delta":"text"}}
                             else if (parsed.progress?.delta) {
                                 fullContent += parsed.progress.delta;
+                                showFirstContent();
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
                             // Direct content field (but not if it's an output summary)
                             else if (parsed.content && !parsed.output) {
                                 fullContent += parsed.content;
+                                showFirstContent();
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
                             // Ignore "output" field - it's a summary of streamed content
@@ -181,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const trimmed = line.trim();
                             if (!trimmed.startsWith('{') && !trimmed.includes('"output"')) {
                                 fullContent += line;
+                                showFirstContent();
                                 updateBotMessage(botMessageDiv, fullContent);
                             }
                         }
@@ -211,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     }
+                    showFirstContent();
                     updateBotMessage(botMessageDiv, fullContent);
                 }
 
@@ -221,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Final update with cleaned content
+                showFirstContent();
                 if (fullContent.trim()) {
                     updateBotMessage(botMessageDiv, fullContent);
                 } else {
@@ -228,6 +241,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 // Fallback to non-streaming JSON response
+                if (typingIndicator && typingIndicator.parentNode) {
+                    chatMessages.removeChild(typingIndicator);
+                }
                 const data = await response.json();
                 console.log(data.output);
                 addMessage(data.output, false);
