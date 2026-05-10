@@ -95,13 +95,18 @@ function ahmedia_json_error(string $message, int $status = 500): never
 function ahmedia_get_n8n_headers(): array
 {
     $webhookKey = ahmedia_env('N8N_WEBHOOK_KEY');
+    $headerName = ahmedia_env('N8N_WEBHOOK_HEADER_NAME', 'X-N8N-API-KEY');
 
     if ($webhookKey === null || $webhookKey === '') {
         ahmedia_json_error('Missing N8N webhook configuration.', 500);
     }
 
+    if ($headerName === null || trim($headerName) === '') {
+        ahmedia_json_error('Missing N8N webhook header configuration.', 500);
+    }
+
     return [
-        'X-Webhook-Key: ' . $webhookKey,
+        trim($headerName) . ': ' . $webhookKey,
     ];
 }
 
