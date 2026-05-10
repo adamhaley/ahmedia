@@ -19,10 +19,11 @@ This is a frontend web application for AH Media.ai that provides:
 - **styles.css**: CSS styling for the entire application
 
 ### Backend Integration
-- **n8n webhooks**: All backend processing handled through n8n automation workflows
-  - File uploads: `https://n8n.ahmedia.ai/webhook/ingest_file`
-  - Chat messages: `https://n8n.ahmedia.ai/webhook/rag_chat`
-  - Test endpoints available with `-test` suffix
+- **PHP webhook proxy**: Browser traffic goes through local PHP endpoints that forward to n8n
+  - Upload proxy: `/api/upload.php`
+  - Chat proxy: `/api/chat.php`
+  - Shared secret loaded from `.env` via `N8N_WEBHOOK_KEY`
+  - Optional upstream overrides: `N8N_CHAT_WEBHOOK_URL`, `N8N_UPLOAD_WEBHOOK_URL`
 
 ### Demo Content System
 - **demo/recipes.py**: Generates sample recipe markdown files with dietary metadata
@@ -63,13 +64,16 @@ This is a frontend web application for AH Media.ai that provides:
 
 ### Environment Variables
 - `CARTESIA_API_KEY`: Required for text-to-speech functionality in cartesia.sh
+- `N8N_WEBHOOK_KEY`: Required for authenticating proxy requests to n8n
+- `N8N_CHAT_WEBHOOK_URL`: Optional override for the upstream chat webhook
+- `N8N_UPLOAD_WEBHOOK_URL`: Optional override for the upstream upload webhook
 
 ## Webhook Configuration
 
-The application uses different webhook endpoints for different environments:
-- Production webhooks use the base n8n.ahmedia.ai domain
-- Test webhooks append `-test` to the endpoint path
-- Chat and file upload use separate webhook endpoints
+The browser should call local proxy endpoints instead of hitting n8n directly:
+- `/api/chat.php` forwards JSON chat requests
+- `/api/upload.php` forwards multipart file uploads
+- n8n should validate the `X-Webhook-Key` header on both workflows
 
 ## Browser Compatibility
 

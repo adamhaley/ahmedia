@@ -206,9 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         status.appendChild(progressContainer);
         uploadStatus.appendChild(status);
 
-        let postUrl = 'https://n8n.ahmedia.ai/webhook/ingest_file';
-
-        //let postUrl = 'https://n8n.ahmedia.ai/webhook-test/ingest_file';
+        let postUrl = '/api/upload.php';
         try {
             const response = await fetch(postUrl, {
                 method: 'POST',

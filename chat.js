@@ -6,10 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeButton = document.querySelector('.close-button');
     const reopenButton = document.querySelector('.reopen-chat-button');
 
-    // Replace this with your actual webhook URL
-    const WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/rag_chat';
-    const RESTAURANT_WEBHOOK_URL = 'https://n8n.ahmedia.ai/webhook/edfc23ee-48e4-4d8e-a51a-30be223586f7';
-    const WEBHOOK_URL_TEST = 'https://n8n.ahmedia.ai/webhook-test/edfc23ee-48e4-4d8e-a51a-30be223586f7';
+    const WEBHOOK_URL = '/api/chat.php';
 
     // Check if namespace exists and update chat state accordingly
     function checkNamespaceAndUpdateChat() {
