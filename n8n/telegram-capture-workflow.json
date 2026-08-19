@@ -1,0 +1,1111 @@
+{
+  "name": "Telegram Multimodal Capture",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        848,
+        2832
+      ],
+      "id": "e57eef08-c352-4949-bfea-f414b3dea0f6",
+      "name": "Telegram Trigger",
+      "webhookId": "2b6f546c-000e-445d-9556-14f779c4ea12",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const update = $input.item.json;\nconst message = update.message ?? update.callback_query?.message;\nconst callbackData = update.callback_query?.data;\n\nconst text = update.message?.text ?? '';\nconst command = text.startsWith('/')\n  ? text.split(' ')[0].split('@')[0].toLowerCase()\n  : callbackData;\n\nconst type = update.message?.photo ? 'photo'\n  : update.message?.voice ? 'voice'\n  : update.message?.location ? 'location'\n  : text ? 'text'\n  : callbackData ? 'callback'\n  : 'unknown';\n\nreturn [{\n  json: {\n    chat_id: message?.chat?.id,\n    user_id: update.message?.from?.id ?? update.callback_query?.from?.id,\n    message_id: message?.message_id,\n    command: command ?? null,\n    text,\n    type,\n    voice_file_id: update.message?.voice?.file_id ?? null,\n    photo_file_id: update.message?.photo?.at(-1)?.file_id ?? null,\n    latitude: update.message?.location?.latitude ?? null,\n    longitude: update.message?.location?.longitude ?? null,\n    caption: update.message?.caption ?? ''\n  }\n}];"
+      },
+      "id": "9e8bda39-d52b-4285-8e18-75c978b93657",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        2832
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "/capture",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0712e210-bce7-4fb7-9553-9f413840a0a8"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "/done",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0480840a-d7f8-4267-b16a-52671c0e2605"
+                  }
+                ],
+                "combinator": "or"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "/cancel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5244c67f-1320-4d6c-82a7-d272a218fd19"
+                  }
+                ],
+                "combinator": "or"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.command }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e2a7c4f9-8b3d-4e1a-9f5c-6d2b8a1e4c9f"
+                  }
+                ],
+                "combinator": "or"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "location",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b4bc3539-ec22-463e-8474-0524e323db98"
+                  },
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "17b91810-1884-45f0-8fcd-05963a91227c"
+                  },
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c1e9f3a2-4b7d-4e6a-8f1c-9d2e5b8a3c7f"
+                  }
+                ],
+                "combinator": "or"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "ce50326e-3e93-481e-8742-e61acd0ffe17",
+      "name": "Route",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        2832
+      ],
+      "notesInFlow": true,
+      "notes": "NOTE: n8n's Switch node UI does not support the 'extraConditions'/OR-across-rules shape used here for /done and /cancel aliases. After import, rebuild the 'done' and 'cancel' rules manually as: command = '/done' OR command = 'capture_done' (same pattern for cancel). This file captures the routing LOGIC; the exact Switch rule JSON may need re-entry in the UI depending on your n8n version. The 'fallback' (unmatched) output is Help."
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO capture_sessions (chat_id, user_id)\nVALUES ($1, $2)\nON CONFLICT (chat_id, user_id) WHERE status = 'collecting' DO NOTHING\nRETURNING session_id;",
+        "options": {
+          "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
+        }
+      },
+      "id": "e92ef108-721e-40d0-ab58-a12cff9ba486",
+      "name": "Create Session",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1536,
+        2544
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "Send photos, voice notes, text, and location. Press Done when finished.",
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Send location",
+                    "additionalFields": {
+                      "request_location": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "/done",
+                    "additionalFields": {}
+                  },
+                  {
+                    "text": "/cancel",
+                    "additionalFields": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "replyKeyboardOptions": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4972a7d1-5309-42f8-9869-c7b1f36c00bd",
+      "name": "Send Capture Instructions",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        2544
+      ],
+      "webhookId": "6899f498-1c90-45e0-b58e-307c79f79608",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT session_id FROM capture_sessions\nWHERE chat_id = $1 AND user_id = $2 AND status = 'collecting'\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
+        }
+      },
+      "id": "9396c110-a1b7-46df-a320-fddfb2b7d5e8",
+      "name": "Find Active Session",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1536,
+        2832
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.session_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "588766a3-b6a0-4daf-9c6b-a4a6b1dab03b",
+      "name": "Has Active Session?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        2832
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO capture_items (session_id, chat_id, telegram_message_id, type, file_id, latitude, longitude, text, caption)\nVALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\nON CONFLICT (chat_id, telegram_message_id) DO NOTHING;\n\nUPDATE capture_sessions SET last_activity = now()\nWHERE session_id = $1;",
+        "options": {
+          "queryReplacement": "={{ [ $json.session_id, $('Normalize').item.json.chat_id, $('Normalize').item.json.message_id, $('Normalize').item.json.type, ($('Normalize').item.json.photo_file_id || $('Normalize').item.json.voice_file_id), $('Normalize').item.json.latitude, $('Normalize').item.json.longitude, $('Normalize').item.json.text, $('Normalize').item.json.caption ] }}"
+        }
+      },
+      "id": "5be6fae7-e443-4ea7-9280-afb13b19c35a",
+      "name": "Store Item",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1984,
+        2784
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "=Saved {{ $('Normalize').item.json.type }}.",
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Send location",
+                    "additionalFields": {
+                      "request_location": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "/done",
+                    "additionalFields": {}
+                  },
+                  {
+                    "text": "/cancel",
+                    "additionalFields": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "replyKeyboardOptions": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a49b6b4b-d14f-443b-90d6-e2371c46965c",
+      "name": "Acknowledge Item",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        2784
+      ],
+      "webhookId": "4eb03837-0662-4dbd-90b3-afeeb1295562",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "Send /capture first to start a session.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "72628ffb-f20b-419e-b845-1a5e457a2e32",
+      "name": "Prompt /capture First",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1984,
+        2960
+      ],
+      "webhookId": "89ad048b-96c5-49e4-b17c-7c1c692c3f3f",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE capture_sessions\nSET status = 'processing', completed_at = now()\nWHERE chat_id = $1 AND user_id = $2 AND status = 'collecting'\nRETURNING session_id;",
+        "options": {
+          "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
+        }
+      },
+      "id": "72e1bcab-a261-4876-8540-8784102d19a3",
+      "name": "Mark Processing",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1536,
+        3136
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM capture_items WHERE session_id = $1 ORDER BY created_at ASC;",
+        "options": {
+          "queryReplacement": "={{ $json.session_id }}"
+        }
+      },
+      "id": "7df9e3ad-3cbb-4409-9822-f8610fc62641",
+      "name": "Load Session Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        3136
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Voice transcription is intentionally deferred to a later iteration\n// per the phased build plan. Photos are downloaded downstream by file_id.\nconst items = $input.all().map(i => i.json);\n\nconst text = items\n  .filter(i => i.type === 'text' || i.caption)\n  .map(i => i.text || i.caption)\n  .filter(Boolean)\n  .join('\\n');\n\nconst locationItem = items.find(i => i.type === 'location');\nconst photoItems = items.filter(i => i.type === 'photo' && i.file_id);\n\nreturn [{\n  json: {\n    session_id: items[0]?.session_id ?? null,\n    request_type: 'field_report',\n    text,\n    location: locationItem\n      ? { latitude: locationItem.latitude, longitude: locationItem.longitude }\n      : null,\n    voice_transcript: null,\n    images: photoItems.map(i => ({ file_id: i.file_id })),\n    captured_at: items[0]?.created_at ?? null\n  }\n}];"
+      },
+      "id": "dd899ceb-8e0e-4953-a84c-530fb1c92942",
+      "name": "Assemble Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        3136
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are summarizing a single field-report capture sent via Telegram (text notes, an optional GPS location, an optional voice transcript, and optional images from one capture session).\n\nWrite a short, plain field report a person could read later to understand what was observed, where, and any notable details.\n\nRules:\n- Only report information given in the input below. Never invent details, addresses, or context not present.\n- If location coordinates are given, state them plainly as coordinates. Do not attempt to reverse-geocode into a place name.\n- If voice transcript or images are 'none', do not comment on their absence.\n- Keep the report to a few sentences, factual and plain. No headers or bullet lists unless the input clearly contains multiple distinct items.\n- Reply with the report text only — no preamble like \"Here is your report\" or \"Thank you\", and no closing offer to help further.\n\nField report capture:\n\nText notes: {{ $json.text || 'none' }}\n\nLocation: {{ $json.location ? ($json.location.latitude + ', ' + $json.location.longitude) : 'none' }}\n\nVoice transcript: {{ $json.voice_transcript || 'none' }}\n\nImages: {{ $json.images && $json.images.length ? $json.images.length + ' image(s) attached' : 'none' }}"
+      },
+      "id": "40abd327-9b02-43c6-a727-f885d5ca6b4c",
+      "name": "Field Report Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2208,
+        3136
+      ],
+      "notesInFlow": true,
+      "notes": "Deliberately scoped and tool-less — not the shared 'AH Core' agent, and a Basic LLM Chain rather than an Agent node (no ReAct tool loop, less prone to the flakiness Agent nodes can have). Just synthesizes the assembled capture payload into a short report; no tools, no memory, can't touch calendars/journals/Slack. Verify the output field name after a test run (chainLlm typically outputs under 'text'; Send Result's expression assumes that — adjust if your n8n version differs)."
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini",
+          "cachedResultName": "gpt-4.1-mini",
+          "cachedResultUrl": ""
+        },
+        "options": {}
+      },
+      "id": "aa7beda6-af5a-4b46-88ba-118ec45790d2",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2144,
+        3312
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5GRgzlcJ5Ujkvgcd",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\nconst images = assembled.images || [];\n\nreturn images.map((img, i) => ({\n  json: {\n    file_id: img.file_id,\n    filename: `${slug}-${i + 1}.jpg`\n  }\n}));"
+      },
+      "id": "6fccad9f-7ed0-40d4-838a-6db2a37dd2b8",
+      "name": "Prepare Images",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2384,
+        3312
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "90ab1832-cacb-4543-b5fe-fa6d90f772fd",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2544,
+        3312
+      ],
+      "webhookId": "7c0fa771-1362-4ccd-a92c-bb2c8f44e7f9",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/vault/field-reports/attachments/{{ $('Prepare Images').item.json.filename }}",
+        "options": {}
+      },
+      "id": "e21f3f3b-94ac-49f2-83de-bc47c3e22ff5",
+      "name": "Write Image to Disk",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        2704,
+        3312
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { filenames: $('Prepare Images').all().map(i => i.json.filename) } }];"
+      },
+      "id": "0ad9ba51-a9c9-4a7b-b3de-5088a10b8428",
+      "name": "Collect Image Filenames",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2864,
+        3312
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst report = $('Field Report Chain').item.json.text || '';\nconst filenames = $json.filenames || [];\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\n\nconst locationBlock = assembled.location\n  ? `location:\\n  latitude: ${assembled.location.latitude}\\n  longitude: ${assembled.location.longitude}\\n`\n  : '';\n\nconst frontmatter = `---\\ntitle: ${capturedAt} Field Report\\ntype: field-report\\ncaptured_at: ${capturedAt}\\n${locationBlock}source: telegram-capture\\ntags:\\n  - field-report\\n---\\n\\n`;\n\nconst embeds = filenames.map(f => `![[${f}]]`).join('\\n');\nconst body = report + (embeds ? `\\n\\n${embeds}` : '');\n\nreturn [{ json: { filename: `${slug}.md`, content: frontmatter + body } }];"
+      },
+      "id": "e616eccc-2667-403c-b4c8-8daa16f5e0c5",
+      "name": "Build Note",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3024,
+        3312
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "content",
+        "options": {}
+      },
+      "id": "95fc127d-00ba-4d19-962c-b2ffe64aa93a",
+      "name": "Convert Note to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3184,
+        3312
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/vault/field-reports/{{ $('Build Note').item.json.filename }}",
+        "options": {}
+      },
+      "id": "e601988f-4b29-49cf-a082-29dc44cdfd09",
+      "name": "Write Note to Disk",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        3344,
+        3312
+      ],
+      "notesInFlow": true,
+      "notes": "Writes one note per capture session to wiki/field-reports/ (first-class citizen, separate from journal/), per the vault README added alongside this workflow update."
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "={{ $json.text || 'Processed your field report.' }}",
+        "replyMarkup": "replyKeyboardRemove",
+        "replyKeyboardRemove": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "02400401-544a-4bd9-8da8-b80d22946a18",
+      "name": "Send Result",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2800,
+        3136
+      ],
+      "webhookId": "d00c6c9a-0d8d-4539-abb7-3f37bf34b616",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE capture_sessions SET status = 'processed' WHERE session_id = $1;",
+        "options": {
+          "queryReplacement": "={{ $('Assemble Payload').item.json.session_id }}"
+        }
+      },
+      "id": "87d963cf-6e9b-4623-af20-967607b4d382",
+      "name": "Mark Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        3024,
+        3136
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE capture_sessions SET status = 'cancelled'\nWHERE chat_id = $1 AND user_id = $2 AND status = 'collecting'\nRETURNING session_id;",
+        "options": {
+          "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
+        }
+      },
+      "id": "df811e62-5312-4d7f-ba55-ed4205b001af",
+      "name": "Cancel Session",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1536,
+        3408
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM capture_items WHERE session_id = $1;",
+        "options": {
+          "queryReplacement": "={{ $json.session_id }}"
+        }
+      },
+      "id": "3ebeaba6-28cf-4a11-b8bb-6dbcc0906e97",
+      "name": "Delete Unprocessed Items",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1760,
+        3408
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "ZOMC6R2jV2fQy9Mx",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "Capture cancelled.",
+        "replyMarkup": "replyKeyboardRemove",
+        "replyKeyboardRemove": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "87b1d7c4-c74c-421a-b589-3b5e1468542d",
+      "name": "Confirm Cancelled",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1984,
+        3408
+      ],
+      "webhookId": "27fda4ea-4360-49e1-82e7-ae32f150619a",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Normalize').item.json.chat_id }}",
+        "text": "Commands:\n/capture - Start collecting photos, audio, and location\n/done - Finish the current capture\n/cancel - Cancel the current capture\n/help - Show available commands",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "7235df34-431f-4a07-86a8-99d460a6a4a4",
+      "name": "Send Help",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1536,
+        3664
+      ],
+      "webhookId": "87c67702-b669-4271-b3dc-a1bed8edf16d",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 360654240,
+          "message": {
+            "message_id": 3,
+            "from": {
+              "id": 6627695515,
+              "is_bot": false,
+              "first_name": "Adam",
+              "last_name": "Haley",
+              "username": "adamhaley7",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 6627695515,
+              "first_name": "Adam",
+              "last_name": "Haley",
+              "username": "adamhaley7",
+              "type": "private"
+            },
+            "date": 1786568244,
+            "text": "Test"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route": {
+      "main": [
+        [
+          {
+            "node": "Create Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cancel Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find Active Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Session": {
+      "main": [
+        [
+          {
+            "node": "Send Capture Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Active Session": {
+      "main": [
+        [
+          {
+            "node": "Has Active Session?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Active Session?": {
+      "main": [
+        [
+          {
+            "node": "Store Item",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prompt /capture First",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Item": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Processing": {
+      "main": [
+        [
+          {
+            "node": "Load Session Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Session Items": {
+      "main": [
+        [
+          {
+            "node": "Assemble Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble Payload": {
+      "main": [
+        [
+          {
+            "node": "Field Report Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Field Report Chain": {
+      "main": [
+        [
+          {
+            "node": "Send Result",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Images": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Write Image to Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Image to Disk": {
+      "main": [
+        [
+          {
+            "node": "Collect Image Filenames",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Image Filenames": {
+      "main": [
+        [
+          {
+            "node": "Build Note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Note": {
+      "main": [
+        [
+          {
+            "node": "Convert Note to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Note to File": {
+      "main": [
+        [
+          {
+            "node": "Write Note to Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Field Report Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Result": {
+      "main": [
+        [
+          {
+            "node": "Mark Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Session": {
+      "main": [
+        [
+          {
+            "node": "Delete Unprocessed Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Unprocessed Items": {
+      "main": [
+        [
+          {
+            "node": "Confirm Cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "CFxyw7s6FYHGw941",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "cc62b639-9c1d-4c8f-9e49-9662d2fd069c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9eba4434b08a3b38c7a52d54228c736501f146e2a8d1b314568ff999759dcb0e"
+  },
+  "nodeGroups": [],
+  "id": "c7fuzQVMr3hZwmx0",
+  "tags": []
+}
