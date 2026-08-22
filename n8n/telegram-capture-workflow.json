@@ -12,10 +12,10 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.5,
       "position": [
-        848,
-        2832
+        -208,
+        4176
       ],
-      "id": "e57eef08-c352-4949-bfea-f414b3dea0f6",
+      "id": "4986fbb2-8838-47c2-a7ee-f62edfab17c8",
       "name": "Telegram Trigger",
       "webhookId": "2b6f546c-000e-445d-9556-14f779c4ea12",
       "credentials": {
@@ -29,13 +29,13 @@
       "parameters": {
         "jsCode": "const update = $input.item.json;\nconst message = update.message ?? update.callback_query?.message;\nconst callbackData = update.callback_query?.data;\n\nconst text = update.message?.text ?? '';\nconst command = text.startsWith('/')\n  ? text.split(' ')[0].split('@')[0].toLowerCase()\n  : callbackData;\n\nconst type = update.message?.photo ? 'photo'\n  : update.message?.voice ? 'voice'\n  : update.message?.location ? 'location'\n  : text ? 'text'\n  : callbackData ? 'callback'\n  : 'unknown';\n\nreturn [{\n  json: {\n    chat_id: message?.chat?.id,\n    user_id: update.message?.from?.id ?? update.callback_query?.from?.id,\n    message_id: message?.message_id,\n    command: command ?? null,\n    text,\n    type,\n    voice_file_id: update.message?.voice?.file_id ?? null,\n    photo_file_id: update.message?.photo?.at(-1)?.file_id ?? null,\n    latitude: update.message?.location?.latitude ?? null,\n    longitude: update.message?.location?.longitude ?? null,\n    caption: update.message?.caption ?? ''\n  }\n}];"
       },
-      "id": "9e8bda39-d52b-4285-8e18-75c978b93657",
+      "id": "d0ae4a1d-b3bd-461c-ac08-fc2c6ea3cfa6",
       "name": "Normalize",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1056,
-        2832
+        16,
+        4176
       ]
     },
     {
@@ -165,6 +165,15 @@
                       "operation": "equals"
                     },
                     "id": "c1e9f3a2-4b7d-4e6a-8f1c-9d2e5b8a3c7f"
+                  },
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "voice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f7d4b8e1-2a6c-4f9d-8b3e-1c5a7d9e2f4b"
                   }
                 ],
                 "combinator": "or"
@@ -176,13 +185,13 @@
           "fallbackOutput": "extra"
         }
       },
-      "id": "ce50326e-3e93-481e-8742-e61acd0ffe17",
+      "id": "f3fb88da-c554-4357-9d5c-08b4180a104d",
       "name": "Route",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
       "position": [
-        1296,
-        2832
+        256,
+        4176
       ],
       "notesInFlow": true,
       "notes": "NOTE: n8n's Switch node UI does not support the 'extraConditions'/OR-across-rules shape used here for /done and /cancel aliases. After import, rebuild the 'done' and 'cancel' rules manually as: command = '/done' OR command = 'capture_done' (same pattern for cancel). This file captures the routing LOGIC; the exact Switch rule JSON may need re-entry in the UI depending on your n8n version. The 'fallback' (unmatched) output is Help."
@@ -195,13 +204,13 @@
           "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
         }
       },
-      "id": "e92ef108-721e-40d0-ab58-a12cff9ba486",
+      "id": "b52982f1-d377-409a-bee7-25600dd7feae",
       "name": "Create Session",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1536,
-        2544
+        496,
+        3888
       ],
       "credentials": {
         "postgres": {
@@ -250,13 +259,13 @@
           "appendAttribution": false
         }
       },
-      "id": "4972a7d1-5309-42f8-9869-c7b1f36c00bd",
+      "id": "5774d065-7cf4-480a-ba8c-c52faaf5165d",
       "name": "Send Capture Instructions",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1760,
-        2544
+        720,
+        3888
       ],
       "webhookId": "6899f498-1c90-45e0-b58e-307c79f79608",
       "credentials": {
@@ -274,13 +283,13 @@
           "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
         }
       },
-      "id": "9396c110-a1b7-46df-a320-fddfb2b7d5e8",
+      "id": "4df56262-ee9d-4d55-a386-967272ab1adc",
       "name": "Find Active Session",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1536,
-        2832
+        496,
+        4176
       ],
       "credentials": {
         "postgres": {
@@ -312,13 +321,13 @@
         },
         "options": {}
       },
-      "id": "588766a3-b6a0-4daf-9c6b-a4a6b1dab03b",
+      "id": "21afc919-be47-4a85-bcd1-c836142f88e3",
       "name": "Has Active Session?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        1760,
-        2832
+        720,
+        4176
       ]
     },
     {
@@ -329,13 +338,13 @@
           "queryReplacement": "={{ [ $json.session_id, $('Normalize').item.json.chat_id, $('Normalize').item.json.message_id, $('Normalize').item.json.type, ($('Normalize').item.json.photo_file_id || $('Normalize').item.json.voice_file_id), $('Normalize').item.json.latitude, $('Normalize').item.json.longitude, $('Normalize').item.json.text, $('Normalize').item.json.caption ] }}"
         }
       },
-      "id": "5be6fae7-e443-4ea7-9280-afb13b19c35a",
+      "id": "343d80e3-91aa-4e9c-b558-4b080e6a46fc",
       "name": "Store Item",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1984,
-        2784
+        944,
+        4128
       ],
       "credentials": {
         "postgres": {
@@ -384,13 +393,13 @@
           "appendAttribution": false
         }
       },
-      "id": "a49b6b4b-d14f-443b-90d6-e2371c46965c",
+      "id": "9bcc3d6d-8ab1-47b9-abd9-d5ae92d56b2f",
       "name": "Acknowledge Item",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2192,
-        2784
+        1152,
+        4128
       ],
       "webhookId": "4eb03837-0662-4dbd-90b3-afeeb1295562",
       "credentials": {
@@ -408,13 +417,13 @@
           "appendAttribution": false
         }
       },
-      "id": "72628ffb-f20b-419e-b845-1a5e457a2e32",
+      "id": "84e33211-e7b5-46cd-8488-c8d9b03fa205",
       "name": "Prompt /capture First",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1984,
-        2960
+        944,
+        4304
       ],
       "webhookId": "89ad048b-96c5-49e4-b17c-7c1c692c3f3f",
       "credentials": {
@@ -432,13 +441,13 @@
           "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
         }
       },
-      "id": "72e1bcab-a261-4876-8540-8784102d19a3",
+      "id": "c116f3dd-d483-4bce-961a-e19b42204818",
       "name": "Mark Processing",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1536,
-        3136
+        496,
+        4480
       ],
       "credentials": {
         "postgres": {
@@ -455,13 +464,13 @@
           "queryReplacement": "={{ $json.session_id }}"
         }
       },
-      "id": "7df9e3ad-3cbb-4409-9822-f8610fc62641",
+      "id": "9b1025a1-62ae-4943-ac62-49f619eb0d30",
       "name": "Load Session Items",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1760,
-        3136
+        720,
+        4480
       ],
       "credentials": {
         "postgres": {
@@ -472,32 +481,101 @@
     },
     {
       "parameters": {
-        "jsCode": "// Voice transcription is intentionally deferred to a later iteration\n// per the phased build plan. Photos are downloaded downstream by file_id.\nconst items = $input.all().map(i => i.json);\n\nconst text = items\n  .filter(i => i.type === 'text' || i.caption)\n  .map(i => i.text || i.caption)\n  .filter(Boolean)\n  .join('\\n');\n\nconst locationItem = items.find(i => i.type === 'location');\nconst photoItems = items.filter(i => i.type === 'photo' && i.file_id);\n\nreturn [{\n  json: {\n    session_id: items[0]?.session_id ?? null,\n    request_type: 'field_report',\n    text,\n    location: locationItem\n      ? { latitude: locationItem.latitude, longitude: locationItem.longitude }\n      : null,\n    voice_transcript: null,\n    images: photoItems.map(i => ({ file_id: i.file_id })),\n    captured_at: items[0]?.created_at ?? null\n  }\n}];"
+        "jsCode": "const items = $input.all().map(i => i.json);\nreturn items\n  .filter(i => i.type === 'voice' && i.file_id)\n  .map(i => ({ json: { file_id: i.file_id } }));"
       },
-      "id": "dd899ceb-8e0e-4953-a84c-530fb1c92942",
+      "id": "4c7b6da6-5ec7-43a3-9d15-559ee30aad6b",
+      "name": "Filter Voice Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        4480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "c7ecfe82-7536-49bf-af38-fda30ad20d28",
+      "name": "Download Voice",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        4480
+      ],
+      "webhookId": "90c1fc3f-d531-4e6f-b24e-b28cb42e9543",
+      "credentials": {
+        "telegramApi": {
+          "id": "4cZ3CiFOXjvkN880",
+          "name": "AHLocationBOT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "ced0012b-4c49-41c9-bafc-a643b72d1c5f",
+      "name": "Transcribe Voice",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1296,
+        4480
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5GRgzlcJ5Ujkvgcd",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { transcripts: $input.all().map(i => i.json.text).filter(Boolean) } }];"
+      },
+      "id": "c17f81c3-8cd4-4818-83d0-cf11f52def3c",
+      "name": "Collect Voice Transcripts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        4480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $('Load Session Items').all().map(i => i.json);\nconst transcripts = $json.transcripts || [];\n\nconst text = items\n  .filter(i => i.type === 'text' || i.caption)\n  .map(i => i.text || i.caption)\n  .filter(Boolean)\n  .join('\\n');\n\nconst locationItem = items.find(i => i.type === 'location');\nconst photoItems = items.filter(i => i.type === 'photo' && i.file_id);\n\nreturn [{\n  json: {\n    session_id: items[0]?.session_id ?? null,\n    request_type: 'field_report',\n    text,\n    location: locationItem\n      ? { latitude: locationItem.latitude, longitude: locationItem.longitude }\n      : null,\n    voice_transcript: transcripts.length ? transcripts.join('\\n') : null,\n    images: photoItems.map(i => ({ file_id: i.file_id })),\n    captured_at: items[0]?.created_at ?? null\n  }\n}];"
+      },
+      "id": "ddcfedd0-5203-46c3-8cc2-bea05f52d278",
       "name": "Assemble Payload",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1984,
-        3136
+        1648,
+        4480
       ]
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=You are summarizing a single field-report capture sent via Telegram (text notes, an optional GPS location, an optional voice transcript, and optional images from one capture session).\n\nWrite a short, plain field report a person could read later to understand what was observed, where, and any notable details.\n\nRules:\n- Only report information given in the input below. Never invent details, addresses, or context not present.\n- If location coordinates are given, state them plainly as coordinates. Do not attempt to reverse-geocode into a place name.\n- If voice transcript or images are 'none', do not comment on their absence.\n- Keep the report to a few sentences, factual and plain. No headers or bullet lists unless the input clearly contains multiple distinct items.\n- Reply with the report text only — no preamble like \"Here is your report\" or \"Thank you\", and no closing offer to help further.\n\nField report capture:\n\nText notes: {{ $json.text || 'none' }}\n\nLocation: {{ $json.location ? ($json.location.latitude + ', ' + $json.location.longitude) : 'none' }}\n\nVoice transcript: {{ $json.voice_transcript || 'none' }}\n\nImages: {{ $json.images && $json.images.length ? $json.images.length + ' image(s) attached' : 'none' }}"
+        "text": "=You are summarizing a single field-report capture sent via Telegram (text notes, an optional GPS location, an optional voice transcript, and optional images from one capture session).\n\nWrite a short, plain field report a person could read later to understand what was observed, where, and any notable details.\n\nRules:\n- Only report information given in the input below. Never invent details, addresses, or context not present.\n- If location coordinates are given, state them plainly as coordinates. Do not attempt to reverse-geocode into a place name.\n- If voice transcript or images are 'none', do not comment on their absence.\n- Keep the report to a few sentences, factual and plain. No headers or bullet lists unless the input clearly contains multiple distinct items.\n- Reply with the report text only \u2014 no preamble like \"Here is your report\" or \"Thank you\", and no closing offer to help further.\n\nField report capture:\n\nText notes: {{ $json.text || 'none' }}\n\nLocation: {{ $json.location ? ($json.location.latitude + ', ' + $json.location.longitude) : 'none' }}\n\nVoice transcript: {{ $json.voice_transcript || 'none' }}\n\nImages: {{ $json.images && $json.images.length ? $json.images.length + ' image(s) attached' : 'none' }}"
       },
-      "id": "40abd327-9b02-43c6-a727-f885d5ca6b4c",
+      "id": "99c82537-203e-438f-98e8-7208a2f7e96d",
       "name": "Field Report Chain",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.5,
       "position": [
-        2208,
-        3136
+        1824,
+        4480
       ],
       "notesInFlow": true,
-      "notes": "Deliberately scoped and tool-less — not the shared 'AH Core' agent, and a Basic LLM Chain rather than an Agent node (no ReAct tool loop, less prone to the flakiness Agent nodes can have). Just synthesizes the assembled capture payload into a short report; no tools, no memory, can't touch calendars/journals/Slack. Verify the output field name after a test run (chainLlm typically outputs under 'text'; Send Result's expression assumes that — adjust if your n8n version differs)."
+      "notes": "Deliberately scoped and tool-less \u2014 not the shared 'AH Core' agent, and a Basic LLM Chain rather than an Agent node (no ReAct tool loop, less prone to the flakiness Agent nodes can have). Just synthesizes the assembled capture payload into a short report; no tools, no memory, can't touch calendars/journals/Slack. Verify the output field name after a test run (chainLlm typically outputs under 'text'; Send Result's expression assumes that \u2014 adjust if your n8n version differs)."
     },
     {
       "parameters": {
@@ -510,13 +588,13 @@
         },
         "options": {}
       },
-      "id": "aa7beda6-af5a-4b46-88ba-118ec45790d2",
+      "id": "f7b145dd-5c92-4607-8234-93010b3abcfb",
       "name": "OpenAI Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        2144,
-        3312
+        1824,
+        4656
       ],
       "credentials": {
         "openAiApi": {
@@ -527,15 +605,48 @@
     },
     {
       "parameters": {
-        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\nconst images = assembled.images || [];\n\nreturn images.map((img, i) => ({\n  json: {\n    file_id: img.file_id,\n    filename: `${slug}-${i + 1}.jpg`\n  }\n}));"
+        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\nconst images = assembled.images || [];\n\n// Always emit at least one item so downstream nodes still run when there\n// are zero images \u2014 n8n halts a branch entirely when a node outputs\n// zero items, which would otherwise skip note-writing on image-less captures.\nif (images.length === 0) {\n  return [{ json: { file_id: null, filename: null } }];\n}\n\nreturn images.map((img, i) => ({\n  json: {\n    file_id: img.file_id,\n    filename: `${slug}-${i + 1}.jpg`\n  }\n}));"
       },
-      "id": "6fccad9f-7ed0-40d4-838a-6db2a37dd2b8",
+      "id": "81178b36-3895-472a-99dc-2606e6144255",
       "name": "Prepare Images",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2384,
-        3312
+        1824,
+        4832
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.file_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a2b4c6d8-3e5f-4a7b-9c1d-2e4f6a8b0c3e",
+      "name": "Has Image?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        5008
       ]
     },
     {
@@ -544,13 +655,13 @@
         "fileId": "={{ $json.file_id }}",
         "additionalFields": {}
       },
-      "id": "90ab1832-cacb-4543-b5fe-fa6d90f772fd",
+      "id": "f99553fd-631d-450f-bf99-405464e21617",
       "name": "Download Image",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2544,
-        3312
+        2176,
+        5008
       ],
       "webhookId": "7c0fa771-1362-4ccd-a92c-bb2c8f44e7f9",
       "credentials": {
@@ -566,39 +677,39 @@
         "fileName": "=/vault/field-reports/attachments/{{ $('Prepare Images').item.json.filename }}",
         "options": {}
       },
-      "id": "e21f3f3b-94ac-49f2-83de-bc47c3e22ff5",
+      "id": "8519bfc7-7f93-4f8c-9652-29ad066a45e7",
       "name": "Write Image to Disk",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        2704,
-        3312
+        2352,
+        5008
       ]
     },
     {
       "parameters": {
-        "jsCode": "return [{ json: { filenames: $('Prepare Images').all().map(i => i.json.filename) } }];"
+        "jsCode": "return [{ json: { filenames: $('Prepare Images').all().map(i => i.json.filename).filter(Boolean) } }];"
       },
-      "id": "0ad9ba51-a9c9-4a7b-b3de-5088a10b8428",
+      "id": "94f7edc4-21f7-4d0b-8381-a49c6ee8e1bd",
       "name": "Collect Image Filenames",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2864,
-        3312
+        2000,
+        4832
       ]
     },
     {
       "parameters": {
-        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst report = $('Field Report Chain').item.json.text || '';\nconst filenames = $json.filenames || [];\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\n\nconst locationBlock = assembled.location\n  ? `location:\\n  latitude: ${assembled.location.latitude}\\n  longitude: ${assembled.location.longitude}\\n`\n  : '';\n\nconst frontmatter = `---\\ntitle: ${capturedAt} Field Report\\ntype: field-report\\ncaptured_at: ${capturedAt}\\n${locationBlock}source: telegram-capture\\ntags:\\n  - field-report\\n---\\n\\n`;\n\nconst embeds = filenames.map(f => `![[${f}]]`).join('\\n');\nconst body = report + (embeds ? `\\n\\n${embeds}` : '');\n\nreturn [{ json: { filename: `${slug}.md`, content: frontmatter + body } }];"
+        "jsCode": "const assembled = $('Assemble Payload').item.json;\nconst report = $('Field Report Chain').item.json.text || '';\nconst filenames = $json.filenames || [];\nconst capturedAt = assembled.captured_at || $now.toISO();\nconst slug = String(capturedAt).replace(/[:.]/g, '-').slice(0, 19);\n\nconst locationBlock = assembled.location\n  ? `location:\\n  latitude: ${assembled.location.latitude}\\n  longitude: ${assembled.location.longitude}\\n`\n  : '';\n\nconst frontmatter = `---\\ntitle: ${capturedAt} Field Report\\ntype: field-report\\ncaptured_at: ${capturedAt}\\n${locationBlock}source: telegram-capture\\ntags:\\n  - field-report\\n---\\n\\n`;\n\nconst transcriptSection = assembled.voice_transcript\n  ? `\\n\\n**Voice Transcript:**\\n${assembled.voice_transcript}`\n  : '';\n\nconst embeds = filenames.map(f => `![[${f}]]`).join('\\n');\nconst body = report + transcriptSection + (embeds ? `\\n\\n${embeds}` : '');\n\nreturn [{ json: { filename: `${slug}.md`, content: frontmatter + body } }];"
       },
-      "id": "e616eccc-2667-403c-b4c8-8daa16f5e0c5",
+      "id": "1aa2c0ac-c8a4-4fbd-8ec9-0e0cd999d829",
       "name": "Build Note",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3024,
-        3312
+        2176,
+        4832
       ]
     },
     {
@@ -607,13 +718,13 @@
         "sourceProperty": "content",
         "options": {}
       },
-      "id": "95fc127d-00ba-4d19-962c-b2ffe64aa93a",
+      "id": "c1d6d93b-70d7-4033-bc65-4b427e5d0a1a",
       "name": "Convert Note to File",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        3184,
-        3312
+        2352,
+        4832
       ]
     },
     {
@@ -622,13 +733,13 @@
         "fileName": "=/vault/field-reports/{{ $('Build Note').item.json.filename }}",
         "options": {}
       },
-      "id": "e601988f-4b29-49cf-a082-29dc44cdfd09",
+      "id": "4609d26e-8bb0-4e3e-8d56-783ed125d5b5",
       "name": "Write Note to Disk",
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        3344,
-        3312
+        2528,
+        4832
       ],
       "notesInFlow": true,
       "notes": "Writes one note per capture session to wiki/field-reports/ (first-class citizen, separate from journal/), per the vault README added alongside this workflow update."
@@ -643,13 +754,13 @@
           "appendAttribution": false
         }
       },
-      "id": "02400401-544a-4bd9-8da8-b80d22946a18",
+      "id": "66fbf058-8db5-4643-9e06-c95187133c3a",
       "name": "Send Result",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2800,
-        3136
+        2192,
+        4480
       ],
       "webhookId": "d00c6c9a-0d8d-4539-abb7-3f37bf34b616",
       "credentials": {
@@ -667,13 +778,13 @@
           "queryReplacement": "={{ $('Assemble Payload').item.json.session_id }}"
         }
       },
-      "id": "87d963cf-6e9b-4623-af20-967607b4d382",
+      "id": "86934de1-6441-4261-99a7-40a9da962a3c",
       "name": "Mark Processed",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        3024,
-        3136
+        2368,
+        4480
       ],
       "credentials": {
         "postgres": {
@@ -690,13 +801,13 @@
           "queryReplacement": "={{ $json.chat_id }},{{ $json.user_id }}"
         }
       },
-      "id": "df811e62-5312-4d7f-ba55-ed4205b001af",
+      "id": "69d071de-2d0d-4c00-a2c8-9d6af86c4c41",
       "name": "Cancel Session",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1536,
-        3408
+        496,
+        4752
       ],
       "credentials": {
         "postgres": {
@@ -713,13 +824,13 @@
           "queryReplacement": "={{ $json.session_id }}"
         }
       },
-      "id": "3ebeaba6-28cf-4a11-b8bb-6dbcc0906e97",
+      "id": "47ca1820-e0ee-427f-b7a2-af87d0eeb8f1",
       "name": "Delete Unprocessed Items",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        1760,
-        3408
+        720,
+        4752
       ],
       "credentials": {
         "postgres": {
@@ -738,13 +849,13 @@
           "appendAttribution": false
         }
       },
-      "id": "87b1d7c4-c74c-421a-b589-3b5e1468542d",
+      "id": "fcc26cd6-bbd5-4304-b997-32028a381fd4",
       "name": "Confirm Cancelled",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1984,
-        3408
+        944,
+        4752
       ],
       "webhookId": "27fda4ea-4360-49e1-82e7-ae32f150619a",
       "credentials": {
@@ -762,13 +873,13 @@
           "appendAttribution": false
         }
       },
-      "id": "7235df34-431f-4a07-86a8-99d460a6a4a4",
+      "id": "948a5700-12f0-4ef9-b4e3-472795af2237",
       "name": "Send Help",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1536,
-        3664
+        496,
+        5008
       ],
       "webhookId": "87c67702-b669-4271-b3dc-a1bed8edf16d",
       "credentials": {
@@ -946,6 +1057,50 @@
       "main": [
         [
           {
+            "node": "Filter Voice Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Voice Items": {
+      "main": [
+        [
+          {
+            "node": "Download Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Voice": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Voice": {
+      "main": [
+        [
+          {
+            "node": "Collect Voice Transcripts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Voice Transcripts": {
+      "main": [
+        [
+          {
             "node": "Assemble Payload",
             "type": "main",
             "index": 0
@@ -984,6 +1139,22 @@
       "main": [
         [
           {
+            "node": "Has Image?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Collect Image Filenames",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Image?": {
+      "main": [
+        [
+          {
             "node": "Download Image",
             "type": "main",
             "index": 0
@@ -996,17 +1167,6 @@
         [
           {
             "node": "Write Image to Disk",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Write Image to Disk": {
-      "main": [
-        [
-          {
-            "node": "Collect Image Filenames",
             "type": "main",
             "index": 0
           }
@@ -1100,7 +1260,7 @@
     "errorWorkflow": "CFxyw7s6FYHGw941",
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "cc62b639-9c1d-4c8f-9e49-9662d2fd069c",
+  "versionId": "961b400f-4761-48a8-b8fb-bac03ad51354",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "9eba4434b08a3b38c7a52d54228c736501f146e2a8d1b314568ff999759dcb0e"
