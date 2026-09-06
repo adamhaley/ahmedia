@@ -1,68 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AH Media.ai</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-</head>
-<body>
-    <div class="splash-container">
-        <div class="line-container upper-right">
-            <div class="line line-1"></div>
-            <div class="line line-2"></div>
+    <meta name="description" content="AH Media.ai" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a class="site-brand" href="/">AH Media</a>
+          <nav class="site-nav" aria-label="Primary">
+            
+          </nav>
         </div>
-        <div class="text-section">
-            <h1>AH Media<span class="accent">.ai</span></h1>
+      </header>
+      <main>
+        <section class="section hero-section" id="top">
+      <div class="container hero-grid hero-grid-solo">
+        <div class="hero-copy">
+          <p class="eyebrow"></p>
+          <h1 class="display-title">AH Media<span class="text-accent">.ai</span></h1>
+          <p class="lede"></p>
+          
         </div>
-        <div class="graphics-section">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
-            <div class="circle circle-3"></div>
+        
+      </div>
+    </section>
+      </main>
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <div>
+            <p class="footer-brand">AH Media</p>
+            <p class="footer-copy"></p>
+          </div>
+          <div class="footer-links">
+            
+          </div>
         </div>
-        <div class="line-container lower-left">
-            <div class="line line-3"></div>
-            <div class="line line-4"></div>
+      </footer>
+      <div class="chat-widget">
+      <div class="chat-container">
+        <button class="chat-close-button" type="button" aria-label="Close chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+        <div class="chat-messages"></div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" placeholder="Type your message..." />
+          <button class="chat-send-button" type="button" aria-label="Send message"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10 18 2l-5 16-3-6-6-2Z"/></svg></button>
         </div>
+      </div>
+      <button class="chat-reopen-button" type="button" aria-label="Open chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 3h16v10H7l-4 4V13H2V3Z"/></svg></button>
     </div>
-
-    <div class="email-capture">
-        <div class="email-box">
-
-            <div id="drop-zone" class="drop-zone">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p>Drag & Drop files here</p>
-                <p>or</p>
-                <label for="file-input" class="upload-button">Choose Files</label>
-                <input type="file" id="file-input" multiple hidden>
-            </div>
-            <div id="upload-status" class="upload-status"></div>
-
-        </div>
     </div>
-
-    <div class="chat-container">
-        <button class="close-button">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="chat-input-container">
-            <input type="text" id="chat-input" placeholder="Type your message..." class="chat-input">
-            <button id="send-button" class="send-button">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <button class="reopen-chat-button">
-        <i class="fas fa-comments"></i>
-    </button>
-
-    <script src="animation.js"></script>
-    <script src="chat.js"></script>
-
-</body>
-</html> 
+    
+    <script src="/scripts.js"></script>
+  </body>
+</html>
