@@ -1111,6 +1111,21 @@ body {
   fill: var(--color-accent);
 }
 
+/*
+ * When a chat widget is also present, stack back-to-top directly above the
+ * chat reopen button in the same bottom-right corner (overrides any
+ * site-configured data-position="left", since the two floating controls
+ * should never compete for opposite corners or collide when both exist).
+ * Offset math: chat-reopen-button is 50px tall, bottom: 20px -> its top
+ * edge sits at 70px; add a 12px gap for 82px. Right offset (25px) centers
+ * back-to-top-link's 40px box against the chat button's 50px box.
+ */
+body:has(.chat-widget) .back-to-top-link {
+  left: auto;
+  right: 25px;
+  bottom: 82px;
+}
+
 .chat-container {
   position: fixed;
   bottom: 20px;
