@@ -174,7 +174,15 @@ class PageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('path')
+            // Scoped to top-level pages: child pages are managed (and already
+            // drag-reorderable) via each parent's "Child pages" relation tab.
+            // Mixing both levels in one flat reorderable list would let a
+            // single drag reshuffle sort_order across unrelated parent
+            // groups, which doesn't match the per-level ordering the nav
+            // query and children() relation actually rely on.
+            ->modifyQueryUsing(fn ($query) => $query->whereNull('parent_id'))
+            ->reorderable('sort_order')
+            ->defaultSort('sort_order')
             ->columns([
                 TextColumn::make('title')
                     ->description(fn (Page $record): string => $record->url())
