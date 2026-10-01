@@ -1118,12 +1118,12 @@ body {
 }
 
 .back-to-top-link path {
-  fill: var(--color-text);
+  fill: var(--color-accent);
   transition: fill 180ms ease;
 }
 
 .back-to-top-link:hover path {
-  fill: var(--color-accent);
+  fill: var(--color-text);
 }
 
 /*

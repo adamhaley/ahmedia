@@ -61,7 +61,7 @@
       <x-chat-widget />
       <div class="back-to-top-link" data-threshold="200" data-position="left">
         <a href="#top" aria-label="Back to top">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 3L15 11H0L7.5 3Z"/></svg>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3L17.5 11H2.5L10 3Z"/></svg>
         </a>
       </div>
     </div>
