@@ -1,0 +1,15 @@
+# DirectAdmin (this box, version 1.711) only supports a custom docroot for
+# subdomains, not the account's primary domain -- so ahmedia.ai's docroot
+# stays public_html (this directory, the full app checkout) instead of
+# public_html/public like it would with a real docroot override. This file
+# transparently rewrites every request into public/ before Laravel (or
+# Apache's own static-file serving) ever sees the original path, so
+# app/, .env, vendor/, etc. are never directly reachable even though they
+# technically sit under the web-facing directory.
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
