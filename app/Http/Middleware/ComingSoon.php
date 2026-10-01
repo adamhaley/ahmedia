@@ -14,7 +14,7 @@ class ComingSoon
             return $next($request);
         }
 
-        if ($request->is('admin*', 'up', 'preview/*') || $request->cookie('coming_soon_bypass') === 'granted') {
+        if ($request->is('admin*', 'up', 'preview/*', 'auth/*') || $request->cookie('coming_soon_bypass') === 'granted') {
             return $next($request);
         }
 
