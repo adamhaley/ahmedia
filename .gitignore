@@ -31,7 +31,5 @@ Thumbs.db
 
 # Carried over from the pre-Laravel static site
 cgi-bin
-.htaccess
 *.wav
-*.sh
 n8n-inspect.json
