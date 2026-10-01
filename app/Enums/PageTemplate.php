@@ -15,6 +15,7 @@ enum PageTemplate: string implements HasLabel
     case Contact = 'contact';
     case ServicesIndex = 'services_index';
     case Service = 'service';
+    case CaseStudiesIndex = 'case_studies_index';
     case Standard = 'standard';
 
     // Templates the site structure depends on; only freely creatable/deletable

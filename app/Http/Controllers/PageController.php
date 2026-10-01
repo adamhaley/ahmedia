@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PageTemplate;
+use App\Models\CaseStudy;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -35,6 +36,9 @@ class PageController extends Controller
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),
+            ],
+            PageTemplate::CaseStudiesIndex => [
+                'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),
             ],
             default => [],
         };

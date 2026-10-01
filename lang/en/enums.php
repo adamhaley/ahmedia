@@ -9,6 +9,7 @@ return [
         'secondary' => 'Secondary',
     ],
     PageTemplate::class => [
+        'case_studies_index' => 'Case studies index',
         'contact' => 'Contact',
         'home' => 'Home',
         'service' => 'Service',
