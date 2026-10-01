@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ComingSoon;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Appended to the web *group* (not the global stack) so it runs
+        // after EncryptCookies/StartSession -- it needs the bypass cookie
+        // already decrypted, which isn't true yet at the global-stack stage.
+        $middleware->web(append: [ComingSoon::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
