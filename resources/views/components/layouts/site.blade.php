@@ -33,7 +33,15 @@
           <nav class="site-nav" aria-label="Primary">
             @foreach ($navPages as $navPage)
               @php($navHref = $navPage->nav_anchor ? ($page->template === \App\Enums\PageTemplate::Home ? '#'.$navPage->nav_anchor : '/#'.$navPage->nav_anchor) : $navPage->url())
+              @php($publishedChildren = $navPage->children->where('is_published', true))
+              @if ($publishedChildren->isNotEmpty())
+              <div class="nav-item has-dropdown">
+                <a href="{{ $navHref }}">{{ $navPage->title }} <svg class="nav-caret" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7H16L10 15Z"/></svg></a>
+                <ul class="nav-dropdown">@foreach ($publishedChildren as $child)<li><a href="{{ $child->url() }}">{{ $child->title }}</a></li>@endforeach</ul>
+              </div>
+              @else
               <a href="{{ $navHref }}">{{ $navPage->title }}</a>
+              @endif
             @endforeach
           </nav>
         </div>

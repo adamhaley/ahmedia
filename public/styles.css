@@ -91,6 +91,21 @@ a {
   position: relative;
 }
 
+.nav-item.has-dropdown > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.nav-caret {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.nav-caret path {
+  fill: currentColor;
+}
+
 .nav-dropdown {
   position: absolute;
   top: 100%;
