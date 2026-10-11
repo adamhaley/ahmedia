@@ -8,6 +8,7 @@ use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Pages\RelationManagers\ChildPagesRelationManager;
+use App\Filament\Resources\Pages\RelationManagers\PackagesRelationManager;
 use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
@@ -220,6 +221,7 @@ class PageResource extends Resource
     {
         return [
             ChildPagesRelationManager::class,
+            PackagesRelationManager::class,
         ];
     }
 
