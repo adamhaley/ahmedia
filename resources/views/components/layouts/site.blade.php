@@ -1,4 +1,4 @@
-@props(['page'])
+@props(['page' => null, 'title' => null, 'description' => null])
 @php
   $settings = \App\Models\SiteSetting::current();
   $navPages = \App\Models\Page::query()
@@ -8,7 +8,8 @@
       ->with('children')
       ->orderBy('sort_order')
       ->get();
-  $ogTitle = $page->meta_title ?: $page->title.' | AH Media.ai';
+  $ogTitle = $page?->meta_title ?: ($page?->title ?? $title).' | AH Media.ai';
+  $metaDescription = $page?->meta_description ?? $description;
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -17,8 +18,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ $ogTitle }}</title>
-    @if ($page->meta_description)
-    <meta name="description" content="{{ $page->meta_description }}" />
+    @if ($metaDescription)
+    <meta name="description" content="{{ $metaDescription }}" />
     @endif
     <link rel="stylesheet" href="/styles.css?v={{ filemtime(public_path('styles.css')) }}" />
     @if ($settings->accent_color)
@@ -32,7 +33,7 @@
           <a class="site-brand" href="/">AH Media</a>
           <nav class="site-nav" aria-label="Primary">
             @foreach ($navPages as $navPage)
-              @php($navHref = $navPage->nav_anchor ? ($page->template === \App\Enums\PageTemplate::Home ? '#'.$navPage->nav_anchor : '/#'.$navPage->nav_anchor) : $navPage->url())
+              @php($navHref = $navPage->nav_anchor ? ($page?->template === \App\Enums\PageTemplate::Home ? '#'.$navPage->nav_anchor : '/#'.$navPage->nav_anchor) : $navPage->url())
               @php($publishedChildren = $navPage->children->where('is_published', true))
               @if ($publishedChildren->isNotEmpty())
               <div class="nav-item has-dropdown">
