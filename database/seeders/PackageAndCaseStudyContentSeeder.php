@@ -118,17 +118,17 @@ class PackageAndCaseStudyContentSeeder extends Seeder
         ]);
 
         $this->caseStudy(1, $hackedSiteRecovery, [
-            'slug' => 'independent-magazine-hacked-site-recovery',
-            'title' => 'An independent magazine: hacked-site recovery',
-            'client_name' => 'Independent magazine and online store (anonymised)',
-            'external_link' => null,
+            'slug' => 'monk-magazine-hacked-site-recovery',
+            'title' => 'Monk Magazine: hacked-site recovery',
+            'client_name' => 'Monk Magazine',
+            'external_link' => 'https://monkmagazine.com',
             'tags' => ['Incident response', 'WordPress', 'Hardening'],
-            'summary' => 'Customers saw a red "deceptive site" warning. Behind it: six weeks of hidden admin access. We traced it, cleaned it and locked it down.',
-            'hero_image' => 'recovery-1-cover.jpg',
+            'summary' => 'Monk Magazine’s customers saw a red "deceptive site" warning. Behind it: six weeks of hidden admin access. We traced it, cleaned it and locked it down.',
+            'hero_image' => 'monk-1-cover.jpg',
             'narrative' => <<<'MD'
                 ## How it surfaced
 
-                A customer of an independent magazine's online store reported a red "Deceptive Website Warning" when visiting the site. We started investigating the same day. The domain itself hadn't been hijacked; the warning came from a fake "security check" popup injected into the site's theme and into six published posts.
+                Monk Magazine is an independent magazine that sells its print and digital issues through its own online store. A customer reported a red "Deceptive Website Warning" when visiting the site. We started investigating the same day. The domain itself hadn't been hijacked; the warning came from a fake "security check" popup injected into the site's theme and into six published posts.
 
                 ## What we found
 
@@ -153,9 +153,9 @@ class PackageAndCaseStudyContentSeeder extends Seeder
                 Our report also covered the decisions only the owners could make: rotating payment provider keys together on a short call, whether to notify customers, and adding a second owner to the payment accounts so the business no longer depends on one phone.
                 MD,
             'images' => [
-                ['recovery-2-findings.jpg', 'What one hacked site was hiding.'],
-                ['recovery-3-timeline.jpg', 'Six weeks undetected, then a same-day response and follow-up log review.'],
-                ['recovery-4-hardening.jpg', 'How the way in was closed, and kept closed.'],
+                ['monk-2-findings.jpg', 'What one hacked site was hiding.'],
+                ['monk-3-timeline.jpg', 'Six weeks undetected, then a same-day response and follow-up log review.'],
+                ['monk-4-hardening.jpg', 'How the way in was closed, and kept closed.'],
             ],
         ]);
     }
