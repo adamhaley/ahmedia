@@ -1360,3 +1360,95 @@ body:has(.chat-widget) .back-to-top-link {
     width: auto;
   }
 }
+
+/* Packages (service pages) */
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--gutter);
+  margin-top: 2.5rem;
+}
+
+.package-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  scroll-margin-top: 6rem;
+}
+
+.package-header h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.package-price {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: -0.03em;
+}
+
+.package-meta,
+.package-summary {
+  margin: 0.25rem 0 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.package-includes {
+  margin: 0;
+}
+
+.package-add-ons {
+  padding-top: 1.25rem;
+  border-top: var(--border-subtle);
+}
+
+.package-add-ons .eyebrow {
+  margin-bottom: 0.75rem;
+}
+
+.package-add-ons ul {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.package-add-ons li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.15rem 1rem;
+}
+
+.package-add-on-title {
+  font-weight: 700;
+}
+
+.package-add-on-price {
+  color: var(--color-accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.package-add-on-description {
+  grid-column: 1 / -1;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.package-actions {
+  margin-top: auto;
+}
+
+.package-sample {
+  align-self: flex-start;
+}
+

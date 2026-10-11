@@ -37,6 +37,9 @@ class PageController extends Controller
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),
             ],
+            PageTemplate::Service => [
+                'packages' => $page->packages()->where('is_published', true)->get(),
+            ],
             PageTemplate::CaseStudiesIndex => [
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),
             ],
