@@ -61,6 +61,12 @@ class Page extends Model
         return $this->hasMany(Page::class, 'parent_id')->orderBy('sort_order');
     }
 
+    /** @return HasMany<Package, $this> */
+    public function packages(): HasMany
+    {
+        return $this->hasMany(Package::class)->orderBy('sort_order');
+    }
+
     public function url(): string
     {
         return $this->path === '' ? '/' : '/'.$this->path.'/';
