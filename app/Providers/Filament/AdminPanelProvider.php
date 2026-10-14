@@ -36,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make('Site'),
+                NavigationGroup::make('Leads'),
                 NavigationGroup::make('Settings')->icon(Heroicon::OutlinedCog6Tooth)->collapsed(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
