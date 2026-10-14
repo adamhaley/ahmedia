@@ -1,7 +1,7 @@
 @props([
     'eyebrow' => 'Contact',
     'heading' => "Let's talk about what you're trying to build",
-    'copy' => "Send a few details and we'll get back to you, or use the chat in the corner for something quicker.",
+    'copy' => "Send a few details and we'll get back to you - or use the chat in the corner for something quicker.",
 ])
 <section class="section" id="contact">
   <div class="container">
