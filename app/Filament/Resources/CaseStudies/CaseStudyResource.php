@@ -12,6 +12,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -56,12 +57,18 @@ class CaseStudyResource extends Resource
                     ->required()
                     ->alphaDash()
                     ->unique(ignoreRecord: true)
-                    ->helperText('Not used by a public page yet -- reserved for a future case study detail page.'),
+                    ->helperText(fn (?string $state): string => 'Public URL: /case-studies/'.($state ?: 'slug').'/'),
                 TextInput::make('client_name'),
                 TextInput::make('external_link')->url(),
                 DatePicker::make('started_at'),
                 DatePicker::make('completed_at'),
                 TagsInput::make('tags'),
+                Select::make('package_id')
+                    ->label('Related package')
+                    ->relationship('package', 'title')
+                    ->preload()
+                    ->placeholder('None')
+                    ->helperText('Shown as "Want this for your site?" at the end of the case study.'),
                 Toggle::make('is_published')->default(true),
             ]),
 
@@ -73,8 +80,8 @@ class CaseStudyResource extends Resource
                     ->maxLength(500),
                 Textarea::make('narrative')
                     ->label('Narrative')
-                    ->helperText('Longer client-facing explanation of what was built and why. Not yet rendered anywhere public -- reserved for a future case study detail page.')
-                    ->rows(6),
+                    ->helperText('The full case study, shown on its detail page. Markdown supported: ## headings, **bold**, lists, links.')
+                    ->rows(16),
                 FileUpload::make('hero_image')
                     ->image()
                     ->imageEditor()

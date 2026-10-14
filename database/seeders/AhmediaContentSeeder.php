@@ -32,6 +32,8 @@ class AhmediaContentSeeder extends Seeder
                 'template' => PageTemplate::Home,
                 'is_published' => true,
                 'show_in_nav' => false,
+                'hero_heading' => 'AH Media',
+                'hero_subheading' => 'We design, build, and ship the AI systems businesses actually run on — from custom chat and RAG assistants to end-to-end automation with n8n.',
                 'section_eyebrow' => 'Approach',
                 'section_heading' => "Static where it's simple, AI where it earns its keep",
                 'body' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it — qualifying leads, answering questions, and automating the busywork between the tools you already use.',
@@ -40,8 +42,6 @@ class AhmediaContentSeeder extends Seeder
                     'Custom chat and RAG assistants trained on your own content',
                     'Static-first frontends that stay fast and cheap to run',
                 ],
-                'cta_eyebrow' => 'Case Studies',
-                'cta_heading' => 'Real work, coming soon',
             ]
         );
 
@@ -107,6 +107,15 @@ class AhmediaContentSeeder extends Seeder
                     '$2500 — up to 10-page dynamic site, database-backed CMS, custom design, chatbot + AI-assisted CMS content generation, up to 2 automations',
                     '$5000 — 10+ page fully dynamic site, custom design, product catalogue/e-commerce if needed, up to 3 automations',
                 ],
+            ],
+            [
+                'slug' => 'security-and-launch',
+                'title' => 'Security & Launch',
+                'card_excerpt' => 'Get a vibe-coded app safe to launch, or get a hacked site clean and locked down. Fixed price, fixed scope.',
+                'hero_subheading' => 'Before launch or after a breach: fixed-price reviews and recoveries that leave your site secure and your codebase healthy.',
+                'section_heading' => 'Two ways in',
+                'body' => "Whether you're about to put real users on an app you built fast, or cleaning up after someone got in, the work starts with seeing every side of the site. Then we fix what matters, and leave you a plain-English report.",
+                'bullets' => null,
             ],
             [
                 'slug' => 'voice-ai-receptionists',
@@ -194,18 +203,21 @@ class AhmediaContentSeeder extends Seeder
             ['parent_id' => null, 'slug' => 'case-studies'],
             [
                 'title' => 'Case Studies',
-                'template' => PageTemplate::Standard,
+                'template' => PageTemplate::CaseStudiesIndex,
                 'is_published' => true,
                 'show_in_nav' => true,
                 'nav_anchor' => 'case-studies',
                 'section_eyebrow' => 'Case Studies',
-                'hero_heading' => 'Real work, coming soon',
-                'hero_subheading' => "We're building out detailed case studies from current engagements. Check back soon — or get in touch to talk through a project directly.",
+                'hero_heading' => 'Real work, in detail',
+                'hero_subheading' => 'Recent engagements, start to finish: what we found, what we changed and why it mattered.',
+                'section_heading' => 'Case Studies',
                 'cta_eyebrow' => 'Ready When You Are',
                 'cta_heading' => "Let's talk about your project",
                 'cta_button_label' => 'Start a Project',
             ]
         );
+
+        $this->call(PackageAndCaseStudyContentSeeder::class);
 
         Page::query()->updateOrCreate(
             ['parent_id' => null, 'slug' => 'contact'],

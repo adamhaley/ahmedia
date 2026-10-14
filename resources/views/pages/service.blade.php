@@ -14,6 +14,10 @@
   />
   @endif
 
+  @if ($packages->isNotEmpty())
+  <x-package-grid :packages="$packages" />
+  @endif
+
   <x-cta-band
     :eyebrow="$page->cta_eyebrow"
     :heading="$page->cta_heading"

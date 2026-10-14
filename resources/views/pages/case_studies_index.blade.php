@@ -11,8 +11,8 @@
     :items="$caseStudies->map(fn ($caseStudy) => [
         'title' => $caseStudy->title,
         'copy' => $caseStudy->summary,
-        'href' => $caseStudy->external_link,
-        'linkLabel' => $caseStudy->external_link ? 'View project' : null,
+        'href' => $caseStudy->narrative ? $caseStudy->url() : $caseStudy->external_link,
+        'linkLabel' => $caseStudy->narrative ? 'Read the case study' : ($caseStudy->external_link ? 'View project' : null),
     ])->all()"
   />
 
