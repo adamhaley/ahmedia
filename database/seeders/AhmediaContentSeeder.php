@@ -18,6 +18,12 @@ class AhmediaContentSeeder extends Seeder
 {
     public function run(): void
     {
+        if (Page::query()->exists()) {
+            $this->command?->warn('Pages already exist; skipping content import so CMS edits are never overwritten.');
+
+            return;
+        }
+
         SiteSetting::current()->update([
             'contact_email' => null,
             'phone' => null,
@@ -216,8 +222,6 @@ class AhmediaContentSeeder extends Seeder
                 'cta_button_label' => 'Start a Project',
             ]
         );
-
-        $this->call(PackageAndCaseStudyContentSeeder::class);
 
         Page::query()->updateOrCreate(
             ['parent_id' => null, 'slug' => 'contact'],

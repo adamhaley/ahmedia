@@ -28,13 +28,16 @@ Adam edits content in the Filament admin at `/admin` (Google OAuth, allow-listed
 
 ## Content seeding (how content reaches production)
 
-`AhmediaContentSeeder` (idempotent `updateOrCreate`) seeds all pages; it calls
-`PackageAndCaseStudyContentSeeder`, which copies images and sample PDFs from
-`database/seeders/content/` to the public disk. Run `php artisan storage:link` once per
+`DatabaseSeeder` runs `AhmediaContentSeeder` (pages) then
+`PackageAndCaseStudyContentSeeder` (packages, case studies; copies images and sample PDFs from
+`database/seeders/content/` to the public disk). Each seeder **only runs against an empty
+table** (`Page::exists()` / `Package::exists() || CaseStudy::exists()`, the same gate as
+dreamworldcirque's `ContentSeeder`), so re-running `php artisan db:seed --force` is always safe and
+never overwrites CMS edits. Content changes after first launch are made in the admin, or by a
+targeted one-off update, never by re-seeding. Run `php artisan storage:link` once per
 environment. The source of truth for pricing and package copy is the second brain
 (`llm-wiki/wiki/projects/ahmedia/reference.md`); the gallery and PDF sources live in
-`consultations/upwork-gallery/`. **Re-running the seeder overwrites admin edits to seeded
-records**, so check with Adam before running it in production.
+`consultations/upwork-gallery/`.
 
 ## Frontend
 

@@ -19,6 +19,12 @@ class PackageAndCaseStudyContentSeeder extends Seeder
 {
     public function run(): void
     {
+        if (Package::query()->exists() || CaseStudy::query()->exists()) {
+            $this->command?->warn('Packages or case studies already exist; skipping so CMS edits are never overwritten.');
+
+            return;
+        }
+
         $websiteDesign = Page::query()->where('path', 'services/website-design')->firstOrFail();
         $securityAndLaunch = Page::query()->where('path', 'services/security-and-launch')->firstOrFail();
 
