@@ -1360,3 +1360,23 @@ body:has(.chat-widget) .back-to-top-link {
     width: auto;
   }
 }
+
+/* Contact form states */
+.contact-form-status {
+  padding: clamp(1.5rem, 3vw, 2rem);
+  font-size: 1.15rem;
+}
+
+.contact-form-error {
+  margin: 0.4rem 0 0;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+.contact-form-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

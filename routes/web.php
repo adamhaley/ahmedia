@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\StoreContactSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
@@ -18,6 +19,10 @@ Route::get('/preview/{token}', function (string $token) {
 
     return redirect('/')->withCookie(cookie('coming_soon_bypass', 'granted', 60 * 24 * 365));
 })->name('coming-soon.preview');
+
+Route::post('/contact', StoreContactSubmissionController::class)
+    ->middleware('throttle:5,1')
+    ->name('contact.store');
 
 Route::get('/', PageController::class)->name('page.home');
 Route::fallback(PageController::class)->name('page.show');

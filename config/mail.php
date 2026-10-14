@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Lead Notification Address
+    |--------------------------------------------------------------------------
+    |
+    | Where contact form submissions are emailed.
+    |
+    */
+
+    'lead_notification_address' => env('LEAD_NOTIFICATION_EMAIL', 'adamhaley@gmail.com'),
+
 ];
