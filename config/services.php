@@ -38,6 +38,10 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        // Socialite requires this key to exist. A leading-slash path is
+        // resolved against the current request's host, so the round trip
+        // stays on whichever domain it started on (ahmedia.ai or a dev host).
+        'redirect' => '/auth/google/callback',
     ],
 
 ];
