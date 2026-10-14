@@ -33,6 +33,9 @@ class PageController extends Controller
                     ->where('template', PageTemplate::ServicesIndex)
                     ->with(['children' => fn ($query) => $query->where('is_published', true)])
                     ->first(),
+                'caseStudiesPage' => Page::query()->where('template', PageTemplate::CaseStudiesIndex)->where('is_published', true)->first(),
+                'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->limit(3)->get(),
+                'contactPage' => Page::query()->where('template', PageTemplate::Contact)->first(),
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),

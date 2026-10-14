@@ -1,5 +1,5 @@
-@props(['eyebrow' => null, 'title', 'copy' => null, 'items' => [], 'actions' => []])
-<section class="section" id="services">
+@props(['id' => 'services', 'eyebrow' => null, 'title', 'copy' => null, 'items' => [], 'actions' => []])
+<section class="section" id="{{ $id }}">
   <div class="container">
     @if ($eyebrow)
     <p class="eyebrow">{{ $eyebrow }}</p>

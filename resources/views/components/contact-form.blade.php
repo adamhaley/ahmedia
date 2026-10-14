@@ -1,11 +1,18 @@
+@props([
+    'eyebrow' => 'Contact',
+    'heading' => "Let's talk about what you're trying to build",
+    'copy' => "Send a few details and we'll get back to you — or use the chat in the corner for something quicker.",
+])
 <section class="section" id="contact">
   <div class="container">
     <div class="section-heading">
       <div>
-        <p class="eyebrow">Contact</p>
-        <h2 class="section-title">Let's talk about what you're trying to build</h2>
+        <p class="eyebrow">{{ $eyebrow ?: 'Contact' }}</p>
+        <h2 class="section-title">{{ $heading }}</h2>
       </div>
-      <p class="section-copy">Send a few details and we'll get back to you — or use the chat in the corner for something quicker.</p>
+      @if ($copy)
+      <p class="section-copy">{{ $copy }}</p>
+      @endif
     </div>
     @if (session('contact_status'))
     <p class="surface-card contact-form-status" role="status">{{ session('contact_status') }}</p>

@@ -32,6 +32,8 @@ class AhmediaContentSeeder extends Seeder
                 'template' => PageTemplate::Home,
                 'is_published' => true,
                 'show_in_nav' => false,
+                'hero_heading' => 'AH Media',
+                'hero_subheading' => 'We design, build, and ship the AI systems businesses actually run on — from custom chat and RAG assistants to end-to-end automation with n8n.',
                 'section_eyebrow' => 'Approach',
                 'section_heading' => "Static where it's simple, AI where it earns its keep",
                 'body' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it — qualifying leads, answering questions, and automating the busywork between the tools you already use.',
@@ -40,8 +42,6 @@ class AhmediaContentSeeder extends Seeder
                     'Custom chat and RAG assistants trained on your own content',
                     'Static-first frontends that stay fast and cheap to run',
                 ],
-                'cta_eyebrow' => 'Case Studies',
-                'cta_heading' => 'Real work, in detail',
             ]
         );
 

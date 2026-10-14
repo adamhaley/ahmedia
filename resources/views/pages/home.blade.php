@@ -1,9 +1,9 @@
 <x-layouts.site :page="$page">
   <x-hero
     eyebrow="AI Systems & Automation"
-    title="AH Media"
+    :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
-    copy="We design, build, and ship the AI systems businesses actually run on — from custom chat and RAG assistants to end-to-end automation with n8n."
+    :copy="$page->hero_subheading"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
         ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],
@@ -35,15 +35,25 @@
   />
   @endif
 
-  <x-cta-band
+  @if ($caseStudiesPage && $caseStudies->isNotEmpty())
+  <x-feature-grid
     id="case-studies"
-    :eyebrow="$page->cta_eyebrow"
-    :heading="$page->cta_heading"
-    copy="We're building out detailed case studies from current engagements. Take a look, or check back soon."
-    buttonLabel="View Case Studies"
-    buttonHref="/case-studies/"
-    buttonVariant="secondary"
+    :eyebrow="$caseStudiesPage->section_eyebrow ?: 'Case Studies'"
+    :title="$caseStudiesPage->hero_heading ?: $caseStudiesPage->title"
+    :copy="$caseStudiesPage->hero_subheading"
+    :items="$caseStudies->map(fn ($caseStudy) => [
+        'title' => $caseStudy->title,
+        'copy' => $caseStudy->summary,
+        'href' => $caseStudy->narrative ? $caseStudy->url() : $caseStudy->external_link,
+        'linkLabel' => $caseStudy->narrative ? 'Read the case study' : ($caseStudy->external_link ? 'View project' : null),
+    ])->all()"
+    :actions="[['label' => 'View All Case Studies', 'href' => $caseStudiesPage->url(), 'variant' => 'secondary']]"
   />
+  @endif
 
-  <x-contact-form />
+  <x-contact-form
+    :eyebrow="$contactPage?->section_eyebrow"
+    :heading="$contactPage?->hero_heading ?: 'Let\'s talk about what you\'re trying to build'"
+    :copy="$contactPage?->hero_subheading"
+  />
 </x-layouts.site>

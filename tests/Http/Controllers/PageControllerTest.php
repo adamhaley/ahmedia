@@ -70,6 +70,57 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSee($caseStudy->url())->assertSee('Read the case study');
     }
 
+    #[Test]
+    public function it_shows_published_case_studies_on_the_homepage(): void
+    {
+        $home = $this->homePage();
+        Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true, 'hero_heading' => 'Real work, in detail']);
+        $caseStudy = CaseStudy::factory()->create(['title' => 'Monk Magazine', 'narrative' => 'The story.']);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('Real work, in detail')->assertSee('Monk Magazine')->assertSee($caseStudy->url());
+    }
+
+    #[Test]
+    public function it_hides_the_homepage_case_studies_section_when_none_are_published(): void
+    {
+        $home = $this->homePage();
+        Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);
+        CaseStudy::factory()->create(['is_published' => false]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertDontSee('id="case-studies"', false);
+    }
+
+    #[Test]
+    public function it_takes_the_homepage_contact_copy_from_the_contact_page(): void
+    {
+        $home = $this->homePage();
+        Page::query()->create(['title' => 'Contact', 'slug' => 'contact', 'template' => PageTemplate::Contact, 'is_published' => true, 'hero_heading' => 'Tell us what you need', 'hero_subheading' => 'We reply within a day.']);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('Tell us what you need')->assertSee('We reply within a day.');
+    }
+
+    #[Test]
+    public function it_takes_the_homepage_hero_from_the_home_page(): void
+    {
+        $home = $this->homePage(['hero_subheading' => 'Editable from the CMS.']);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('Editable from the CMS.');
+    }
+
+    /** @param array<string, mixed> $attributes */
+    private function homePage(array $attributes = []): Page
+    {
+        return Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true, ...$attributes]);
+    }
+
     /** @param array<string, mixed> $attributes */
     private function servicePage(array $attributes = []): Page
     {
