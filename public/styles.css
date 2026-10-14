@@ -1572,6 +1572,8 @@ body:has(.chat-widget) .back-to-top-link {
   .case-study-layout {
     grid-template-columns: 1fr;
   }
+}
+
 /* Contact form states */
 .contact-form-status {
   padding: clamp(1.5rem, 3vw, 2rem);
