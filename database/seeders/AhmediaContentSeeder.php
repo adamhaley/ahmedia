@@ -18,6 +18,12 @@ class AhmediaContentSeeder extends Seeder
 {
     public function run(): void
     {
+        if (Page::query()->exists()) {
+            $this->command?->warn('Pages already exist; skipping content import so CMS edits are never overwritten.');
+
+            return;
+        }
+
         SiteSetting::current()->update([
             'contact_email' => null,
             'phone' => null,
@@ -33,10 +39,10 @@ class AhmediaContentSeeder extends Seeder
                 'is_published' => true,
                 'show_in_nav' => false,
                 'hero_heading' => 'AH Media',
-                'hero_subheading' => 'We design, build, and ship the AI systems businesses actually run on — from custom chat and RAG assistants to end-to-end automation with n8n.',
+                'hero_subheading' => 'We design, build, and ship the AI systems businesses actually run on, from custom chat and RAG assistants to end-to-end automation with n8n.',
                 'section_eyebrow' => 'Approach',
                 'section_heading' => "Static where it's simple, AI where it earns its keep",
-                'body' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it — qualifying leads, answering questions, and automating the busywork between the tools you already use.',
+                'body' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it: qualifying leads, answering questions, and automating the busywork between the tools you already use.',
                 'bullets' => [
                     'n8n as the automation and integration layer between your existing tools',
                     'Custom chat and RAG assistants trained on your own content',
@@ -57,7 +63,7 @@ class AhmediaContentSeeder extends Seeder
                 'section_heading' => 'AI Consulting, Custom Programming, Website Design, Voice AI Receptionists',
                 'body' => 'Each engagement starts with a real bottleneck, not a technology mandate.',
                 'hero_heading' => 'What We Do',
-                'hero_subheading' => 'Four ways we help businesses run on AI — pick a starting point, or talk through where you actually are.',
+                'hero_subheading' => 'Four ways we help businesses run on AI. Pick a starting point, or talk through where you actually are.',
                 'cta_eyebrow' => 'Ready When You Are',
                 'cta_heading' => 'Let\'s talk about your project',
                 'cta_button_label' => 'Start a Project',
@@ -68,8 +74,8 @@ class AhmediaContentSeeder extends Seeder
             [
                 'slug' => 'ai-consulting',
                 'title' => 'AI Consulting',
-                'card_excerpt' => "Strategy, opportunity mapping, and a clear path to production — not just a slide deck. We help you decide what's worth building and what isn't.",
-                'hero_subheading' => 'Strategy, opportunity mapping, and a clear path to production — not just a slide deck.',
+                'card_excerpt' => "Strategy, opportunity mapping, and a clear path to production, not just a slide deck. We help you decide what's worth building and what isn't.",
+                'hero_subheading' => 'Strategy, opportunity mapping, and a clear path to production, not just a slide deck.',
                 'section_heading' => 'Pricing',
                 'body' => 'À la carte or on retainer, depending on how much ongoing work you need.',
                 'bullets' => [
@@ -87,7 +93,7 @@ class AhmediaContentSeeder extends Seeder
                 // Shares AI Consulting's pricing structure exactly, decided 2026-10-01 --
                 // left generic/unscoped for now per Adam ("we can leave it generic for
                 // now, $95/hr is fine"), not a placeholder.
-                'body' => 'Same structure as AI Consulting — à la carte or on retainer.',
+                'body' => 'Same structure as AI Consulting: à la carte or on retainer.',
                 'bullets' => [
                     '$95/hr à la carte',
                     'Starter retainer: $1000/mo for up to 10 hrs',
@@ -97,15 +103,15 @@ class AhmediaContentSeeder extends Seeder
             [
                 'slug' => 'website-design',
                 'title' => 'Website Design',
-                'card_excerpt' => 'Fast, content-driven sites paired with the same AI-assisted workflows we build for clients — built to launch quickly and evolve without a redesign.',
+                'card_excerpt' => 'Fast, content-driven sites paired with the same AI-assisted workflows we build for clients. Built to launch quickly and evolve without a redesign.',
                 'hero_subheading' => 'Fast, content-driven sites paired with the same AI-assisted workflows we build for clients.',
                 'section_heading' => 'Packages',
                 'body' => 'Four tiers, escalating from a static brochure site to a full dynamic build. All tiers include a $20/mo hosting/maintenance fee on top of the one-time build price.',
                 'bullets' => [
-                    '$500 — static one-page brochure site, SEO-optimized, contact-collection CTA, customized to your brand',
-                    '$1500 — multi-page static site + a basic chatbot trained on your company data + 1 automation',
-                    '$2500 — up to 10-page dynamic site, database-backed CMS, custom design, chatbot + AI-assisted CMS content generation, up to 2 automations',
-                    '$5000 — 10+ page fully dynamic site, custom design, product catalogue/e-commerce if needed, up to 3 automations',
+                    '$500: static one-page brochure site, SEO-optimized, contact-collection CTA, customized to your brand',
+                    '$1500: multi-page static site + a basic chatbot trained on your company data + 1 automation',
+                    '$2500: up to 10-page dynamic site, database-backed CMS, custom design, chatbot + AI-assisted CMS content generation, up to 2 automations',
+                    '$5000: 10+ page fully dynamic site, custom design, product catalogue/e-commerce if needed, up to 3 automations',
                 ],
             ],
             [
@@ -120,12 +126,12 @@ class AhmediaContentSeeder extends Seeder
             [
                 'slug' => 'voice-ai-receptionists',
                 'title' => 'Voice AI Receptionists',
-                'card_excerpt' => 'A real phone line, answered by an AI receptionist trained on your business — conversation flow, voice, and data, built around how you actually work.',
+                'card_excerpt' => 'A real phone line, answered by an AI receptionist trained on your business. Conversation flow, voice, and data, built around how you actually work.',
                 'hero_subheading' => 'A real phone line, answered by an AI receptionist trained on your business.',
                 'section_heading' => 'Pricing',
                 'body' => 'Sold separately from the website packages above.',
                 'bullets' => [
-                    '$950 setup — conversation flow design, voice character, training on your data',
+                    '$950 setup: conversation flow design, voice character, training on your data',
                     '$500/mo ongoing',
                 ],
             ],
@@ -164,7 +170,7 @@ class AhmediaContentSeeder extends Seeder
                 'hero_heading' => "Static where it's simple, AI where it earns its keep",
                 'hero_subheading' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it.',
                 'section_heading' => 'The stack behind it',
-                'body' => 'The AI does the actual work — qualifying leads, answering questions, and automating the busywork between the tools you already use — while the frontend stays fast, simple, and cheap to run.',
+                'body' => 'The AI does the actual work (qualifying leads, answering questions, and automating the busywork between the tools you already use) while the frontend stays fast, simple, and cheap to run.',
                 'bullets' => [
                     'n8n as the automation and integration layer between your existing tools',
                     'Custom chat and RAG assistants trained on your own content',
@@ -185,7 +191,7 @@ class AhmediaContentSeeder extends Seeder
                 'show_in_nav' => false,
                 'section_eyebrow' => 'About',
                 'hero_heading' => 'About AH Media',
-                'hero_subheading' => 'AH Media is built and run by Adam Haley, who designs and ships the AI systems behind this site — the chat widget, the automation, and the static-site toolkit it\'s built on.',
+                'hero_subheading' => 'AH Media is built and run by Adam Haley, who designs and ships the AI systems behind this site: the chat widget, the automation, and the static-site toolkit it\'s built on.',
                 'section_heading' => "Why It's Different",
                 'body' => 'No account managers, no hand-off between the person who scopes the project and the person who builds it.',
                 'bullets' => [
@@ -217,8 +223,6 @@ class AhmediaContentSeeder extends Seeder
             ]
         );
 
-        $this->call(PackageAndCaseStudyContentSeeder::class);
-
         Page::query()->updateOrCreate(
             ['parent_id' => null, 'slug' => 'contact'],
             [
@@ -229,7 +233,7 @@ class AhmediaContentSeeder extends Seeder
                 'nav_anchor' => 'contact',
                 'section_eyebrow' => 'Contact',
                 'hero_heading' => "Let's talk about what you're trying to build",
-                'hero_subheading' => "Send a few details and we'll get back to you — or use the chat in the corner for something quicker.",
+                'hero_subheading' => "Send a few details and we'll get back to you, or use the chat in the corner for something quicker.",
             ]
         );
     }
