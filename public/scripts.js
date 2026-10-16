@@ -445,3 +445,34 @@
   window.addEventListener('scroll', syncBackToTop, { passive: true });
   syncBackToTop();
 })();
+// On subpages with a CTA band, every "Start a Project" link (/#contact) opens
+// the contact form inline instead of navigating to the homepage form. Pages
+// without the panel (the homepage, which has its own form) are untouched.
+(function () {
+  const panel = document.getElementById('cta-contact-form');
+  if (!panel) return;
+
+  const scrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+
+  function openForm() {
+    panel.hidden = false;
+    document.querySelectorAll('[aria-controls="cta-contact-form"]').forEach(function (trigger) {
+      trigger.setAttribute('aria-expanded', 'true');
+    });
+    const firstField = panel.querySelector('input[name="name"]');
+    if (firstField) firstField.focus({ preventScroll: true });
+    panel.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
+  }
+
+  // Delegated so links added later (the chat widget's "Start a Project") work too.
+  document.addEventListener('click', function (event) {
+    const link = event.target.closest('a[href="/#contact"]');
+    if (!link) return;
+    event.preventDefault();
+    openForm();
+  });
+
+  // After a submission the page reloads with the panel already open; bring
+  // the thank-you message or the validation errors into view.
+  if (!panel.hidden) panel.scrollIntoView({ block: 'start' });
+})();
