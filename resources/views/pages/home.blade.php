@@ -53,7 +53,7 @@
 
   <x-contact-form
     :eyebrow="$contactPage?->section_eyebrow"
-    :heading="$contactPage?->hero_heading ?: 'Let\'s talk about what you\'re trying to build'"
+    :heading="$contactPage?->hero_heading ?: 'Let\'s talk about what you\'re building'"
     :copy="$contactPage?->hero_subheading"
   />
 </x-layouts.site>

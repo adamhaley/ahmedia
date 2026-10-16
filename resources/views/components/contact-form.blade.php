@@ -1,6 +1,6 @@
 @props([
     'eyebrow' => 'Contact',
-    'heading' => "Let's talk about what you're trying to build",
+    'heading' => "Let's talk about what you're building",
     'copy' => "Send a few details and we'll get back to you - or use the chat in the corner for something quicker.",
 ])
 <section class="section" id="contact">
@@ -31,7 +31,7 @@
       </div>
       <div class="contact-form-row">
         <label for="contact-form-message">Message</label>
-        <textarea id="contact-form-message" name="message" rows="5" placeholder="What are you trying to build?" required maxlength="5000">{{ old('message') }}</textarea>
+        <textarea id="contact-form-message" name="message" rows="5" placeholder="What are you building?" required maxlength="5000">{{ old('message') }}</textarea>
         @error('message')<p class="contact-form-error">{{ $message }}</p>@enderror
       </div>
       {{-- Honeypot: off-screen and skipped by keyboard and screen readers, so only bots fill it in. --}}
