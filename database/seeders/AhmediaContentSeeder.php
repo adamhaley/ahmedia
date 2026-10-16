@@ -232,7 +232,7 @@ class AhmediaContentSeeder extends Seeder
                 'show_in_nav' => true,
                 'nav_anchor' => 'contact',
                 'section_eyebrow' => 'Contact',
-                'hero_heading' => "Let's talk about what you're trying to build",
+                'hero_heading' => "Let's talk about what you're building",
                 'hero_subheading' => "Send a few details and we'll get back to you - or use the chat in the corner for something quicker.",
             ]
         );
