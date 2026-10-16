@@ -24,13 +24,23 @@ Adam edits content in the Filament admin at `/admin` (Google OAuth, allow-listed
   `/case-studies/{slug}/` (`CaseStudyController`, `resources/views/case-studies/show.blade.php`);
   `narrative` is Markdown, rendered with HTML escaped. Optional `package_id` adds a "Want this for
   your site?" CTA. `source_project_id` is reserved for a future adamhaley.com import (not built).
+- **`FaqItem`**: FAQs shown on `/faq/` (`PageTemplate::Faq`) and answered by the chatbot. Answers are
+  HTML (Filament RichEditor); `keywords` (comma-separated) are alternate visitor phrasings that weigh
+  heavily in matching.
+- **Chatbot**: the widget (`public/scripts.js`, `components/chat-widget`) posts to `POST /chat/ask`,
+  answered by `App\Services\Faq\FaqMatchingService` (TF-IDF + cosine, no LLM; ported from
+  dreamworldcirque, pattern note `llm-wiki/wiki/patterns/llm-free-faq-chatbot.md`). Every question is
+  logged as a `ChatQuery`; unanswered ones can be sent via `POST /chat/lead`, which files a
+  `ContactSubmission` with `source` = chat. Retune with `tests/Services/Faq/FaqCorpusMatchingTest.php`.
+- **`ContactSubmission`**: leads from the contact form and the chatbot (`source`), in Leads → Contact form.
 - **`SiteSetting`**: singleton for contact details and the accent colour.
 
 ## Content seeding (how content reaches production)
 
-`DatabaseSeeder` runs `AhmediaContentSeeder` (pages) then
-`PackageAndCaseStudyContentSeeder` (packages, case studies; copies images and sample PDFs from
-`database/seeders/content/` to the public disk). Each seeder **only runs against an empty
+`DatabaseSeeder` runs `AhmediaContentSeeder` (pages), `PackageAndCaseStudyContentSeeder`
+(packages, case studies; copies images and sample PDFs from
+`database/seeders/content/` to the public disk) and `FaqContentSeeder` (FAQs from
+`database/seeders/data/faqs.php` plus the `/faq/` page). Each seeder **only runs against an empty
 table** (`Page::exists()` / `Package::exists() || CaseStudy::exists()`, the same gate as
 dreamworldcirque's `ContentSeeder`), so re-running `php artisan db:seed --force` is always safe and
 never overwrites CMS edits. Content changes after first launch are made in the admin, or by a
@@ -43,9 +53,7 @@ environment. The source of truth for pricing and package copy is the second brai
 
 Plain Blade components in `resources/views/components/` and a static, hand-maintained
 `public/styles.css` (ported from Codette; no Vite build for the public site). The chat widget
-(`public/scripts.js`) still posts to the legacy PHP proxy `/api/chat.php`, which forwards to n8n
-using `N8N_WEBHOOK_KEY` / `N8N_WEBHOOK_HEADER_NAME` (optional overrides `N8N_CHAT_WEBHOOK_URL`,
-`N8N_UPLOAD_WEBHOOK_URL`).
+is the FAQ chatbot described above (the old n8n `/api/chat.php` proxy is gone).
 
 ## Testing
 
