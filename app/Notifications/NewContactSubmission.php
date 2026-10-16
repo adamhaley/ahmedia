@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enums\ContactSubmissionSource;
 use App\Filament\Resources\ContactSubmissions\ContactSubmissionResource;
 use App\Models\ContactSubmission;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -22,7 +23,7 @@ class NewContactSubmission extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New AH Media enquiry from '.$this->submission->name)
+            ->subject(($this->submission->source === ContactSubmissionSource::Chat ? 'New AH Media chat question from ' : 'New AH Media enquiry from ').$this->submission->name)
             ->replyTo($this->submission->email, $this->submission->name)
             ->greeting('New contact form submission')
             ->line('Name: '.$this->submission->name)
