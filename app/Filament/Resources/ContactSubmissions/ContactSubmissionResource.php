@@ -43,6 +43,7 @@ class ContactSubmissionResource extends Resource
             TextEntry::make('email')->copyable(),
             TextEntry::make('created_at')->label('Received')->dateTime(),
             TextEntry::make('submitted_from')->label('Page')->placeholder('—'),
+            TextEntry::make('source')->badge(),
             TextEntry::make('message')->columnSpanFull()->prose(),
         ]);
     }
@@ -59,6 +60,7 @@ class ContactSubmissionResource extends Resource
                     ->falseIcon(Heroicon::OutlinedEnvelope)
                     ->falseColor('primary'),
                 TextColumn::make('name')->searchable()->weight('bold'),
+                TextColumn::make('source')->badge(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('message')->limit(80),
                 TextColumn::make('created_at')->label('Received')->since()->sortable(),

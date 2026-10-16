@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ContactSubmissionSource;
 use Database\Factories\ContactSubmissionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['name', 'email', 'message', 'submitted_from', 'ip_address', 'read_at'])]
+#[Fillable(['name', 'email', 'message', 'source', 'submitted_from', 'ip_address', 'read_at'])]
 class ContactSubmission extends Model
 {
     /** @use HasFactory<ContactSubmissionFactory> */
@@ -19,6 +20,7 @@ class ContactSubmission extends Model
     protected function casts(): array
     {
         return [
+            'source' => ContactSubmissionSource::class,
             'read_at' => 'datetime',
         ];
     }

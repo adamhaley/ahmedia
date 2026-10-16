@@ -2,11 +2,14 @@
 
 namespace Tests\Database\Seeders;
 
+use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
+use App\Models\FaqItem;
 use App\Models\Package;
 use App\Models\Page;
 use Database\Seeders\AhmediaContentSeeder;
 use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\FaqContentSeeder;
 use Database\Seeders\PackageAndCaseStudyContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +20,7 @@ use Tests\TestCase;
 #[CoversClass(DatabaseSeeder::class)]
 #[CoversClass(AhmediaContentSeeder::class)]
 #[CoversClass(PackageAndCaseStudyContentSeeder::class)]
+#[CoversClass(FaqContentSeeder::class)]
 class DatabaseSeederTest extends TestCase
 {
     use RefreshDatabase;
@@ -36,6 +40,38 @@ class DatabaseSeederTest extends TestCase
         $this->assertTrue(Page::query()->where('path', 'services/security-and-launch')->exists());
         $this->assertSame(3, Package::query()->count());
         $this->assertSame(2, CaseStudy::query()->count());
+    }
+
+    #[Test]
+    public function it_seeds_the_faqs_and_the_faq_page(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(16, FaqItem::query()->count());
+        $this->assertSame(PageTemplate::Faq, Page::query()->where('path', 'faq')->value('template'));
+    }
+
+    #[Test]
+    public function it_adds_faqs_to_a_site_that_already_has_pages(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        FaqItem::query()->delete();
+        Page::query()->where('path', 'faq')->delete();
+
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertTrue(Page::query()->where('path', 'faq')->exists());
+    }
+
+    #[Test]
+    public function it_never_overwrites_edited_faqs(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+        FaqItem::query()->orderBy('id')->first()->update(['answer' => '<p>Edited in the CMS</p>']);
+
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame('<p>Edited in the CMS</p>', FaqItem::query()->orderBy('id')->value('answer'));
     }
 
     #[Test]
@@ -78,7 +114,8 @@ class DatabaseSeederTest extends TestCase
 
         $content = Page::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .Package::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
-            .CaseStudy::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
+            .CaseStudy::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
+            .FaqItem::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
 
         $this->assertStringNotContainsString('—', $content);
     }
