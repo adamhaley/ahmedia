@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
+use App\Models\FaqItem;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -42,6 +43,9 @@ class PageController extends Controller
             ],
             PageTemplate::Service => [
                 'packages' => $page->packages()->where('is_published', true)->get(),
+            ],
+            PageTemplate::Faq => [
+                'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),
             ],
             PageTemplate::CaseStudiesIndex => [
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),

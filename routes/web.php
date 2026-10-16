@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CaseStudyController;
+use App\Http\Controllers\Chat\AskChatQuestionController;
+use App\Http\Controllers\Chat\StoreChatLeadController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\StoreContactSubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,14 @@ Route::get('/preview/{token}', function (string $token) {
 })->name('coming-soon.preview');
 
 Route::get('/case-studies/{slug}', CaseStudyController::class)->name('case-studies.show');
+
+Route::post('/chat/ask', AskChatQuestionController::class)
+    ->middleware('throttle:20,1')
+    ->name('chat.ask');
+
+Route::post('/chat/lead', StoreChatLeadController::class)
+    ->middleware('throttle:5,1')
+    ->name('chat.lead');
 
 Route::post('/contact', StoreContactSubmissionController::class)
     ->middleware('throttle:5,1')
