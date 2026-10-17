@@ -7,10 +7,12 @@ use App\Models\CaseStudy;
 use App\Models\FaqItem;
 use App\Models\Package;
 use App\Models\Page;
+use App\Models\Testimonial;
 use Database\Seeders\AhmediaContentSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\FaqContentSeeder;
 use Database\Seeders\PackageAndCaseStudyContentSeeder;
+use Database\Seeders\TestimonialContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -21,6 +23,7 @@ use Tests\TestCase;
 #[CoversClass(AhmediaContentSeeder::class)]
 #[CoversClass(PackageAndCaseStudyContentSeeder::class)]
 #[CoversClass(FaqContentSeeder::class)]
+#[CoversClass(TestimonialContentSeeder::class)]
 class DatabaseSeederTest extends TestCase
 {
     use RefreshDatabase;
@@ -75,6 +78,14 @@ class DatabaseSeederTest extends TestCase
     }
 
     #[Test]
+    public function it_seeds_the_testimonials(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame(7, Testimonial::query()->count());
+    }
+
+    #[Test]
     public function it_never_overwrites_edited_pages(): void
     {
         $this->seed(DatabaseSeeder::class);
@@ -115,7 +126,8 @@ class DatabaseSeederTest extends TestCase
         $content = Page::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .Package::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .CaseStudy::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
-            .FaqItem::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
+            .FaqItem::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
+            .Testimonial::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
 
         $this->assertStringNotContainsString('—', $content);
     }

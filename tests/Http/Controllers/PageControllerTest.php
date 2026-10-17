@@ -7,6 +7,7 @@ use App\Http\Controllers\PageController;
 use App\Models\CaseStudy;
 use App\Models\Package;
 use App\Models\Page;
+use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -113,6 +114,39 @@ class PageControllerTest extends TestCase
         $response = $this->get($home->url());
 
         $response->assertOk()->assertSee('Editable from the CMS.');
+    }
+
+    #[Test]
+    public function it_shows_active_testimonials_with_their_star_rating_on_the_homepage(): void
+    {
+        $home = $this->homePage();
+        Testimonial::factory()->create(['body' => 'Lightning-fast and skilled.', 'rating' => 4]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('Lightning-fast and skilled.')->assertSee('Rated 4 out of 5');
+    }
+
+    #[Test]
+    public function it_hides_inactive_testimonials(): void
+    {
+        $home = $this->homePage();
+        Testimonial::factory()->inactive()->create(['body' => 'Switched off.']);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertDontSee('Switched off.')->assertDontSee('id="testimonials"', false);
+    }
+
+    #[Test]
+    public function it_leaves_out_the_stars_when_a_testimonial_has_no_rating(): void
+    {
+        $home = $this->homePage();
+        Testimonial::factory()->create(['body' => 'An endorsement.', 'rating' => null]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('An endorsement.')->assertDontSee('testimonial-stars', false);
     }
 
     /** @param array<string, mixed> $attributes */

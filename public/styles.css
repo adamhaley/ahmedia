@@ -1820,3 +1820,60 @@ a.chat-option {
 .cta-contact-form > .section {
   padding-bottom: 0;
 }
+
+/* Testimonials (homepage) */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--gutter);
+  margin-top: 2.5rem;
+  align-items: start;
+}
+
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 2rem);
+}
+
+.testimonial-stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.testimonial-star {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.testimonial-star.is-filled {
+  fill: var(--color-accent);
+}
+
+.testimonial-quote {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.testimonial-attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: auto;
+}
+
+.testimonial-name {
+  font-weight: 700;
+}
+
+.testimonial-project {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
