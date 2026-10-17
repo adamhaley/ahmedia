@@ -31,7 +31,7 @@
     :heading="$page->section_heading"
     :body="$page->body"
     :bullets="$page->bullets"
-    :actions="[['label' => 'More on Our Approach', 'href' => '/approach/', 'variant' => 'secondary']]"
+    :actions="[['label' => 'More on Our Approach', 'href' => '/approach', 'variant' => 'secondary']]"
   />
   @endif
 

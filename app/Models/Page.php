@@ -69,7 +69,7 @@ class Page extends Model
 
     public function url(): string
     {
-        return $this->path === '' ? '/' : '/'.$this->path.'/';
+        return $this->path === '' ? '/' : '/'.$this->path;
     }
 
     /** @return list<int> */
