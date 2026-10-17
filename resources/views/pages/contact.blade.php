@@ -7,5 +7,5 @@
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"
   />
-  <x-contact-form eyebrow="Send a message" heading="Tell us about your project" :copy="null" />
+  <x-contact-form eyebrow="Send a message" heading="Tell us about your project" copy="" />
 </x-layouts.site>
