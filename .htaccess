@@ -11,12 +11,6 @@ Options -Indexes -MultiViews
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Send stray /public/... URLs (old redirects, bookmarks) to the clean URL.
-    # THE_REQUEST is the visitor's original request line, so this never
-    # matches the internal rewrite below.
-    RewriteCond %{THE_REQUEST} ^[A-Z]+\s/public/(\S*)\s [NC]
-    RewriteRule ^ /%1 [NE,L,R=301]
-
     # Strip trailing slashes here rather than leaving it to Laravel's rule in
     # public/.htaccess: by then the path has been rewritten to /public/...,
     # so that rule would redirect visitors to /public/approach.

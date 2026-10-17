@@ -13,6 +13,14 @@
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
+    # Production serves the app from the account root, with a root .htaccess
+    # rewriting into public/. Apache only applies the innermost .htaccess's
+    # rewrite rules, so a visitor asking for /public/... directly lands here
+    # and never sees the root rules: send them to the clean URL. THE_REQUEST
+    # is the original request line, so the internal rewrite never matches.
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s/public/(\S*)\s [NC]
+    RewriteRule ^ /%1 [NE,L,R=301]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
