@@ -51,6 +51,10 @@
   />
   @endif
 
+  @if ($testimonials->isNotEmpty())
+  <x-testimonials :testimonials="$testimonials" />
+  @endif
+
   <x-contact-form
     :eyebrow="$contactPage?->section_eyebrow"
     :heading="$contactPage?->hero_heading ?: 'Let\'s talk about what you\'re building'"
