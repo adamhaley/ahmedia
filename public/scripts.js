@@ -224,7 +224,7 @@
     cta.className = 'chat-options chat-cta-row';
 
     const faqLink = document.createElement('a');
-    faqLink.href = '/faq/';
+    faqLink.href = '/faq';
     faqLink.className = 'chat-option';
     faqLink.textContent = 'View the FAQs';
     cta.appendChild(faqLink);

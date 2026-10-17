@@ -57,7 +57,7 @@ class CaseStudyResource extends Resource
                     ->required()
                     ->alphaDash()
                     ->unique(ignoreRecord: true)
-                    ->helperText(fn (?string $state): string => 'Public URL: /case-studies/'.($state ?: 'slug').'/'),
+                    ->helperText(fn (?string $state): string => 'Public URL: /case-studies/'.($state ?: 'slug')),
                 TextInput::make('client_name'),
                 TextInput::make('external_link')->url(),
                 DatePicker::make('started_at'),

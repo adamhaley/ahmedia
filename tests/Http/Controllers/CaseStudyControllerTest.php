@@ -59,7 +59,7 @@ class CaseStudyControllerTest extends TestCase
 
         $response = $this->get($caseStudy->url());
 
-        $response->assertOk()->assertSee('Brand Audit')->assertSee('/website-design/#brand-audit');
+        $response->assertOk()->assertSee('Brand Audit')->assertSee('/website-design#brand-audit');
     }
 
     #[Test]

@@ -43,7 +43,7 @@ class CaseStudy extends Model
 
     public function url(): string
     {
-        return '/case-studies/'.$this->slug.'/';
+        return '/case-studies/'.$this->slug;
     }
 
     /** @return HasMany<CaseStudyImage, $this> */
