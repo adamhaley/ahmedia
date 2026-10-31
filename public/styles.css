@@ -336,6 +336,101 @@ body {
   justify-content: flex-end;
 }
 
+/*
+ * Doppler rings (components/doppler-rings): each ring is born at the source
+ * behind the title, then grows and drifts left along one horizon at a fixed
+ * ratio (--mach), so its offset stays proportional to its radius. Per-ring
+ * --phase and --size come from the component markup. Tune values with
+ * resources/prototypes/doppler-rings.html.
+ */
+.hero-has-rings {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-has-rings .hero-copy {
+  position: relative;
+}
+
+/* Full-hero layer, so the rings fade out at the edges instead of being cut off */
+.hero-rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 75%, transparent);
+}
+
+/* Matches the content container, so the source sits behind the right-aligned title */
+.hero-rings-frame {
+  position: relative;
+  height: 100%;
+}
+
+.doppler-rings {
+  --period: 39s;
+  --mach: 2.8;
+  --reach: 300;
+  --source-x: 880px;
+  --source-y: 300px;
+  --direction: -1;
+  --stroke: 2;
+  --glow: 12;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  /* On the layer, not each ring: a filter inside a scaled ring scales with it */
+  filter:
+    drop-shadow(0 0 calc(var(--glow) * 0.4px) var(--glow-color))
+    drop-shadow(0 0 calc(var(--glow) * 1px) color-mix(in srgb, var(--glow-color) 60%, transparent));
+}
+
+.doppler-rings circle {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: var(--stroke);
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  transform-origin: 0 0;
+  opacity: 0;
+  animation: doppler-propagate var(--period) linear infinite;
+  animation-delay: calc(var(--period) * (var(--i) + var(--phase)) / var(--rings) * -1);
+}
+
+@keyframes doppler-propagate {
+  from {
+    transform: translate(var(--source-x), var(--source-y)) scale(0.001);
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 0.9;
+  }
+
+  to {
+    transform:
+      translate(calc(var(--source-x) + var(--reach) * var(--mach) * var(--direction) * 1px), var(--source-y))
+      scale(calc(var(--reach) * (1 + var(--size))));
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: the staggered delays freeze into a still Doppler diagram */
+@media (prefers-reduced-motion: reduce) {
+  .doppler-rings circle {
+    animation-play-state: paused;
+  }
+}
+
+/* On narrow screens the copy spans the width, so keep the rings behind it quieter */
+@media (max-width: 960px) {
+  .doppler-rings {
+    opacity: 0.45;
+  }
+}
+
 .text-accent {
   color: var(--color-accent);
 }

@@ -1,5 +1,12 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => []])
-<section class="section hero-section">
+@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false])
+<section @class(['section', 'hero-section', 'hero-has-rings' => $rings])>
+  @if ($rings)
+  <div class="hero-rings">
+    <div class="container hero-rings-frame">
+      <x-doppler-rings />
+    </div>
+  </div>
+  @endif
   <div class="container hero-grid hero-grid-solo hero-align-right">
     <div class="hero-copy">
       @if ($eyebrow)

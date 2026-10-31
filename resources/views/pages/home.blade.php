@@ -4,6 +4,7 @@
     :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
     :copy="$page->hero_subheading"
+    :rings="true"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
         ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],
