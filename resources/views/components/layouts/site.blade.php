@@ -30,7 +30,15 @@
     <div class="site-shell">
       <header class="site-header">
         <div class="container header-inner">
-          <a class="site-brand" href="/">AH Media</a>
+          <a class="site-brand" href="/">
+            {{-- The Doppler rings, frozen small as the logo mark --}}
+            <svg class="doppler-rings is-frozen brand-mark" viewBox="0 0 50 60" aria-hidden="true" style="--rings: 4">
+              @for ($i = 0; $i < 4; $i++)
+              <circle r="1" style="--i: {{ $i }}; --phase: 0; --size: 0"/>
+              @endfor
+            </svg>
+            AH Media
+          </a>
           <nav class="site-nav" aria-label="Primary">
             @foreach ($navPages as $navPage)
               @php($navHref = $navPage->nav_anchor ? ($page?->template === \App\Enums\PageTemplate::Home ? '#'.$navPage->nav_anchor : '/#'.$navPage->nav_anchor) : $navPage->url())

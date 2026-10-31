@@ -404,6 +404,28 @@ body {
   animation-play-state: paused;
 }
 
+/* Header logo mark: four nested rings frozen mid-cycle, travelling right */
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand-mark.doppler-rings {
+  --period: 4s;
+  --mach: 0.8;
+  --reach: 26;
+  --source-x: 12px;
+  --source-y: 30px;
+  --direction: 1;
+  --stroke: 1.25;
+  --glow: 3;
+  position: static;
+  flex: none;
+  width: 1.35rem;
+  height: 1.6rem;
+}
+
 /*
  * Scroll-scrubbed rings (pinned hero): scripts.js sets each ring's progress
  * (--q, 0 to 1) and opacity (--o) from the scroll position, using the same
