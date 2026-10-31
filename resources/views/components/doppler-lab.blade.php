@@ -42,6 +42,22 @@
         <label class="doppler-lab-check"><input type="checkbox" name="frozen"> Freeze</label>
         <label class="doppler-lab-check"><input type="checkbox" name="travelLeft" checked> Travel left</label>
       </fieldset>
+
+      <fieldset>
+        <legend>Motion</legend>
+        <label class="doppler-lab-check"><input type="radio" name="motion" value="auto" checked> Auto (timed loop)</label>
+        <label class="doppler-lab-check"><input type="radio" name="motion" value="scroll"> Scroll (pinned)</label>
+        <div class="doppler-lab-scroll" data-scroll-only hidden>
+          <label>Scroll preview <output data-for="preview"></output>
+            <input type="range" name="preview" min="0" max="1" step="0.005" value="0"></label>
+          <label>Scroll start <output data-for="scrollStart"></output>
+            <input type="range" name="scrollStart" min="0" max="3" step="0.05" value="0"></label>
+          <label>Scroll end <output data-for="scrollEnd"></output>
+            <input type="range" name="scrollEnd" min="0" max="3" step="0.05" value="1"></label>
+          <label>Pin length (% of screen) <output data-for="pinLength"></output>
+            <input type="range" name="pinLength" min="120" max="600" step="10" value="220"></label>
+        </div>
+      </fieldset>
     </div>
 
     <div class="button-row doppler-lab-actions">

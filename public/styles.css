@@ -485,7 +485,7 @@ body {
 
 .doppler-lab-controls {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   gap: 1.5rem 2rem;
   margin-top: 2rem;
 }
@@ -520,9 +520,12 @@ body {
   font-weight: 700;
 }
 
+.doppler-lab-controls input {
+  accent-color: var(--color-accent);
+}
+
 .doppler-lab-controls input[type="range"] {
   width: 100%;
-  accent-color: var(--color-accent);
 }
 
 .doppler-lab-controls .doppler-lab-check {
@@ -531,14 +534,17 @@ body {
   gap: 0.5rem;
 }
 
-.doppler-lab-actions {
-  margin-top: 2rem;
+.doppler-lab-scroll {
+  display: grid;
+  gap: 1rem;
 }
 
-@media (max-width: 760px) {
-  .doppler-lab-controls {
-    grid-template-columns: 1fr;
-  }
+.doppler-lab-scroll[hidden] {
+  display: none;
+}
+
+.doppler-lab-actions {
+  margin-top: 2rem;
 }
 
 .text-accent {
