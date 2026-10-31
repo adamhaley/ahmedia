@@ -476,3 +476,180 @@
   // the thank-you message or the validation errors into view.
   if (!panel.hidden) panel.scrollIntoView({ block: 'start' });
 })();
+
+// Doppler rings: the lab on the logo page, and the pinned homepage hero.
+// Both share scrubRings(), so scroll previews in the lab match the site.
+(function () {
+  const fadeInEnd = 0.06; // matches the 6% keyframe in doppler-propagate
+  const peakOpacity = 0.9;
+
+  // Places each ring at a point in its cycle, using the same maths as the
+  // doppler-propagate keyframes. progress 0 is the logo arrangement; a whole
+  // cycle later (1, 2, ...) is the same arrangement again.
+  function scrubRings(circles, phases, progress) {
+    circles.forEach(function (circle, index) {
+      const ring = (((progress + (index + phases[index]) / circles.length) % 1) + 1) % 1;
+      const opacity = ring < fadeInEnd
+        ? peakOpacity * ring / fadeInEnd
+        : peakOpacity * (1 - ring) / (1 - fadeInEnd);
+      circle.style.setProperty('--q', ring.toFixed(4));
+      circle.style.setProperty('--o', opacity.toFixed(3));
+    });
+  }
+
+  // Lab: sliders rebuild the rings live. Per-ring offsets come from a seeded
+  // random, so a seed always gives the same arrangement; seed 7 reproduces the
+  // values in components/doppler-rings. Standalone: nothing here is saved.
+  (function () {
+    const lab = document.querySelector('[data-doppler-lab]');
+    if (!lab) return;
+
+    const svg = lab.querySelector('.doppler-rings');
+    const svgNamespace = 'http://www.w3.org/2000/svg';
+    const ranges = lab.querySelectorAll('input[type="range"]');
+    const toggles = lab.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+    const scrollOnly = lab.querySelectorAll('[data-scroll-only]');
+    const value = function (name) { return Number(lab.querySelector('[name="' + name + '"]').value); };
+    const checked = function (name) { return lab.querySelector('[name="' + name + '"]').checked; };
+
+    // mulberry32
+    function seededRandom(seed) {
+      return function () {
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    function settings() {
+      const random = seededRandom(value('seed'));
+      // A separate stream, so tempo jitter never changes a seed's sizes and spacing
+      const tempoRandom = seededRandom(value('seed') * 7919 + 1);
+      const perRing = [];
+      for (let i = 0; i < value('rings'); i++) {
+        const phase = Number(((random() - 0.5) * value('spacing')).toFixed(3));
+        const size = Number(((random() - 0.5) * 2 * value('size')).toFixed(3));
+        random(); // a retired off-axis value; still drawn so seeds keep their arrangement
+        const tempo = Number((1 + (tempoRandom() - 0.5) * 2 * value('tempo')).toFixed(3));
+        perRing.push({ phase: phase, size: size, tempo: tempo });
+      }
+
+      return {
+        mach: value('mach'), rings: value('rings'), period: value('period'), reach: value('reach'),
+        spacing: value('spacing'), size: value('size'), seed: value('seed'), tempo: value('tempo'),
+        stroke: value('stroke'), glow: value('glow'),
+        frozen: checked('frozen'), travelLeft: checked('travelLeft'),
+        motion: lab.querySelector('[name="motion"]:checked').value,
+        scrollStart: value('scrollStart'), scrollEnd: value('scrollEnd'), pinLength: value('pinLength'),
+        perRing: perRing,
+      };
+    }
+
+    function render() {
+      const current = settings();
+      const style = svg.style;
+      style.setProperty('--mach', current.mach);
+      style.setProperty('--rings', current.rings);
+      style.setProperty('--period', current.period + 's');
+      style.setProperty('--reach', current.reach);
+      style.setProperty('--stroke', current.stroke);
+      style.setProperty('--glow', current.glow);
+      style.setProperty('--direction', current.travelLeft ? -1 : 1);
+      style.setProperty('--source-x', current.travelLeft ? '880px' : '120px');
+      svg.classList.toggle('is-frozen', current.frozen);
+      ranges.forEach(function (input) {
+        lab.querySelector('output[data-for="' + input.name + '"]').textContent = input.value;
+      });
+
+      if (svg.querySelectorAll('circle').length !== current.rings) {
+        svg.replaceChildren();
+        current.perRing.forEach(function () {
+          const circle = document.createElementNS(svgNamespace, 'circle');
+          circle.setAttribute('r', 1);
+          svg.append(circle);
+        });
+      }
+      const circles = Array.from(svg.querySelectorAll('circle'));
+      circles.forEach(function (circle, index) {
+        const ring = current.perRing[index];
+        circle.style.setProperty('--i', index);
+        circle.style.setProperty('--phase', ring.phase);
+        circle.style.setProperty('--size', ring.size);
+        circle.style.setProperty('--tempo', ring.tempo);
+      });
+
+      // Scroll motion: the preview slider stands in for scrolling through the pin
+      const isScroll = current.motion === 'scroll';
+      scrollOnly.forEach(function (element) { element.hidden = !isScroll; });
+      svg.classList.toggle('is-scrubbed', isScroll);
+      if (isScroll) {
+        const progress = current.scrollStart + value('preview') * (current.scrollEnd - current.scrollStart);
+        scrubRings(circles, current.perRing.map(function (ring) { return ring.phase; }), progress);
+      }
+    }
+
+    lab.addEventListener('input', render);
+    lab.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-doppler-action]');
+      if (!button) return;
+
+      const action = button.dataset.dopplerAction;
+      if (action === 'reshuffle') {
+        lab.querySelector('[name="seed"]').value = 1 + Math.floor(Math.random() * 999);
+      } else if (action === 'reset') {
+        ranges.forEach(function (input) { input.value = input.defaultValue; });
+        toggles.forEach(function (input) { input.checked = input.defaultChecked; });
+      } else if (action === 'copy') {
+        const label = button.textContent;
+        navigator.clipboard.writeText(JSON.stringify(settings()))
+          .then(function () { button.textContent = 'Copied'; })
+          .catch(function () { button.textContent = 'Copy failed'; })
+          .finally(function () { setTimeout(function () { button.textContent = label; }, 1500); });
+        return;
+      }
+      render();
+    });
+
+    render();
+  })();
+
+  // Pinned hero: while the hero is stuck (.hero-pin), scroll position drives
+  // the rings instead of time. data-start and data-end (Site settings) are
+  // points in the ring cycle, so 0 to 1 pins in and out without a jump.
+  // Reduced-motion visitors keep the still frame.
+  (function () {
+    const pin = document.querySelector('[data-hero-pin]');
+    if (!pin || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const svg = pin.querySelector('.doppler-rings');
+    if (!svg) return;
+
+    const circles = Array.from(svg.querySelectorAll('circle'));
+    const phases = circles.map(function (circle) { return Number(circle.style.getPropertyValue('--phase')); });
+    const cycleStart = Number(pin.dataset.start);
+    const cycleEnd = Number(pin.dataset.end);
+    let frameRequested = false;
+
+    function update() {
+      frameRequested = false;
+      // The pin starts below the sticky header, so measure from there
+      const pinTop = pin.getBoundingClientRect().top + window.scrollY;
+      pin.style.setProperty('--pin-top', pinTop + 'px');
+      const pinDistance = Math.max(pin.offsetHeight - (window.innerHeight - pinTop), 1);
+      const scrolled = Math.min(Math.max((pinTop - pin.getBoundingClientRect().top) / pinDistance, 0), 1);
+      scrubRings(circles, phases, cycleStart + scrolled * (cycleEnd - cycleStart));
+    }
+
+    function requestUpdate() {
+      if (frameRequested) return;
+      frameRequested = true;
+      window.requestAnimationFrame(update);
+    }
+
+    svg.classList.add('is-scrubbed');
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    update();
+  })();
+})();

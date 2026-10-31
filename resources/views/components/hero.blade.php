@@ -1,5 +1,15 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => []])
-<section class="section hero-section">
+@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false, 'pin' => false, 'pinStart' => 0, 'pinEnd' => 1, 'pinLength' => 220])
+@if ($pin)
+<div class="hero-pin" data-hero-pin data-start="{{ $pinStart }}" data-end="{{ $pinEnd }}" style="--pin-length: {{ $pinLength }}svh">
+@endif
+<section @class(['section', 'hero-section', 'hero-has-rings' => $rings])>
+  @if ($rings)
+  <div class="hero-rings">
+    <div class="container hero-rings-frame">
+      <x-doppler-rings />
+    </div>
+  </div>
+  @endif
   <div class="container hero-grid hero-grid-solo hero-align-right">
     <div class="hero-copy">
       @if ($eyebrow)
@@ -19,3 +29,6 @@
     </div>
   </div>
 </section>
+@if ($pin)
+</div>
+@endif

@@ -117,7 +117,7 @@ class PageResource extends Resource
                     TextInput::make('section_heading')->label('Heading'),
                     Textarea::make('body')->rows(5),
                     Grid::make(1)
-                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Standard, PageTemplate::Service], true))
+                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
                         ->schema([
                             Repeater::make('bullets')
                                 ->simple(TextInput::make('bullet')->required())

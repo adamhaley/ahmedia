@@ -336,6 +336,217 @@ body {
   justify-content: flex-end;
 }
 
+/*
+ * Doppler rings (components/doppler-rings): each ring is born at the source
+ * behind the title, then grows and drifts left along one horizon at a fixed
+ * ratio (--mach), so its offset stays proportional to its radius. Per-ring
+ * --phase and --size come from the component markup. Tune values with
+ * resources/prototypes/doppler-rings.html.
+ */
+.hero-has-rings {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-has-rings .hero-copy {
+  position: relative;
+}
+
+/* Full-hero layer, so the rings fade out at the edges instead of being cut off */
+.hero-rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 75%, transparent);
+}
+
+/* Matches the content container, so the source sits behind the right-aligned title */
+.hero-rings-frame {
+  position: relative;
+  height: 100%;
+}
+
+.doppler-rings {
+  --period: 39s;
+  --mach: 2.8;
+  --reach: 300;
+  --source-x: 880px;
+  --source-y: 300px;
+  --direction: -1;
+  --stroke: 2;
+  --glow: 12;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  /* On the layer, not each ring: a filter inside a scaled ring scales with it */
+  filter:
+    drop-shadow(0 0 calc(var(--glow) * 0.4px) var(--glow-color))
+    drop-shadow(0 0 calc(var(--glow) * 1px) color-mix(in srgb, var(--glow-color) 60%, transparent));
+}
+
+.doppler-rings circle {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: var(--stroke);
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  transform-origin: 0 0;
+  opacity: 0;
+  /* --tempo (lab only) gives each ring its own cycle, so the set never repeats */
+  animation: doppler-propagate calc(var(--period) * var(--tempo, 1)) linear infinite;
+  animation-delay: calc(var(--period) * (var(--i) + var(--phase)) / var(--rings) * -1);
+}
+
+.doppler-rings.is-frozen circle {
+  animation-play-state: paused;
+}
+
+/*
+ * Scroll-scrubbed rings (pinned hero): scripts.js sets each ring's progress
+ * (--q, 0 to 1) and opacity (--o) from the scroll position, using the same
+ * maths as the doppler-propagate keyframes.
+ */
+.doppler-rings.is-scrubbed circle {
+  animation: none;
+  transform:
+    translate(calc(var(--source-x) + var(--reach) * var(--mach) * var(--direction) * var(--q) * 1px), var(--source-y))
+    scale(calc(var(--reach) * (1 + var(--size)) * max(var(--q), 0.001)));
+  opacity: var(--o);
+}
+
+/* The hero sticks while the reader scrolls through this extra height, then releases */
+.hero-pin {
+  height: var(--pin-length, 220svh);
+}
+
+/* --pin-top is the header's height, set by scripts.js, so the hero sticks from the first scroll */
+.hero-pin > .hero-section {
+  position: sticky;
+  top: var(--pin-top, 0);
+  display: grid;
+  align-content: center;
+  min-height: calc(100svh - var(--pin-top, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pin {
+    height: auto;
+  }
+
+  .hero-pin > .hero-section {
+    position: static;
+    min-height: 0;
+  }
+}
+
+@keyframes doppler-propagate {
+  from {
+    transform: translate(var(--source-x), var(--source-y)) scale(0.001);
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 0.9;
+  }
+
+  to {
+    transform:
+      translate(calc(var(--source-x) + var(--reach) * var(--mach) * var(--direction) * 1px), var(--source-y))
+      scale(calc(var(--reach) * (1 + var(--size))));
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: the staggered delays freeze into a still Doppler diagram */
+@media (prefers-reduced-motion: reduce) {
+  .doppler-rings circle {
+    animation-play-state: paused;
+  }
+}
+
+/* On narrow screens the copy spans the width, so keep the rings behind it quieter */
+@media (max-width: 960px) {
+  .hero-rings .doppler-rings {
+    opacity: 0.45;
+  }
+}
+
+/* Doppler rings lab (logo page) */
+.doppler-lab-stage {
+  position: relative;
+  height: clamp(16rem, 40vw, 28rem);
+  margin-top: 2rem;
+  overflow: hidden;
+  border: var(--border-subtle);
+}
+
+.doppler-lab-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.doppler-lab-controls fieldset {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.doppler-lab-controls legend {
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.doppler-lab-controls label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.doppler-lab-controls output {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.doppler-lab-controls input {
+  accent-color: var(--color-accent);
+}
+
+.doppler-lab-controls input[type="range"] {
+  width: 100%;
+}
+
+.doppler-lab-controls .doppler-lab-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.doppler-lab-scroll {
+  display: grid;
+  gap: 1rem;
+}
+
+.doppler-lab-scroll[hidden] {
+  display: none;
+}
+
+.doppler-lab-actions {
+  margin-top: 2rem;
+}
+
 .text-accent {
   color: var(--color-accent);
 }

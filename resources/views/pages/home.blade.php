@@ -4,6 +4,11 @@
     :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
     :copy="$page->hero_subheading"
+    :rings="true"
+    :pin="$siteSettings->hero_rings_motion === \App\Enums\HeroRingsMotion::Scroll"
+    :pin-start="$siteSettings->hero_rings_scroll_start"
+    :pin-end="$siteSettings->hero_rings_scroll_end"
+    :pin-length="$siteSettings->hero_rings_pin_length"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
         ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],

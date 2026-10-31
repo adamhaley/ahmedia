@@ -149,6 +149,16 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSee('An endorsement.')->assertDontSee('testimonial-stars', false);
     }
 
+    #[Test]
+    public function it_renders_the_doppler_rings_lab_on_the_logo_page(): void
+    {
+        $page = Page::query()->create(['title' => 'Our Logo', 'slug' => 'logo', 'template' => PageTemplate::Logo, 'is_published' => true]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('data-doppler-lab', false);
+    }
+
     /** @param array<string, mixed> $attributes */
     private function homePage(array $attributes = []): Page
     {
