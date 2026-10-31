@@ -419,7 +419,7 @@ body {
 
 /* The hero sticks while the reader scrolls through this extra height, then releases */
 .hero-pin {
-  height: 220svh;
+  height: var(--pin-length, 220svh);
 }
 
 /* --pin-top is the header's height, set by scripts.js, so the hero sticks from the first scroll */

@@ -1,6 +1,6 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false, 'pin' => false])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false, 'pin' => false, 'pinStart' => 0, 'pinEnd' => 1, 'pinLength' => 220])
 @if ($pin)
-<div class="hero-pin" data-hero-pin>
+<div class="hero-pin" data-hero-pin data-start="{{ $pinStart }}" data-end="{{ $pinEnd }}" style="--pin-length: {{ $pinLength }}svh">
 @endif
 <section @class(['section', 'hero-section', 'hero-has-rings' => $rings])>
   @if ($rings)

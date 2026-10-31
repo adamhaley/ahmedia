@@ -582,9 +582,10 @@
 })();
 
 // Pinned hero: while the hero is stuck (.hero-pin), scroll position drives
-// the Doppler rings instead of time. Top of the pin is the start frame; the
-// bottom is one full cycle later, which is the same arrangement, so pinning
-// in and out never jumps. Reduced-motion visitors keep the still frame.
+// the Doppler rings instead of time. data-start and data-end (Site settings)
+// are points in the ring cycle: 0 is the logo arrangement, and a whole cycle
+// later is the same arrangement again, so 0 to 1 pins in and out without a
+// jump. Reduced-motion visitors keep the still frame.
 (function () {
   const pin = document.querySelector('[data-hero-pin]');
   if (!pin || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -594,6 +595,8 @@
 
   const circles = Array.from(svg.querySelectorAll('circle'));
   const phases = circles.map(function (circle) { return Number(circle.style.getPropertyValue('--phase')); });
+  const cycleStart = Number(pin.dataset.start);
+  const cycleEnd = Number(pin.dataset.end);
   const fadeInEnd = 0.06; // matches the 6% keyframe in doppler-propagate
   const peakOpacity = 0.9;
   let frameRequested = false;
@@ -603,8 +606,9 @@
     // The pin starts below the sticky header, so measure from there
     const pinTop = pin.getBoundingClientRect().top + window.scrollY;
     pin.style.setProperty('--pin-top', pinTop + 'px');
-    const pinDistance = pin.offsetHeight - (window.innerHeight - pinTop);
-    const progress = Math.min(Math.max((pinTop - pin.getBoundingClientRect().top) / pinDistance, 0), 1);
+    const pinDistance = Math.max(pin.offsetHeight - (window.innerHeight - pinTop), 1);
+    const scrolled = Math.min(Math.max((pinTop - pin.getBoundingClientRect().top) / pinDistance, 0), 1);
+    const progress = cycleStart + scrolled * (cycleEnd - cycleStart);
 
     circles.forEach(function (circle, index) {
       const ring = (((progress + (index + phases[index]) / circles.length) % 1) + 1) % 1;

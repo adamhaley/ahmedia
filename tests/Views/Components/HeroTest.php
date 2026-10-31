@@ -2,8 +2,10 @@
 
 namespace Tests\Views\Components;
 
+use App\Enums\HeroRingsMotion;
 use App\Enums\PageTemplate;
 use App\Models\Page;
+use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,6 +34,28 @@ class HeroTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk()->assertSee('data-hero-pin', false);
+    }
+
+    #[Test]
+    public function it_passes_the_scroll_settings_to_the_pinned_hero(): void
+    {
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        SiteSetting::current()->update(['hero_rings_scroll_start' => 0.5, 'hero_rings_scroll_end' => 1, 'hero_rings_pin_length' => 300]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()->assertSee('data-start="0.5" data-end="1" style="--pin-length: 300svh"', false);
+    }
+
+    #[Test]
+    public function it_loops_the_rings_without_a_pin_in_auto_motion(): void
+    {
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        SiteSetting::current()->update(['hero_rings_motion' => HeroRingsMotion::Auto]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()->assertSee('class="doppler-rings"', false)->assertDontSee('data-hero-pin', false);
     }
 
     #[Test]

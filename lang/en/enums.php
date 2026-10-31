@@ -3,6 +3,7 @@
 use App\Enums\ButtonStyle;
 use App\Enums\ContactSubmissionSource;
 use App\Enums\FaqMatchOutcome;
+use App\Enums\HeroRingsMotion;
 use App\Enums\PageTemplate;
 
 return [
@@ -18,6 +19,10 @@ return [
         'confident' => 'Answered',
         'ambiguous' => 'Offered options',
         'no_match' => 'No match',
+    ],
+    HeroRingsMotion::class => [
+        'auto' => 'Auto (timed loop)',
+        'scroll' => 'Scroll (pinned hero)',
     ],
     PageTemplate::class => [
         'case_studies_index' => 'Case studies index',
