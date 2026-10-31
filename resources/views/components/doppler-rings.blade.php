@@ -1,8 +1,8 @@
 {{--
   Doppler rings: the AH Media motif. Rings are born behind the title and travel left along one
   horizon, growing and fading. Each ring's [phase, size] offset is fixed (seed 7 in the tuner),
-  so the irregularity looks hand-placed but renders the same every time. Retune with
-  resources/prototypes/doppler-rings.html and paste its "perRing" values here.
+  so the irregularity looks hand-placed but renders the same every time. Retune with the lab on
+  the Logo story page (components/doppler-lab) and paste its "Copy settings" perRing values here.
 --}}
 @php
   $rings = [

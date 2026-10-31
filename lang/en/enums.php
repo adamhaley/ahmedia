@@ -24,6 +24,7 @@ return [
         'contact' => 'Contact',
         'faq' => 'FAQ',
         'home' => 'Home',
+        'logo' => 'Logo story',
         'service' => 'Service',
         'services_index' => 'Services index',
         'standard' => 'Standard',

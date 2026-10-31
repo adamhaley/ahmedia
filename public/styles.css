@@ -395,8 +395,13 @@ body {
   transform-box: view-box;
   transform-origin: 0 0;
   opacity: 0;
-  animation: doppler-propagate var(--period) linear infinite;
+  /* --tempo (lab only) gives each ring its own cycle, so the set never repeats */
+  animation: doppler-propagate calc(var(--period) * var(--tempo, 1)) linear infinite;
   animation-delay: calc(var(--period) * (var(--i) + var(--phase)) / var(--rings) * -1);
+}
+
+.doppler-rings.is-frozen circle {
+  animation-play-state: paused;
 }
 
 @keyframes doppler-propagate {
@@ -426,8 +431,75 @@ body {
 
 /* On narrow screens the copy spans the width, so keep the rings behind it quieter */
 @media (max-width: 960px) {
-  .doppler-rings {
+  .hero-rings .doppler-rings {
     opacity: 0.45;
+  }
+}
+
+/* Doppler rings lab (logo page) */
+.doppler-lab-stage {
+  position: relative;
+  height: clamp(16rem, 40vw, 28rem);
+  margin-top: 2rem;
+  overflow: hidden;
+  border: var(--border-subtle);
+}
+
+.doppler-lab-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+  margin-top: 2rem;
+}
+
+.doppler-lab-controls fieldset {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.doppler-lab-controls legend {
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.doppler-lab-controls label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.doppler-lab-controls output {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.doppler-lab-controls input[type="range"] {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+
+.doppler-lab-controls .doppler-lab-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.doppler-lab-actions {
+  margin-top: 2rem;
+}
+
+@media (max-width: 760px) {
+  .doppler-lab-controls {
+    grid-template-columns: 1fr;
   }
 }
 
