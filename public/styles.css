@@ -340,8 +340,8 @@ body {
  * Doppler rings (components/doppler-rings): each ring is born at the source
  * behind the title, then grows and drifts left along one horizon at a fixed
  * ratio (--mach), so its offset stays proportional to its radius. Per-ring
- * --phase and --size come from the component markup. Tune values with
- * resources/prototypes/doppler-rings.html.
+ * --phase and --size come from the component markup. Tune values with the
+ * lab on the Logo story page.
  */
 .hero-has-rings {
   position: relative;
@@ -470,7 +470,8 @@ body {
     opacity: 0;
   }
 
-  6% {
+  /* Rings stay faint near the source and brighten as they travel out (fadeInEnd in scripts.js) */
+  30% {
     opacity: 0.9;
   }
 

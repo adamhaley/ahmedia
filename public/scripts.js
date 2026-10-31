@@ -480,7 +480,7 @@
 // Doppler rings: the lab on the logo page, and the pinned homepage hero.
 // Both share scrubRings(), so scroll previews in the lab match the site.
 (function () {
-  const fadeInEnd = 0.06; // matches the 6% keyframe in doppler-propagate
+  const fadeInEnd = 0.3; // matches the 30% keyframe in doppler-propagate
   const peakOpacity = 0.9;
 
   // Places each ring at a point in its cycle, using the same maths as the
