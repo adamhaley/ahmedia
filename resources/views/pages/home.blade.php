@@ -5,6 +5,7 @@
     accent=".ai"
     :copy="$page->hero_subheading"
     :rings="true"
+    :pin="true"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
         ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],

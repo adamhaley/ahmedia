@@ -580,3 +580,50 @@
 
   render();
 })();
+
+// Pinned hero: while the hero is stuck (.hero-pin), scroll position drives
+// the Doppler rings instead of time. Top of the pin is the start frame; the
+// bottom is one full cycle later, which is the same arrangement, so pinning
+// in and out never jumps. Reduced-motion visitors keep the still frame.
+(function () {
+  const pin = document.querySelector('[data-hero-pin]');
+  if (!pin || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const svg = pin.querySelector('.doppler-rings');
+  if (!svg) return;
+
+  const circles = Array.from(svg.querySelectorAll('circle'));
+  const phases = circles.map(function (circle) { return Number(circle.style.getPropertyValue('--phase')); });
+  const fadeInEnd = 0.06; // matches the 6% keyframe in doppler-propagate
+  const peakOpacity = 0.9;
+  let frameRequested = false;
+
+  function update() {
+    frameRequested = false;
+    // The pin starts below the sticky header, so measure from there
+    const pinTop = pin.getBoundingClientRect().top + window.scrollY;
+    pin.style.setProperty('--pin-top', pinTop + 'px');
+    const pinDistance = pin.offsetHeight - (window.innerHeight - pinTop);
+    const progress = Math.min(Math.max((pinTop - pin.getBoundingClientRect().top) / pinDistance, 0), 1);
+
+    circles.forEach(function (circle, index) {
+      const ring = (((progress + (index + phases[index]) / circles.length) % 1) + 1) % 1;
+      const opacity = ring < fadeInEnd
+        ? peakOpacity * ring / fadeInEnd
+        : peakOpacity * (1 - ring) / (1 - fadeInEnd);
+      circle.style.setProperty('--q', ring.toFixed(4));
+      circle.style.setProperty('--o', opacity.toFixed(3));
+    });
+  }
+
+  function requestUpdate() {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(update);
+  }
+
+  svg.classList.add('is-scrubbed');
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+  update();
+})();

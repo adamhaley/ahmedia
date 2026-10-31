@@ -1,4 +1,7 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'rings' => false, 'pin' => false])
+@if ($pin)
+<div class="hero-pin" data-hero-pin>
+@endif
 <section @class(['section', 'hero-section', 'hero-has-rings' => $rings])>
   @if ($rings)
   <div class="hero-rings">
@@ -26,3 +29,6 @@
     </div>
   </div>
 </section>
+@if ($pin)
+</div>
+@endif

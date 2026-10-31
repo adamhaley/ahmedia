@@ -25,6 +25,16 @@ class HeroTest extends TestCase
     }
 
     #[Test]
+    public function it_pins_the_homepage_hero_for_scroll_driven_rings(): void
+    {
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()->assertSee('data-hero-pin', false);
+    }
+
+    #[Test]
     public function it_leaves_rings_off_by_default(): void
     {
         $html = (string) $this->blade('<x-hero title="Services" />');

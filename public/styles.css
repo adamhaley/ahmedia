@@ -404,6 +404,44 @@ body {
   animation-play-state: paused;
 }
 
+/*
+ * Scroll-scrubbed rings (pinned hero): scripts.js sets each ring's progress
+ * (--q, 0 to 1) and opacity (--o) from the scroll position, using the same
+ * maths as the doppler-propagate keyframes.
+ */
+.doppler-rings.is-scrubbed circle {
+  animation: none;
+  transform:
+    translate(calc(var(--source-x) + var(--reach) * var(--mach) * var(--direction) * var(--q) * 1px), var(--source-y))
+    scale(calc(var(--reach) * (1 + var(--size)) * max(var(--q), 0.001)));
+  opacity: var(--o);
+}
+
+/* The hero sticks while the reader scrolls through this extra height, then releases */
+.hero-pin {
+  height: 220svh;
+}
+
+/* --pin-top is the header's height, set by scripts.js, so the hero sticks from the first scroll */
+.hero-pin > .hero-section {
+  position: sticky;
+  top: var(--pin-top, 0);
+  display: grid;
+  align-content: center;
+  min-height: calc(100svh - var(--pin-top, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pin {
+    height: auto;
+  }
+
+  .hero-pin > .hero-section {
+    position: static;
+    min-height: 0;
+  }
+}
+
 @keyframes doppler-propagate {
   from {
     transform: translate(var(--source-x), var(--source-y)) scale(0.001);
