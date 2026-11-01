@@ -633,7 +633,7 @@
 
     function update() {
       frameRequested = false;
-      // The pin starts below the sticky header, so measure from there
+      // Measured, not assumed to be 0, so the pin works wherever it starts
       const pinTop = pin.getBoundingClientRect().top + window.scrollY;
       pin.style.setProperty('--pin-top', pinTop + 'px');
       const pinDistance = Math.max(pin.offsetHeight - (window.innerHeight - pinTop), 1);
@@ -652,4 +652,45 @@
     window.addEventListener('resize', requestUpdate);
     update();
   })();
+})();
+
+// Header: floats transparent over the hero and turns solid once scrolled.
+// Hysteresis (separate enter/exit points) stops momentum scrolling that
+// settles near one value from flickering the class. Also publishes the
+// header's height, which wraps to two rows on narrow screens, so the hero
+// can clear it.
+(function () {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+
+  // Turns solid alongside the back-to-top button (its threshold is 200)
+  const enterThreshold = 200;
+  const exitThreshold = 180;
+  let isScrolled = false;
+  let frameRequested = false;
+
+  function update() {
+    frameRequested = false;
+    if (!isScrolled && window.scrollY > enterThreshold) {
+      isScrolled = true;
+    } else if (isScrolled && window.scrollY < exitThreshold) {
+      isScrolled = false;
+    }
+    header.classList.toggle('is-scrolled', isScrolled);
+  }
+
+  function requestUpdate() {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(update);
+  }
+
+  function measure() {
+    document.documentElement.style.setProperty('--header-height', header.offsetHeight + 'px');
+  }
+
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', measure);
+  measure();
+  update();
 })();

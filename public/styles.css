@@ -43,9 +43,21 @@ a {
 }
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  /* backdrop-filter toggles instantly: animating a live blur on a fixed header smears */
+  transition: background-color 80ms ease-out, border-color 80ms ease-out;
+  /* Stops scroll anchoring nudging scrollY when the header changes, which could re-cross the threshold */
+  overflow-anchor: none;
+}
+
+/* Header floats transparent over the hero, then picks up its blurred surface once scrolled (scripts.js) */
+.site-header.is-scrolled {
   backdrop-filter: blur(18px);
   background: color-mix(in srgb, var(--color-surface) 82%, transparent);
   border-bottom: var(--border-subtle);
@@ -298,6 +310,8 @@ body {
 }
 
 .hero-section {
+  /* Every page opens with a hero, which runs up under the fixed header; --header-height is set by scripts.js */
+  padding-top: calc(var(--section-space) + var(--header-height, 4rem));
   /*
    * Adjacent .section elements each carry a full --section-space of
    * padding, so two in a row (hero + whatever follows) stack into an
