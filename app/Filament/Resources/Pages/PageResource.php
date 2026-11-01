@@ -94,6 +94,11 @@ class PageResource extends Resource
             Section::make('Hero')->schema([
                 TextInput::make('hero_heading')->label('Heading')->placeholder('Defaults to the page title'),
                 TextInput::make('hero_subheading')->label('Subheading'),
+                Select::make('doppler_ring_style_id')
+                    ->label('Doppler rings')
+                    ->relationship('dopplerRingStyle', 'name')
+                    ->placeholder('No rings')
+                    ->helperText('Rings behind the hero title. Styles are edited under Site → Doppler rings.'),
                 FileUpload::make('hero_image')
                     ->label('Hero image')
                     ->helperText('Not currently used by any ahmedia template (the current hero is a text/glow treatment) -- kept for future use.')

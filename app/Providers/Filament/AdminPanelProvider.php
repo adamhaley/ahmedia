@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
+use App\Filament\Resources\DopplerRingStyles\Pages\CreateDopplerRingStyle;
+use App\Filament\Resources\DopplerRingStyles\Pages\EditDopplerRingStyle;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -13,6 +15,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -62,6 +65,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            // The rings style editor reuses the site's rings stylesheet and lab script
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => '<link rel="stylesheet" href="/doppler-rings.css?v='.filemtime(public_path('doppler-rings.css')).'" />',
+                scopes: [CreateDopplerRingStyle::class, EditDopplerRingStyle::class],
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => '<script src="/doppler-rings.js?v='.filemtime(public_path('doppler-rings.js')).'"></script>',
+                scopes: [CreateDopplerRingStyle::class, EditDopplerRingStyle::class],
+            );
     }
 }

@@ -46,6 +46,14 @@ class DatabaseSeederTest extends TestCase
     }
 
     #[Test]
+    public function it_gives_the_seeded_homepage_the_homepage_rings_style(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertSame('Homepage', Page::query()->where('path', '')->first()->dopplerRingStyle?->name);
+    }
+
+    #[Test]
     public function it_seeds_the_faqs_and_the_faq_page(): void
     {
         $this->seed(DatabaseSeeder::class);

@@ -2,10 +2,9 @@
 
 namespace Tests\Views\Components;
 
-use App\Enums\HeroRingsMotion;
 use App\Enums\PageTemplate;
+use App\Models\DopplerRingStyle;
 use App\Models\Page;
-use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,52 +16,54 @@ class HeroTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function it_draws_doppler_rings_behind_the_homepage_hero(): void
+    public function it_draws_doppler_rings_behind_a_page_with_a_rings_style(): void
     {
-        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true, 'doppler_ring_style_id' => DopplerRingStyle::factory()->create()->id]);
 
-        $response = $this->get('/');
+        $response = $this->get('/approach');
 
-        $response->assertOk()->assertSee('class="doppler-rings"', false);
+        $response->assertOk()->assertSee('<svg class="doppler-rings"', false);
     }
 
     #[Test]
-    public function it_pins_the_homepage_hero_for_scroll_driven_rings(): void
+    public function it_draws_no_rings_for_a_page_without_a_rings_style(): void
     {
-        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true]);
 
-        $response = $this->get('/');
+        $response = $this->get('/approach');
 
-        $response->assertOk()->assertSee('data-hero-pin', false);
+        $response->assertOk()->assertDontSee('<svg class="doppler-rings"', false);
     }
 
     #[Test]
-    public function it_passes_the_scroll_settings_to_the_pinned_hero(): void
+    public function it_pins_the_hero_with_the_rings_style_scroll_settings(): void
     {
-        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
-        SiteSetting::current()->update(['hero_rings_scroll_start' => 0.5, 'hero_rings_scroll_end' => 1, 'hero_rings_pin_length' => 300]);
+        $style = DopplerRingStyle::factory()->create(['settings' => ['scrollStart' => 0.5, 'scrollEnd' => 1, 'pinLength' => 300]]);
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true, 'doppler_ring_style_id' => $style->id]);
 
         $response = $this->get('/');
 
-        $response->assertOk()->assertSee('data-start="0.5" data-end="1" style="--pin-length: 300svh"', false);
+        $response->assertOk()->assertSee('data-hero-pin data-start="0.5" data-end="1" style="--pin-length: 300svh"', false);
     }
 
     #[Test]
     public function it_loops_the_rings_without_a_pin_in_auto_motion(): void
     {
-        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
-        SiteSetting::current()->update(['hero_rings_motion' => HeroRingsMotion::Auto]);
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true, 'doppler_ring_style_id' => DopplerRingStyle::factory()->autoMotion()->create()->id]);
 
         $response = $this->get('/');
 
-        $response->assertOk()->assertSee('class="doppler-rings"', false)->assertDontSee('data-hero-pin', false);
+        $response->assertOk()->assertSee('<svg class="doppler-rings"', false)->assertDontSee('data-hero-pin', false);
     }
 
     #[Test]
-    public function it_leaves_rings_off_by_default(): void
+    public function it_passes_the_rings_style_to_the_svg(): void
     {
-        $html = (string) $this->blade('<x-hero title="Services" />');
+        $style = DopplerRingStyle::factory()->create(['settings' => ['mach' => 1.5, 'axisMobile' => 350]]);
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true, 'doppler_ring_style_id' => $style->id]);
 
-        $this->assertStringNotContainsString('doppler-rings', $html);
+        $response = $this->get('/approach');
+
+        $response->assertOk()->assertSee('--mach: 1.5;', false)->assertSee('--axis-mobile: 350', false);
     }
 }

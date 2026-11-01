@@ -3,6 +3,7 @@
      This page itself is reachable at /contact/. --}}
 <x-layouts.site :page="$page">
   <x-hero
+    :ring-style="$page->dopplerRingStyle"
     :eyebrow="$page->section_eyebrow"
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"

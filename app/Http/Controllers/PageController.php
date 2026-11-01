@@ -6,7 +6,6 @@ use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
 use App\Models\FaqItem;
 use App\Models\Page;
-use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -40,7 +39,6 @@ class PageController extends Controller
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->limit(3)->get(),
                 'contactPage' => Page::query()->where('template', PageTemplate::Contact)->first(),
                 'testimonials' => Testimonial::query()->active()->get(),
-                'siteSettings' => SiteSetting::current(),
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),
