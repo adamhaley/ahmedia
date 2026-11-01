@@ -62,7 +62,9 @@
         <div class="container footer-inner">
           <div>
             <p class="footer-brand">AH Media</p>
-            <p class="footer-copy">AI systems and automation for teams that want to ship, not just plan.</p>
+            @if ($settings->footer_tagline)
+            <p class="footer-copy">{{ $settings->footer_tagline }}</p>
+            @endif
           </div>
           <div class="footer-links"></div>
         </div>

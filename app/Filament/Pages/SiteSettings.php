@@ -60,6 +60,10 @@ class SiteSettings extends Page
                             ->hex()
                             ->placeholder(SiteSetting::DefaultAccentColor)
                             ->rule('regex:/^#[0-9a-f]{6}$/i'),
+                        TextInput::make('footer_tagline')
+                            ->label('Footer tagline')
+                            ->helperText('The line under "AH Media" in the footer. Leave empty to hide it.')
+                            ->maxLength(255),
                     ]),
                 Section::make('Homepage hero rings')
                     ->description('How the Doppler rings behind the homepage title move. Scroll pins the hero and plays the rings as you scroll; Auto loops them on a timer with no pin.')
