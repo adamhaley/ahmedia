@@ -134,6 +134,7 @@ class PageResource extends Resource
                     PageTemplate::Home => 'The Approach spotlight on the homepage.',
                     PageTemplate::Contact => 'The eyebrow is also used above the contact form on the homepage.',
                     PageTemplate::CaseStudiesIndex => 'The eyebrow is also used above the case studies on the homepage.',
+                    PageTemplate::Logo => 'The eyebrow sits above the lab; the heading, body and bullets tell the story below it. Leave a blank line between paragraphs. Buttons aren\'t shown on this page.',
                     default => null,
                 })
                 ->schema([

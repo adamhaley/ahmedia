@@ -1,17 +1,30 @@
 <x-layouts.site :page="$page">
-  @if ($page->section_heading)
-  <x-split-content
-    :heading="$page->section_heading"
-    :body="$page->body"
-    :bullets="$page->bullets"
-  />
-  @endif
-
   <x-doppler-lab
     :eyebrow="$page->section_eyebrow"
     :heading="$page->hero_heading ?: $page->title"
     :intro="$page->hero_subheading"
   />
+
+  {{-- The story of the mark, after the lab so visitors meet the toy first. Blank lines split the body into paragraphs. --}}
+  @if ($page->body || $page->section_heading)
+  <section class="section">
+    <div class="container logo-story">
+      @if ($page->section_heading)
+      <h2 class="section-title">{{ $page->section_heading }}</h2>
+      @endif
+      @foreach (preg_split('/\R{2,}/', trim((string) $page->body), flags: PREG_SPLIT_NO_EMPTY) as $paragraph)
+      <p class="section-copy">{{ $paragraph }}</p>
+      @endforeach
+      @if (count($page->bullets ?? []))
+      <ul class="bullet-list">
+        @foreach ($page->bullets as $bullet)
+        <li>{{ $bullet }}</li>
+        @endforeach
+      </ul>
+      @endif
+    </div>
+  </section>
+  @endif
 
   <x-cta-band
     :eyebrow="$page->cta_eyebrow"

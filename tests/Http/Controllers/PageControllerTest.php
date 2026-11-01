@@ -179,6 +179,16 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSeeInOrder(['The mark', 'Doppler rings', 'Where the mark came from.', 'doppler-lab-stage'], false);
     }
 
+    #[Test]
+    public function it_tells_the_logo_story_from_the_body_after_the_lab(): void
+    {
+        $page = Page::query()->create(['title' => 'Our Logo', 'slug' => 'logo', 'template' => PageTemplate::Logo, 'is_published' => true, 'body' => "First paragraph.\n\nSecond paragraph."]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['data-doppler-lab', '<p class="section-copy">First paragraph.</p>', '<p class="section-copy">Second paragraph.</p>'], false);
+    }
+
     /** @param array<string, mixed> $attributes */
     private function homePage(array $attributes = []): Page
     {

@@ -490,6 +490,11 @@ main > .section:first-child {
   grid-column: 7 / span 5;
 }
 
+/* Reading width for the logo page's story (pages/logo) */
+.logo-story > * {
+  max-width: 44rem;
+}
+
 .preview-list {
   display: grid;
   gap: 1.5rem;
