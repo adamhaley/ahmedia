@@ -141,6 +141,11 @@
 }
 
 /* Doppler rings lab (logo page) */
+
+/* The lab opens the page, and a hero's full top spacing wastes the screen height it needs */
+main > .doppler-lab.section:first-child {
+  padding-top: calc(var(--section-space) * 0.35 + var(--header-height, 4rem));
+}
 .doppler-lab-stage {
   position: relative;
   height: clamp(16rem, 40vw, 28rem);
