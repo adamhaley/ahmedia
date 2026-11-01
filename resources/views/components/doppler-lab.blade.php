@@ -29,6 +29,14 @@
       <x-doppler-rings :settings="$settings" />
     </div>
 
+    <div class="button-row doppler-lab-actions">
+      <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
+      @unless ($editor)
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
+      @endunless
+    </div>
+
     <div class="doppler-lab-controls">
       @foreach (['Geometry', 'Randomness', 'Style', 'Axis'] as $group)
       <fieldset>
@@ -58,14 +66,6 @@
           @endforeach
         </div>
       </fieldset>
-    </div>
-
-    <div class="button-row doppler-lab-actions">
-      <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
-      @unless ($editor)
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
-      @endunless
     </div>
   </div>
 </section>
