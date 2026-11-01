@@ -23,6 +23,7 @@ return [
     HeroRingsMotion::class => [
         'auto' => 'Auto (timed loop)',
         'scroll' => 'Scroll (pinned hero)',
+        'still' => 'Still (one held frame)',
     ],
     PageTemplate::class => [
         'case_studies_index' => 'Case studies index',

@@ -58,7 +58,7 @@
         {!! $slider('tempo', ['label' => 'Tempo jitter (no repeats)', 'min' => 0, 'max' => 0.3, 'step' => 0.01], $tempo) !!}
         @endif
         @if ($group === 'Style')
-        <label class="doppler-lab-check"><input type="checkbox" name="frozen" @checked($frozen)> Freeze</label>
+        <label class="doppler-lab-check"><input type="checkbox" name="frozen" @checked($frozen)> Freeze{{ $editor ? ' (preview only; use Still to save one)' : '' }}</label>
         <label class="doppler-lab-check"><input type="checkbox" name="travelLeft" @checked($settings->travelLeft)> Travel left</label>
         @endif
       </fieldset>
@@ -72,6 +72,11 @@
         <div class="doppler-lab-scroll" data-scroll-only hidden>
           {!! $slider('preview', ['label' => 'Scroll preview', 'min' => 0, 'max' => 1, 'step' => 0.005], 0) !!}
           @foreach ($ranges['Motion'] as $name => $range)
+          {!! $slider($name, $range, $settings->{$name}) !!}
+          @endforeach
+        </div>
+        <div class="doppler-lab-scroll" data-still-only hidden>
+          @foreach ($ranges['Still'] as $name => $range)
           {!! $slider($name, $range, $settings->{$name}) !!}
           @endforeach
         </div>
