@@ -1,6 +1,6 @@
 <x-layouts.site :page="$page">
   <x-hero
-    :ring-style="$page->dopplerRingStyle"
+    :ring-style="$page->heroRingStyle()"
     :eyebrow="$page->section_eyebrow"
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"

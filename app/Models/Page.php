@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property list<array<string, string>>|null $buttons
  */
 #[Fillable([
-    'parent_id', 'title', 'slug', 'template', 'doppler_ring_style_id', 'sort_order', 'is_published', 'show_in_nav', 'nav_anchor',
+    'parent_id', 'title', 'slug', 'template', 'doppler_ring_style_id', 'hide_doppler_rings', 'sort_order', 'is_published', 'show_in_nav', 'nav_anchor',
     'meta_title', 'meta_description', 'hero_heading', 'hero_subheading', 'hero_image', 'og_image',
     'section_eyebrow', 'section_heading', 'body', 'bullets', 'buttons', 'circle_image', 'circle_image_alt',
     'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_button_label',
@@ -31,6 +31,7 @@ class Page extends Model
             'buttons' => 'array',
             'is_published' => 'boolean',
             'show_in_nav' => 'boolean',
+            'hide_doppler_rings' => 'boolean',
         ];
     }
 
@@ -38,6 +39,16 @@ class Page extends Model
     public function dopplerRingStyle(): BelongsTo
     {
         return $this->belongsTo(DopplerRingStyle::class);
+    }
+
+    /** The rings style the hero shows: the page's own, else its nearest ancestor's, unless rings are turned off. */
+    public function heroRingStyle(): ?DopplerRingStyle
+    {
+        if ($this->hide_doppler_rings) {
+            return null;
+        }
+
+        return $this->dopplerRingStyle ?? $this->parent?->heroRingStyle();
     }
 
     protected static function booted(): void

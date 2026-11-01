@@ -4,7 +4,7 @@
     :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
     :copy="$page->hero_subheading"
-    :ring-style="$page->dopplerRingStyle"
+    :ring-style="$page->heroRingStyle()"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
         ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],
