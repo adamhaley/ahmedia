@@ -508,6 +508,7 @@ body {
 @media (max-width: 960px) {
   .hero-rings .doppler-rings {
     opacity: 0.45;
+      --source-y: 350px;
   }
 }
 
