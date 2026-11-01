@@ -172,34 +172,57 @@
       return getComputedStyle(document.documentElement).getPropertyValue('--color-page-top');
     }
 
-    // Draws the frame on screen to a PNG. Each ring's position, size and fade
-    // are read live from the page, so it matches mid-motion or frozen.
-    function saveImage() {
+    // Draws the frame on screen to an image. Each ring's position, size and
+    // fade are read live from the page, so it matches mid-motion or frozen.
+    // "instagram" reframes it as a 4:5 portrait JPEG at 1080 x 1350 (the
+    // tallest feed post Instagram takes), centred on the visible rings;
+    // rings beyond the stage's edges are still drawn, so the wider crop fills.
+    function saveImage(shape) {
       const current = settings();
       const stage = svg.parentElement;
       const box = stage.getBoundingClientRect();
-      const pixelRatio = 2;
+      const rings = Array.from(svg.querySelectorAll('circle')).map(function (circle) {
+        const rect = circle.getBoundingClientRect();
+        return {
+          x: rect.left - box.left + rect.width / 2,
+          y: rect.top - box.top + rect.height / 2,
+          radius: rect.width / 2,
+          opacity: Number(getComputedStyle(circle).opacity),
+        };
+      });
+
+      const forInstagram = shape === 'instagram';
+      let frame = { left: 0, width: box.width };
+      if (forInstagram) {
+        const instagramAspect = 4 / 5;
+        const visibleCentres = rings.filter(function (ring) { return ring.opacity > 0.15; }).map(function (ring) { return ring.x; });
+        const centre = visibleCentres.length ? (Math.min.apply(null, visibleCentres) + Math.max.apply(null, visibleCentres)) / 2 : box.width / 2;
+        frame = { left: centre - box.height * instagramAspect / 2, width: box.height * instagramAspect };
+      }
+      const instagramWidth = 1080;
+      const pixelRatio = forInstagram ? instagramWidth / frame.width : 2;
+
       const canvas = document.createElement('canvas');
-      canvas.width = box.width * pixelRatio;
-      canvas.height = box.height * pixelRatio;
+      canvas.width = Math.round(frame.width * pixelRatio);
+      canvas.height = Math.round(box.height * pixelRatio);
       const context = canvas.getContext('2d');
       context.scale(pixelRatio, pixelRatio);
+      context.translate(-frame.left, 0);
       context.fillStyle = backgroundOf(stage);
-      context.fillRect(0, 0, box.width, box.height);
+      context.fillRect(frame.left, 0, frame.width, box.height);
       context.lineWidth = current.stroke;
       context.strokeStyle = getComputedStyle(svg.querySelector('circle')).stroke;
       context.shadowColor = getComputedStyle(svg).getPropertyValue('--glow-color').trim() || context.strokeStyle;
       context.shadowBlur = current.glow;
-      svg.querySelectorAll('circle').forEach(function (circle) {
-        const ring = circle.getBoundingClientRect();
-        context.globalAlpha = Number(getComputedStyle(circle).opacity);
+      rings.forEach(function (ring) {
+        context.globalAlpha = ring.opacity;
         context.beginPath();
-        context.arc(ring.left - box.left + ring.width / 2, ring.top - box.top + ring.height / 2, ring.width / 2, 0, 2 * Math.PI);
+        context.arc(ring.x, ring.y, ring.radius, 0, 2 * Math.PI);
         context.stroke();
       });
 
       // A quiet credit in the corner, so a shared image leads back to the lab
-      const creditSize = Math.max(11, Math.round(box.width / 70));
+      const creditSize = Math.max(11, Math.round(Math.max(frame.width, box.height) / 70));
       const creditInset = creditSize;
       context.globalAlpha = 0.55;
       context.shadowBlur = 0;
@@ -207,11 +230,11 @@
       context.font = '600 ' + creditSize + 'px ' + getComputedStyle(document.body).fontFamily;
       context.textAlign = 'right';
       context.textBaseline = 'bottom';
-      context.fillText((location.host + location.pathname).replace(/\/$/, ''), box.width - creditInset, box.height - creditInset);
+      context.fillText((location.host + location.pathname).replace(/\/$/, ''), frame.left + frame.width - creditInset, box.height - creditInset);
 
       const link = document.createElement('a');
-      link.download = 'doppler-rings-seed-' + current.seed + '.png';
-      link.href = canvas.toDataURL('image/png');
+      link.download = 'doppler-rings-seed-' + current.seed + (forInstagram ? '-instagram.jpg' : '.png');
+      link.href = forInstagram ? canvas.toDataURL('image/jpeg', 0.95) : canvas.toDataURL('image/png');
       link.click();
     }
 
@@ -248,8 +271,8 @@
       } else if (action === 'reset') {
         ranges.forEach(function (input) { input.value = input.defaultValue; });
         toggles.forEach(function (input) { input.checked = input.defaultChecked; });
-      } else if (action === 'save-image') {
-        saveImage();
+      } else if (action === 'save-image' || action === 'save-instagram') {
+        saveImage(action === 'save-instagram' ? 'instagram' : 'stage');
         return;
       } else if (action === 'copy-link') {
         const label = button.textContent;
