@@ -38,6 +38,13 @@
       @endunless
     </div>
 
+    @unless ($editor)
+    <form class="doppler-lab-import" data-doppler-import>
+      <input type="text" name="link" placeholder="Paste a shared lab link" aria-label="Shared lab link" autocomplete="off">
+      <button type="submit" class="button button-secondary">Open</button>
+    </form>
+    @endunless
+
     <div class="doppler-lab-controls">
       @foreach (['Geometry', 'Randomness', 'Style', 'Axis'] as $group)
       <fieldset>

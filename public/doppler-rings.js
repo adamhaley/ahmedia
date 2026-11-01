@@ -196,7 +196,26 @@
       link.click();
     }
 
-    lab.addEventListener('input', function () {
+    // A pasted link reloads the lab on its arrangement, frozen frame and all.
+    // Only its query string is used, so a link can't send visitors elsewhere.
+    const importForm = lab.querySelector('[data-doppler-import]');
+    if (importForm) {
+      const linkField = importForm.elements.link;
+      importForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const search = new URL(linkField.value.trim(), location.href).search;
+        if (!new URLSearchParams(search).has('seed')) {
+          linkField.setCustomValidity("That doesn't look like a lab link");
+          linkField.reportValidity();
+          return;
+        }
+        location.search = search;
+      });
+      linkField.addEventListener('input', function () { linkField.setCustomValidity(''); });
+    }
+
+    lab.addEventListener('input', function (event) {
+      if (event.target.name === 'link') return;
       render();
       updateAddress();
     });
