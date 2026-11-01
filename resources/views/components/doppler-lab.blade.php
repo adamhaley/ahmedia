@@ -62,7 +62,7 @@
 
     <div class="button-row doppler-lab-actions">
       <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Back to the logo' }}</button>
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
       @unless ($editor)
       <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
       @endunless
