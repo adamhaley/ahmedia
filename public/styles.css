@@ -309,9 +309,12 @@ body {
   align-items: start;
 }
 
-.hero-section {
-  /* Every page opens with a hero, which runs up under the fixed header; --header-height is set by scripts.js */
+/* A page's first section runs up under the fixed header; --header-height is set by scripts.js */
+main > .section:first-child {
   padding-top: calc(var(--section-space) + var(--header-height, 4rem));
+}
+
+.hero-section {
   /*
    * Adjacent .section elements each carry a full --section-space of
    * padding, so two in a row (hero + whatever follows) stack into an

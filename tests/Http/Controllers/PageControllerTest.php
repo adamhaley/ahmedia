@@ -159,6 +159,16 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSee('data-doppler-lab', false);
     }
 
+    #[Test]
+    public function it_opens_the_logo_page_with_the_lab_instead_of_a_hero(): void
+    {
+        $page = Page::query()->create(['title' => 'Our Logo', 'slug' => 'logo', 'template' => PageTemplate::Logo, 'is_published' => true]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('hero-section', false);
+    }
+
     /** @param array<string, mixed> $attributes */
     private function homePage(array $attributes = []): Page
     {
