@@ -43,6 +43,18 @@ class SiteSettingsTest extends TestCase
             ->assertHasFormErrors(['hero_rings_scroll_end']);
     }
 
+    #[Test]
+    public function it_saves_the_footer_tagline(): void
+    {
+        Livewire::actingAs($this->admin())
+            ->test(SiteSettings::class)
+            ->fillForm(['footer_tagline' => 'Systems that ship.'])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('Systems that ship.', SiteSetting::current()->footer_tagline);
+    }
+
     private function admin(): User
     {
         $user = User::factory()->create();
