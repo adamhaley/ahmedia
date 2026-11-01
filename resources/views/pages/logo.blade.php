@@ -7,7 +7,11 @@
   />
   @endif
 
-  <x-doppler-lab />
+  <x-doppler-lab
+    :eyebrow="$page->section_eyebrow"
+    :heading="$page->hero_heading ?: $page->title"
+    :intro="$page->hero_subheading"
+  />
 
   <x-cta-band
     :eyebrow="$page->cta_eyebrow"
