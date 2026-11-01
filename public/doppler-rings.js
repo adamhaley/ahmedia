@@ -31,6 +31,7 @@
     const ranges = lab.querySelectorAll('input[type="range"]');
     const toggles = lab.querySelectorAll('input[type="checkbox"], input[type="radio"]');
     const scrollOnly = lab.querySelectorAll('[data-scroll-only]');
+    const stillOnly = lab.querySelectorAll('[data-still-only]');
     // Lab-only controls (tempo) are missing from the editor, so they read as 0
     const value = function (name) {
       const input = lab.querySelector('[name="' + name + '"]');
@@ -70,6 +71,7 @@
         frozen: checked('frozen'), travelLeft: checked('travelLeft'),
         motion: lab.querySelector('[name="motion"]:checked').value,
         scrollStart: value('scrollStart'), scrollEnd: value('scrollEnd'), pinLength: value('pinLength'),
+        frame: value('frame'),
         perRing: perRing,
       };
     }
@@ -111,9 +113,13 @@
 
       // Scroll motion: the preview slider stands in for scrolling through the pin
       const isScroll = current.motion === 'scroll';
+      const isStill = current.motion === 'still';
       scrollOnly.forEach(function (element) { element.hidden = !isScroll; });
+      stillOnly.forEach(function (element) { element.hidden = !isStill; });
       if (isScroll) {
         scrubRings(svg, current.scrollStart + value('preview') * (current.scrollEnd - current.scrollStart));
+      } else if (isStill) {
+        scrubRings(svg, current.frame);
       } else {
         releaseRings(svg);
       }
@@ -122,7 +128,7 @@
         // Only what a rings style stores; the preview aids (freeze, scroll preview) aren't saved
         const stored = {};
         ['mach', 'rings', 'period', 'reach', 'spacing', 'size', 'seed', 'stroke', 'glow', 'axis', 'axisMobile',
-          'scrollStart', 'scrollEnd', 'pinLength', 'travelLeft', 'motion'].forEach(function (key) { stored[key] = current[key]; });
+          'scrollStart', 'scrollEnd', 'pinLength', 'frame', 'travelLeft', 'motion'].forEach(function (key) { stored[key] = current[key]; });
         lab.dispatchEvent(new CustomEvent('doppler-settings', { bubbles: true, detail: stored }));
       }
     }
@@ -141,6 +147,8 @@
       params.set('travelLeft', current.travelLeft ? 1 : 0);
       if (current.motion === 'scroll') {
         ['scrollStart', 'scrollEnd', 'pinLength'].forEach(function (key) { params.set(key, current[key]); });
+      } else if (current.motion === 'still') {
+        params.set('frame', current.frame);
       } else if (current.frozen) {
         const animation = svg.getAnimations({ subtree: true })[0];
         params.set('frozen', 1);

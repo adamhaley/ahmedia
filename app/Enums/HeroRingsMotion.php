@@ -13,4 +13,5 @@ enum HeroRingsMotion: string implements HasLabel
 
     case Scroll = 'scroll';
     case Auto = 'auto';
+    case Still = 'still';
 }

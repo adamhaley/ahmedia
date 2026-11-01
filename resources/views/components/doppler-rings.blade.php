@@ -5,7 +5,7 @@
   the irregularity looks hand-placed but renders the same every time. Styles are edited in the
   admin (Doppler rings); the defaults are the homepage logo arrangement.
 --}}
-<svg class="doppler-rings" viewBox="0 0 1000 600" preserveAspectRatio="xMaxYMid slice" style="{{ $settings->cssVariables() }}" aria-hidden="true" focusable="false">
+<svg @class(['doppler-rings', 'is-scrubbed' => $settings->motion === \App\Enums\HeroRingsMotion::Still]) viewBox="0 0 1000 600" preserveAspectRatio="xMaxYMid slice" style="{{ $settings->cssVariables() }}" aria-hidden="true" focusable="false">
   @foreach ($settings->perRing() as [$phase, $size])
   <circle r="1" style="--i: {{ $loop->index }}; --phase: {{ $phase }}; --size: {{ $size }}" />
   @endforeach

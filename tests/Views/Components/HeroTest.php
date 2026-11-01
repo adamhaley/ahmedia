@@ -57,6 +57,20 @@ class HeroTest extends TestCase
     }
 
     #[Test]
+    public function it_holds_the_rings_on_their_frame_without_a_pin_in_still_motion(): void
+    {
+        $style = DopplerRingStyle::factory()->create(['settings' => ['motion' => 'still', 'frame' => 0.25]]);
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true, 'doppler_ring_style_id' => $style->id]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()
+            ->assertSee('<svg class="doppler-rings is-scrubbed"', false)
+            ->assertSee('--progress: 0.25', false)
+            ->assertDontSee('data-hero-pin', false);
+    }
+
+    #[Test]
     public function it_passes_the_rings_style_to_the_svg(): void
     {
         $style = DopplerRingStyle::factory()->create(['settings' => ['mach' => 1.5, 'axisMobile' => 350]]);

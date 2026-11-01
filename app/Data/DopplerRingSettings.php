@@ -34,6 +34,8 @@ final readonly class DopplerRingSettings implements Castable
         'scrollStart' => ['label' => 'Scroll start', 'group' => 'Motion', 'min' => 0, 'max' => 3, 'step' => 0.05, 'default' => 0],
         'scrollEnd' => ['label' => 'Scroll end', 'group' => 'Motion', 'min' => 0, 'max' => 3, 'step' => 0.05, 'default' => 1],
         'pinLength' => ['label' => 'Pin length (% of screen)', 'group' => 'Motion', 'min' => 120, 'max' => 600, 'step' => 10, 'default' => 220],
+        // A point in the ring cycle, like the scroll start and end; Still motion holds the rings there
+        'frame' => ['label' => 'Still frame', 'group' => 'Still', 'min' => 0, 'max' => 1, 'step' => 0.005, 'default' => 0],
     ];
 
     public function __construct(
@@ -51,6 +53,7 @@ final readonly class DopplerRingSettings implements Castable
         public float $scrollStart,
         public float $scrollEnd,
         public int $pinLength,
+        public float $frame,
         public bool $travelLeft,
         public HeroRingsMotion $motion,
     ) {}
@@ -82,6 +85,7 @@ final readonly class DopplerRingSettings implements Castable
             // The pin has to move forward, or scrolling would play nothing
             scrollEnd: max((float) $number('scrollEnd'), $scrollStart + self::Ranges['scrollEnd']['step']),
             pinLength: (int) round($number('pinLength')),
+            frame: (float) $number('frame'),
             travelLeft: (bool) ($values['travelLeft'] ?? true),
             motion: HeroRingsMotion::tryFrom((string) ($values['motion'] ?? '')) ?? HeroRingsMotion::Scroll,
         );
@@ -133,6 +137,8 @@ final readonly class DopplerRingSettings implements Castable
             '--source-x: '.($this->travelLeft ? 880 : 120).'px',
             "--axis: {$this->axis}",
             "--axis-mobile: {$this->axisMobile}",
+            // Still motion: the rings are scrubbed (paused) at one frame, no script needed
+            ...($this->motion === HeroRingsMotion::Still ? ["--progress: {$this->frame}"] : []),
         ]);
     }
 
