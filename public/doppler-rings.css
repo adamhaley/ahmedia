@@ -245,6 +245,96 @@
 }
 
 /*
+ * Laptop width and up: the controls shrink into a side panel the height of
+ * the screen, scrolling on their own, so the rings stay in view while you
+ * tune them. A container query, so the admin editor (narrower, beside the
+ * Filament sidebar) switches by its own width.
+ */
+.doppler-lab {
+  container-type: inline-size;
+}
+
+@container (min-width: 56rem) {
+  .doppler-lab-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .doppler-lab-stage,
+  .doppler-lab-panel {
+    height: min(calc(100svh - var(--header-height, 4rem) - 2rem), 44rem);
+  }
+
+  .doppler-lab-stage {
+    margin-top: 0;
+  }
+
+  .doppler-lab-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--color-accent) 50%, transparent) transparent;
+  }
+
+  .doppler-lab-panel .doppler-lab-actions {
+    margin-top: 0;
+    gap: 0.5rem;
+  }
+
+  .doppler-lab-panel .button,
+  .doppler-lab-panel .doppler-lab-button {
+    min-height: 0;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-import {
+    margin-top: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-import input {
+    flex-basis: 0;
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-controls {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-controls fieldset,
+  .doppler-lab-panel .doppler-lab-scroll {
+    gap: 0.55rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-controls legend {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Name and value share a line, with the slider underneath */
+  .doppler-lab-panel .doppler-lab-controls label:not(.doppler-lab-check) {
+    grid-template-columns: 1fr auto;
+    gap: 0.1rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .doppler-lab-panel .doppler-lab-controls input[type="range"] {
+    grid-column: 1 / -1;
+  }
+
+  .doppler-lab-panel .doppler-lab-check {
+    font-size: 0.85rem;
+  }
+}
+
+/*
  * Admin rings style editor (resources/views/filament/doppler-rings-editor):
  * the admin has none of the site's stylesheet, so this supplies the site
  * colours and button look the lab relies on. --color-accent comes inline.
