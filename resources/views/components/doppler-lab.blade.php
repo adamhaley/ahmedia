@@ -1,4 +1,4 @@
-@props(['settings' => \App\Data\DopplerRingSettings::fromArray(['motion' => 'auto']), 'editor' => false])
+@props(['settings' => \App\Data\DopplerRingSettings::fromArray(['motion' => 'auto']), 'editor' => false, 'eyebrow' => null, 'heading' => 'Lab - Make your own rings', 'intro' => null])
 @php
   $ranges = collect(\App\Data\DopplerRingSettings::Ranges)->groupBy('group', preserveKeys: true);
   // The admin has no site stylesheet, so the editor's buttons are styled in doppler-rings.css
@@ -16,12 +16,25 @@
 <section @class(['doppler-lab', 'section' => ! $editor]) data-doppler-lab @if ($editor) data-doppler-editor @endif>
   <div @class(['container' => ! $editor])>
     @unless ($editor)
-    <p class="eyebrow">Try it</p>
-    <h1 class="section-title">Make your own rings</h1>
+    @if ($eyebrow)
+    <p class="eyebrow">{{ $eyebrow }}</p>
+    @endif
+    <h1 class="section-title">{{ $heading }}</h1>
+    @if ($intro)
+    <p class="lede">{{ $intro }}</p>
+    @endif
     @endunless
 
     <div class="doppler-lab-stage">
       <x-doppler-rings :settings="$settings" />
+    </div>
+
+    <div class="button-row doppler-lab-actions">
+      <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
+      @unless ($editor)
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
+      @endunless
     </div>
 
     <div class="doppler-lab-controls">
@@ -53,14 +66,6 @@
           @endforeach
         </div>
       </fieldset>
-    </div>
-
-    <div class="button-row doppler-lab-actions">
-      <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Back to the logo' }}</button>
-      @unless ($editor)
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
-      @endunless
     </div>
   </div>
 </section>

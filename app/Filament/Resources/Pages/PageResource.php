@@ -96,39 +96,45 @@ class PageResource extends Resource
                     ->helperText('Top-level pages only; child pages appear in their parent\'s dropdown.'),
             ]),
 
-            Section::make('Hero')->schema([
-                TextInput::make('hero_heading')->label('Heading')->placeholder('Defaults to the page title'),
-                TextInput::make('hero_subheading')->label('Subheading'),
-                // Empty means "inherit" on a child page, so "No rings" is its own option there,
-                // stored as hide_doppler_rings
-                Select::make('doppler_ring_style_id')
-                    ->label('Doppler rings')
-                    // + rather than spread: spreading renumbers the style ids
-                    ->options(fn (Get $get): array => DopplerRingStyle::query()->orderBy('name')->pluck('name', 'id')->all()
-                        + ($get('parent_id') ? [self::NoRings => 'No rings'] : []))
-                    ->placeholder(fn (Get $get): string => $get('parent_id') ? 'Same as parent page' : 'No rings')
-                    ->formatStateUsing(fn (mixed $state, ?Page $record): mixed => $record?->hide_doppler_rings ? self::NoRings : $state)
-                    ->dehydrateStateUsing(fn (mixed $state): mixed => $state === self::NoRings ? null : $state)
-                    ->live()
-                    ->helperText(fn (Get $get): string => self::ringsHelperText($get)),
-                Hidden::make('hide_doppler_rings')
-                    ->dehydrateStateUsing(fn (Get $get): bool => $get('doppler_ring_style_id') === self::NoRings),
-                FileUpload::make('hero_image')
-                    ->label('Hero image')
-                    ->helperText('Not currently used by any ahmedia template (the current hero is a text/glow treatment) -- kept for future use.')
-                    ->image()
-                    ->imageEditor()
-                    ->disk('public')
-                    ->directory('pages')
-                    ->visibility('public')
-                    ->hidden(fn (Get $get): bool => self::template($get) === PageTemplate::Home),
-            ]),
+            Section::make('Hero')
+                ->description(fn (Get $get): ?string => self::template($get) === PageTemplate::Logo
+                    ? 'The heading above the rings lab. Its eyebrow is the one under Content.'
+                    : null)
+                ->schema([
+                    TextInput::make('hero_heading')->label('Heading')->placeholder('Defaults to the page title'),
+                    TextInput::make('hero_subheading')->label('Subheading'),
+                    // Empty means "inherit" on a child page, so "No rings" is its own option there,
+                    // stored as hide_doppler_rings
+                    Select::make('doppler_ring_style_id')
+                        ->label('Doppler rings')
+                        // + rather than spread: spreading renumbers the style ids
+                        ->options(fn (Get $get): array => DopplerRingStyle::query()->orderBy('name')->pluck('name', 'id')->all()
+                            + ($get('parent_id') ? [self::NoRings => 'No rings'] : []))
+                        ->placeholder(fn (Get $get): string => $get('parent_id') ? 'Same as parent page' : 'No rings')
+                        ->formatStateUsing(fn (mixed $state, ?Page $record): mixed => $record?->hide_doppler_rings ? self::NoRings : $state)
+                        ->dehydrateStateUsing(fn (mixed $state): mixed => $state === self::NoRings ? null : $state)
+                        ->live()
+                        ->helperText(fn (Get $get): string => self::ringsHelperText($get))
+                        ->hidden(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
+                    Hidden::make('hide_doppler_rings')
+                        ->dehydrateStateUsing(fn (Get $get): bool => $get('doppler_ring_style_id') === self::NoRings),
+                    FileUpload::make('hero_image')
+                        ->label('Hero image')
+                        ->helperText('Not currently used by any ahmedia template (the current hero is a text/glow treatment) -- kept for future use.')
+                        ->image()
+                        ->imageEditor()
+                        ->disk('public')
+                        ->directory('pages')
+                        ->visibility('public')
+                        ->hidden(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Logo], true)),
+                ]),
 
             Section::make('Content')
                 ->description(fn (Get $get): ?string => match (self::template($get)) {
                     PageTemplate::Home => 'The Approach spotlight on the homepage.',
                     PageTemplate::Contact => 'The eyebrow is also used above the contact form on the homepage.',
                     PageTemplate::CaseStudiesIndex => 'The eyebrow is also used above the case studies on the homepage.',
+                    PageTemplate::Logo => 'The eyebrow sits above the lab; the heading, body and bullets tell the story below it. Leave a blank line between paragraphs. Buttons aren\'t shown on this page.',
                     default => null,
                 })
                 ->schema([
