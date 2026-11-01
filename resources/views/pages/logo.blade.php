@@ -1,5 +1,8 @@
 <x-layouts.site :page="$page">
   <x-doppler-lab
+    :settings="$labSettings"
+    :frozen="$labFrozen"
+    :tempo="$labTempo"
     :eyebrow="$page->section_eyebrow"
     :heading="$page->hero_heading ?: $page->title"
     :intro="$page->hero_subheading"

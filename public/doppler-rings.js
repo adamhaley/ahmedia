@@ -127,7 +127,98 @@
       }
     }
 
-    lab.addEventListener('input', render);
+    // The lab page's address describes what's on screen, so a copied link
+    // reopens this arrangement (PageController reads it back). Frozen, it
+    // also keeps the frame ("at", the rings' time in ms). Debounced, as
+    // browsers cap how often a page may rewrite its address.
+    let addressTimer;
+    function writeAddress() {
+      clearTimeout(addressTimer);
+      const current = settings();
+      const params = new URLSearchParams();
+      ['mach', 'rings', 'period', 'reach', 'spacing', 'size', 'seed', 'tempo', 'stroke', 'glow', 'axis', 'axisMobile', 'motion']
+        .forEach(function (key) { params.set(key, current[key]); });
+      params.set('travelLeft', current.travelLeft ? 1 : 0);
+      if (current.motion === 'scroll') {
+        ['scrollStart', 'scrollEnd', 'pinLength'].forEach(function (key) { params.set(key, current[key]); });
+      } else if (current.frozen) {
+        const animation = svg.getAnimations({ subtree: true })[0];
+        params.set('frozen', 1);
+        if (animation) params.set('at', Math.round(Number(animation.currentTime)));
+      }
+      history.replaceState(null, '', '?' + params.toString());
+    }
+
+    function updateAddress() {
+      if (lab.hasAttribute('data-doppler-editor')) return;
+      clearTimeout(addressTimer);
+      addressTimer = setTimeout(writeAddress, 250);
+    }
+
+    // The first painted background behind the stage, for the image's backdrop
+    function backgroundOf(element) {
+      for (let node = element; node; node = node.parentElement) {
+        const colour = getComputedStyle(node).backgroundColor;
+        if (colour !== 'rgba(0, 0, 0, 0)' && colour !== 'transparent') return colour;
+      }
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-page-top');
+    }
+
+    // Draws the frame on screen to a PNG. Each ring's position, size and fade
+    // are read live from the page, so it matches mid-motion or frozen.
+    function saveImage() {
+      const current = settings();
+      const stage = svg.parentElement;
+      const box = stage.getBoundingClientRect();
+      const pixelRatio = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = box.width * pixelRatio;
+      canvas.height = box.height * pixelRatio;
+      const context = canvas.getContext('2d');
+      context.scale(pixelRatio, pixelRatio);
+      context.fillStyle = backgroundOf(stage);
+      context.fillRect(0, 0, box.width, box.height);
+      context.lineWidth = current.stroke;
+      context.strokeStyle = getComputedStyle(svg.querySelector('circle')).stroke;
+      context.shadowColor = getComputedStyle(svg).getPropertyValue('--glow-color').trim() || context.strokeStyle;
+      context.shadowBlur = current.glow;
+      svg.querySelectorAll('circle').forEach(function (circle) {
+        const ring = circle.getBoundingClientRect();
+        context.globalAlpha = Number(getComputedStyle(circle).opacity);
+        context.beginPath();
+        context.arc(ring.left - box.left + ring.width / 2, ring.top - box.top + ring.height / 2, ring.width / 2, 0, 2 * Math.PI);
+        context.stroke();
+      });
+
+      const link = document.createElement('a');
+      link.download = 'doppler-rings-seed-' + current.seed + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // A pasted link reloads the lab on its arrangement, frozen frame and all.
+    // Only its query string is used, so a link can't send visitors elsewhere.
+    const importForm = lab.querySelector('[data-doppler-import]');
+    if (importForm) {
+      const linkField = importForm.elements.link;
+      importForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const search = new URL(linkField.value.trim(), location.href).search;
+        if (!new URLSearchParams(search).has('seed')) {
+          linkField.setCustomValidity("That doesn't look like a lab link");
+          linkField.reportValidity();
+          return;
+        }
+        location.search = search;
+      });
+      linkField.addEventListener('input', function () { linkField.setCustomValidity(''); });
+    }
+
+    lab.addEventListener('input', function (event) {
+      if (event.target.name === 'link') return;
+      render();
+      updateAddress();
+    });
     lab.addEventListener('click', function (event) {
       const button = event.target.closest('[data-doppler-action]');
       if (!button) return;
@@ -138,18 +229,28 @@
       } else if (action === 'reset') {
         ranges.forEach(function (input) { input.value = input.defaultValue; });
         toggles.forEach(function (input) { input.checked = input.defaultChecked; });
-      } else if (action === 'copy') {
+      } else if (action === 'save-image') {
+        saveImage();
+        return;
+      } else if (action === 'copy-link') {
         const label = button.textContent;
-        navigator.clipboard.writeText(JSON.stringify(settings()))
+        writeAddress();
+        navigator.clipboard.writeText(location.href)
           .then(function () { button.textContent = 'Copied'; })
           .catch(function () { button.textContent = 'Copy failed'; })
           .finally(function () { setTimeout(function () { button.textContent = label; }, 1500); });
         return;
       }
       render();
+      updateAddress();
     });
 
     render();
+    // A shared frozen frame: put every ring back where it was
+    const sharedFrame = new URLSearchParams(location.search).get('at');
+    if (sharedFrame !== null && !lab.hasAttribute('data-doppler-editor') && checked('frozen')) {
+      svg.getAnimations({ subtree: true }).forEach(function (animation) { animation.currentTime = Number(sharedFrame); });
+    }
   })();
 
   // Pinned hero: while the hero is stuck (.hero-pin), scroll position drives

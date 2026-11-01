@@ -189,6 +189,31 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSeeInOrder(['data-doppler-lab', '<p class="section-copy">First paragraph.</p>', '<p class="section-copy">Second paragraph.</p>'], false);
     }
 
+    #[Test]
+    public function it_opens_the_logo_lab_on_a_shared_arrangement(): void
+    {
+        $page = Page::query()->create(['title' => 'Our Logo', 'slug' => 'logo', 'template' => PageTemplate::Logo, 'is_published' => true]);
+
+        $response = $this->get($page->url().'?seed=42&rings=5&tempo=0.12&frozen=1&travelLeft=0');
+
+        $response->assertOk()->assertSeeInOrder([
+            'name="seed" min="1" max="999" step="1" value="42"',
+            'name="tempo" min="0" max="0.3" step="0.01" value="0.12"',
+            'name="frozen" checked',
+            'name="travelLeft" >',
+        ], false);
+    }
+
+    #[Test]
+    public function it_ignores_malformed_lab_settings_in_the_address(): void
+    {
+        $page = Page::query()->create(['title' => 'Our Logo', 'slug' => 'logo', 'template' => PageTemplate::Logo, 'is_published' => true]);
+
+        $response = $this->get($page->url().'?motion[]=scroll&seed[]=3&rings=banana');
+
+        $response->assertOk()->assertSee('name="rings" min="2" max="14" step="1" value="8"', false);
+    }
+
     /** @param array<string, mixed> $attributes */
     private function homePage(array $attributes = []): Page
     {

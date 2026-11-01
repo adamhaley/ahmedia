@@ -1,4 +1,4 @@
-@props(['settings' => \App\Data\DopplerRingSettings::fromArray(['motion' => 'auto']), 'editor' => false, 'eyebrow' => null, 'heading' => 'Lab - Make your own rings', 'intro' => null])
+@props(['settings' => \App\Data\DopplerRingSettings::fromArray(['motion' => 'auto']), 'editor' => false, 'eyebrow' => null, 'heading' => 'Lab - Make your own rings', 'intro' => null, 'frozen' => false, 'tempo' => 0])
 @php
   $ranges = collect(\App\Data\DopplerRingSettings::Ranges)->groupBy('group', preserveKeys: true);
   // The admin has no site stylesheet, so the editor's buttons are styled in doppler-rings.css
@@ -33,9 +33,17 @@
       <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
       <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
       @unless ($editor)
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy">Copy settings</button>
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy-link">Copy link</button>
+      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="save-image">Save image</button>
       @endunless
     </div>
+
+    @unless ($editor)
+    <form class="doppler-lab-import" data-doppler-import>
+      <input type="text" name="link" placeholder="Paste a shared lab link" aria-label="Shared lab link" autocomplete="off">
+      <button type="submit" class="button button-secondary">Open</button>
+    </form>
+    @endunless
 
     <div class="doppler-lab-controls">
       @foreach (['Geometry', 'Randomness', 'Style', 'Axis'] as $group)
@@ -45,10 +53,10 @@
         {!! $slider($name, $range, $settings->{$name}) !!}
         @endforeach
         @if ($group === 'Randomness' && ! $editor)
-        {!! $slider('tempo', ['label' => 'Tempo jitter (no repeats)', 'min' => 0, 'max' => 0.3, 'step' => 0.01], 0) !!}
+        {!! $slider('tempo', ['label' => 'Tempo jitter (no repeats)', 'min' => 0, 'max' => 0.3, 'step' => 0.01], $tempo) !!}
         @endif
         @if ($group === 'Style')
-        <label class="doppler-lab-check"><input type="checkbox" name="frozen"> Freeze</label>
+        <label class="doppler-lab-check"><input type="checkbox" name="frozen" @checked($frozen)> Freeze</label>
         <label class="doppler-lab-check"><input type="checkbox" name="travelLeft" @checked($settings->travelLeft)> Travel left</label>
         @endif
       </fieldset>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\DopplerRingSettings;
 use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
 use App\Models\FaqItem;
@@ -22,12 +23,12 @@ class PageController extends Controller
 
         return response()->view($page->template->view(), [
             'page' => $page,
-            ...$this->templateData($page),
+            ...$this->templateData($page, $request),
         ]);
     }
 
     /** @return array<string, mixed> */
-    private function templateData(Page $page): array
+    private function templateData(Page $page, Request $request): array
     {
         return match ($page->template) {
             PageTemplate::Home => [
@@ -51,6 +52,12 @@ class PageController extends Controller
             ],
             PageTemplate::CaseStudiesIndex => [
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),
+            ],
+            // A shared lab link carries its arrangement in the query string (public/doppler-rings.js)
+            PageTemplate::Logo => [
+                'labSettings' => DopplerRingSettings::fromArray(['motion' => 'auto', ...array_filter($request->query(), is_string(...))]),
+                'labFrozen' => $request->boolean('frozen'),
+                'labTempo' => $request->float('tempo'),
             ],
             default => [],
         };
