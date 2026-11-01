@@ -25,10 +25,12 @@
     @endif
     @endunless
 
+    <div class="doppler-lab-workspace">
     <div class="doppler-lab-stage">
       <x-doppler-rings :settings="$settings" />
     </div>
 
+    <div class="doppler-lab-panel">
     <div class="button-row doppler-lab-actions">
       <button type="button" class="{{ $button('primary') }}" data-doppler-action="reshuffle">Reshuffle</button>
       <button type="button" class="{{ $button('secondary') }}" data-doppler-action="reset">{{ $editor ? 'Back to saved' : 'Reset' }}</button>
@@ -74,6 +76,8 @@
           @endforeach
         </div>
       </fieldset>
+    </div>
+    </div>
     </div>
   </div>
 </section>
