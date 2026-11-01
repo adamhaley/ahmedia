@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\PageTemplate;
+use App\Models\DopplerRingStyle;
 use App\Models\Page;
 use App\Models\SiteSetting;
 use Illuminate\Database\Seeder;
@@ -36,6 +37,8 @@ class AhmediaContentSeeder extends Seeder
                 'title' => 'AH Media',
                 'slug' => null,
                 'template' => PageTemplate::Home,
+                // The rings style the create_doppler_ring_styles migration made for the homepage
+                'doppler_ring_style_id' => DopplerRingStyle::query()->where('name', 'Homepage')->value('id'),
                 'is_published' => true,
                 'show_in_nav' => false,
                 'hero_heading' => 'AH Media',

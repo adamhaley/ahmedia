@@ -22,6 +22,7 @@
     <meta name="description" content="{{ $metaDescription }}" />
     @endif
     <link rel="stylesheet" href="/styles.css?v={{ filemtime(public_path('styles.css')) }}" />
+    <link rel="stylesheet" href="/doppler-rings.css?v={{ filemtime(public_path('doppler-rings.css')) }}" />
     @if ($settings->accent_color)
     <style>:root { --color-accent: {{ $settings->accent_color }}; }</style>
     @endif
@@ -77,5 +78,6 @@
       </div>
     </div>
     <script src="/scripts.js?v={{ filemtime(public_path('scripts.js')) }}"></script>
+    <script src="/doppler-rings.js?v={{ filemtime(public_path('doppler-rings.js')) }}"></script>
   </body>
 </html>

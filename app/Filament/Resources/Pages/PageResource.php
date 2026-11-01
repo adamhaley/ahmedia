@@ -9,12 +9,14 @@ use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Pages\RelationManagers\ChildPagesRelationManager;
 use App\Filament\Resources\Pages\RelationManagers\PackagesRelationManager;
+use App\Models\DopplerRingStyle;
 use App\Models\Page;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -38,6 +40,9 @@ use UnitEnum;
 
 class PageResource extends Resource
 {
+    /** The rings picker's "No rings" option, set apart from the empty "inherit" choice. */
+    private const NoRings = 'none';
+
     protected static ?string $model = Page::class;
 
     protected static string|UnitEnum|null $navigationGroup = 'Site';
@@ -94,6 +99,20 @@ class PageResource extends Resource
             Section::make('Hero')->schema([
                 TextInput::make('hero_heading')->label('Heading')->placeholder('Defaults to the page title'),
                 TextInput::make('hero_subheading')->label('Subheading'),
+                // Empty means "inherit" on a child page, so "No rings" is its own option there,
+                // stored as hide_doppler_rings
+                Select::make('doppler_ring_style_id')
+                    ->label('Doppler rings')
+                    // + rather than spread: spreading renumbers the style ids
+                    ->options(fn (Get $get): array => DopplerRingStyle::query()->orderBy('name')->pluck('name', 'id')->all()
+                        + ($get('parent_id') ? [self::NoRings => 'No rings'] : []))
+                    ->placeholder(fn (Get $get): string => $get('parent_id') ? 'Same as parent page' : 'No rings')
+                    ->formatStateUsing(fn (mixed $state, ?Page $record): mixed => $record?->hide_doppler_rings ? self::NoRings : $state)
+                    ->dehydrateStateUsing(fn (mixed $state): mixed => $state === self::NoRings ? null : $state)
+                    ->live()
+                    ->helperText(fn (Get $get): string => self::ringsHelperText($get)),
+                Hidden::make('hide_doppler_rings')
+                    ->dehydrateStateUsing(fn (Get $get): bool => $get('doppler_ring_style_id') === self::NoRings),
                 FileUpload::make('hero_image')
                     ->label('Hero image')
                     ->helperText('Not currently used by any ahmedia template (the current hero is a text/glow treatment) -- kept for future use.')
@@ -237,6 +256,20 @@ class PageResource extends Resource
             'create' => CreatePage::route('/create'),
             'edit' => EditPage::route('/{record}/edit'),
         ];
+    }
+
+    private static function ringsHelperText(Get $get): string
+    {
+        $parent = Page::query()->find($get('parent_id'));
+        if (! $parent || filled($get('doppler_ring_style_id'))) {
+            return 'Rings behind the hero title. Styles are edited under Site → Doppler rings.';
+        }
+
+        $inherited = $parent->heroRingStyle()?->name;
+
+        return $inherited
+            ? "Inheriting \"{$inherited}\" from {$parent->title}. Pick a style to override it."
+            : "{$parent->title} has no rings, so neither does this page. Pick a style to add them.";
     }
 
     private static function template(Get $get): ?PageTemplate
