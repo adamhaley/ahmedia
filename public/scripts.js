@@ -480,21 +480,21 @@
 // Doppler rings: the lab on the logo page, and the pinned homepage hero.
 // Both share scrubRings(), so scroll previews in the lab match the site.
 (function () {
-  const fadeInEnd = 0.3; // matches the 30% keyframe in doppler-propagate
-  const peakOpacity = 0.9;
+  // Holds the rings at a point in their cycle (CSS .is-scrubbed pauses the
+  // keyframes; --progress picks the frame). progress 0 is the logo
+  // arrangement; a whole cycle later (1, 2, ...) is the same arrangement again.
+  function scrubRings(svg, progress) {
+    if (!svg.classList.contains('is-scrubbed')) {
+      svg.classList.add('is-scrubbed');
+      // A paused animation holds whatever time it had reached; zero it so --progress alone sets the frame
+      svg.getAnimations({ subtree: true }).forEach(function (animation) { animation.currentTime = 0; });
+    }
+    svg.style.setProperty('--progress', progress);
+  }
 
-  // Places each ring at a point in its cycle, using the same maths as the
-  // doppler-propagate keyframes. progress 0 is the logo arrangement; a whole
-  // cycle later (1, 2, ...) is the same arrangement again.
-  function scrubRings(circles, phases, progress) {
-    circles.forEach(function (circle, index) {
-      const ring = (((progress + (index + phases[index]) / circles.length) % 1) + 1) % 1;
-      const opacity = ring < fadeInEnd
-        ? peakOpacity * ring / fadeInEnd
-        : peakOpacity * (1 - ring) / (1 - fadeInEnd);
-      circle.style.setProperty('--q', ring.toFixed(4));
-      circle.style.setProperty('--o', opacity.toFixed(3));
-    });
+  function releaseRings(svg) {
+    svg.classList.remove('is-scrubbed');
+    svg.style.removeProperty('--progress');
   }
 
   // Lab: sliders rebuild the rings live. Per-ring offsets come from a seeded
@@ -582,10 +582,10 @@
       // Scroll motion: the preview slider stands in for scrolling through the pin
       const isScroll = current.motion === 'scroll';
       scrollOnly.forEach(function (element) { element.hidden = !isScroll; });
-      svg.classList.toggle('is-scrubbed', isScroll);
       if (isScroll) {
-        const progress = current.scrollStart + value('preview') * (current.scrollEnd - current.scrollStart);
-        scrubRings(circles, current.perRing.map(function (ring) { return ring.phase; }), progress);
+        scrubRings(svg, current.scrollStart + value('preview') * (current.scrollEnd - current.scrollStart));
+      } else {
+        releaseRings(svg);
       }
     }
 
@@ -625,8 +625,6 @@
     const svg = pin.querySelector('.doppler-rings');
     if (!svg) return;
 
-    const circles = Array.from(svg.querySelectorAll('circle'));
-    const phases = circles.map(function (circle) { return Number(circle.style.getPropertyValue('--phase')); });
     const cycleStart = Number(pin.dataset.start);
     const cycleEnd = Number(pin.dataset.end);
     let frameRequested = false;
@@ -638,7 +636,7 @@
       pin.style.setProperty('--pin-top', pinTop + 'px');
       const pinDistance = Math.max(pin.offsetHeight - (window.innerHeight - pinTop), 1);
       const scrolled = Math.min(Math.max((pinTop - pin.getBoundingClientRect().top) / pinDistance, 0), 1);
-      scrubRings(circles, phases, cycleStart + scrolled * (cycleEnd - cycleStart));
+      scrubRings(svg, cycleStart + scrolled * (cycleEnd - cycleStart));
     }
 
     function requestUpdate() {
@@ -647,7 +645,6 @@
       window.requestAnimationFrame(update);
     }
 
-    svg.classList.add('is-scrubbed');
     window.addEventListener('scroll', requestUpdate, { passive: true });
     window.addEventListener('resize', requestUpdate);
     update();

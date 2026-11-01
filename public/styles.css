@@ -411,7 +411,12 @@ body {
   opacity: 0;
   /* --tempo (lab only) gives each ring its own cycle, so the set never repeats */
   animation: doppler-propagate calc(var(--period) * var(--tempo, 1)) linear infinite;
-  animation-delay: calc(var(--period) * (var(--i) + var(--phase)) / var(--rings) * -1);
+  /*
+   * --progress (in cycles) moves every ring on together; scripts.js sets it
+   * from scroll. The extra whole cycle keeps the delay negative even for a
+   * negative --phase, so no ring waits to start (a positive delay hides it).
+   */
+  animation-delay: calc(var(--period) * ((var(--i) + var(--phase)) / var(--rings) + var(--progress, 0) + 1) * -1);
 }
 
 .doppler-rings.is-frozen circle {
@@ -441,16 +446,12 @@ body {
 }
 
 /*
- * Scroll-scrubbed rings (pinned hero): scripts.js sets each ring's progress
- * (--q, 0 to 1) and opacity (--o) from the scroll position, using the same
- * maths as the doppler-propagate keyframes.
+ * Scroll-scrubbed rings (pinned hero, lab preview): the keyframes pause and
+ * --progress picks the frame, so the motion is only ever defined in
+ * doppler-propagate.
  */
 .doppler-rings.is-scrubbed circle {
-  animation: none;
-  transform:
-    translate(calc(var(--source-x) + var(--reach) * var(--mach) * var(--direction) * var(--q) * 1px), var(--source-y))
-    scale(calc(var(--reach) * (1 + var(--size)) * max(var(--q), 0.001)));
-  opacity: var(--o);
+  animation-play-state: paused;
 }
 
 /* The hero sticks while the reader scrolls through this extra height, then releases */
@@ -484,7 +485,7 @@ body {
     opacity: 0;
   }
 
-  /* Rings stay faint near the source and brighten as they travel out (fadeInEnd in scripts.js) */
+  /* Rings stay faint near the source and brighten as they travel out */
   30% {
     opacity: 0.9;
   }
