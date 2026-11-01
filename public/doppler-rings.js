@@ -190,6 +190,17 @@
         context.stroke();
       });
 
+      // A quiet credit in the corner, so a shared image leads back to the lab
+      const creditSize = Math.max(11, Math.round(box.width / 70));
+      const creditInset = creditSize;
+      context.globalAlpha = 0.55;
+      context.shadowBlur = 0;
+      context.fillStyle = context.strokeStyle;
+      context.font = '600 ' + creditSize + 'px ' + getComputedStyle(document.body).fontFamily;
+      context.textAlign = 'right';
+      context.textBaseline = 'bottom';
+      context.fillText((location.host + location.pathname).replace(/\/$/, ''), box.width - creditInset, box.height - creditInset);
+
       const link = document.createElement('a');
       link.download = 'doppler-rings-seed-' + current.seed + '.png';
       link.href = canvas.toDataURL('image/png');
