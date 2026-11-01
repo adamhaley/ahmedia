@@ -506,9 +506,7 @@ body {
 
 /* On narrow screens the copy spans the width, so keep the rings behind it quieter */
 @media (max-width: 960px) {
-  /* The stacked copy puts the title above the hero's middle, so raise the horizon to meet it */
   .hero-rings .doppler-rings {
-    --source-y: 250px;
     opacity: 0.45;
   }
 }
