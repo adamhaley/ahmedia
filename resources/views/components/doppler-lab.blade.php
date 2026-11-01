@@ -17,7 +17,7 @@
   <div @class(['container' => ! $editor])>
     @unless ($editor)
     <p class="eyebrow">Try it</p>
-    <h2 class="section-title">Make your own rings</h2>
+    <h1 class="section-title">Make your own rings</h1>
     @endunless
 
     <div class="doppler-lab-stage">
