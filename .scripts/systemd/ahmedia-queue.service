@@ -1,0 +1,15 @@
+[Unit]
+Description=AH Media queue worker (contact submission classification, lead emails)
+After=network.target mysqld.service
+
+[Service]
+User=ahmedia
+WorkingDirectory=/home/ahmedia/public_html
+ExecStart=/usr/local/php84/bin/php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+# max-time recycles the worker hourly so it always runs the code from the
+# most recent deploy, as a backstop for deploy.sh's queue:restart.
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
