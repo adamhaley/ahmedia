@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ButtonStyle;
+use App\Enums\ContactSubmissionClassification;
 use App\Enums\ContactSubmissionSource;
 use App\Enums\FaqMatchOutcome;
 use App\Enums\HeroRingsMotion;
@@ -10,6 +11,12 @@ return [
     ButtonStyle::class => [
         'primary' => 'Primary',
         'secondary' => 'Secondary',
+    ],
+    ContactSubmissionClassification::class => [
+        'valid' => 'Valid',
+        'spam' => 'Spam',
+        'unanswerable' => 'Unanswerable',
+        'needs_human' => 'Needs human',
     ],
     ContactSubmissionSource::class => [
         'contact_form' => 'Contact form',

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ContactSubmissionSource;
 use App\Models\ContactSubmission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,7 @@ class ContactSubmissionFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'message' => fake()->paragraph(),
+            'source' => ContactSubmissionSource::ContactForm,
         ];
     }
 }
