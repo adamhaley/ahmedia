@@ -55,7 +55,7 @@ class PageController extends Controller
             ],
             // A shared lab link carries its arrangement in the query string (public/doppler-rings.js)
             PageTemplate::Logo => [
-                'labSettings' => DopplerRingSettings::fromArray(['motion' => 'auto', ...array_filter($request->query(), is_string(...))]),
+                'labSettings' => DopplerRingSettings::fromArray(['motion' => 'still', ...array_filter($request->query(), is_string(...))]),
                 'labFrozen' => $request->boolean('frozen'),
                 'labTempo' => $request->float('tempo'),
             ],

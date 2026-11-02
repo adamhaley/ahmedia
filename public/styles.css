@@ -82,22 +82,40 @@ a {
   text-decoration: none;
 }
 
-.site-nav,
-.footer-links {
+.site-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.site-nav a,
-.footer-links a {
+.site-nav a {
   text-decoration: none;
   color: var(--color-muted);
 }
 
-.site-nav a:hover,
-.footer-links a:hover {
+.site-nav a:hover {
   color: var(--color-text);
+}
+
+/* Footer social and email icons, the same row as dreamworldcirque's (Site settings → Social profiles) */
+.footer-social {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.footer-social a {
+  display: inline-flex;
+  color: var(--color-muted);
+  transition: color 180ms ease;
+}
+
+.footer-social a:hover {
+  color: var(--color-text);
+}
+
+.footer-social svg {
+  width: auto;
+  height: 1.15rem;
 }
 
 .nav-item.has-dropdown {

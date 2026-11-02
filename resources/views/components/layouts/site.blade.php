@@ -67,7 +67,20 @@
             <p class="footer-copy">{{ $settings->footer_tagline }}</p>
             @endif
           </div>
-          <div class="footer-links"></div>
+          <div class="footer-social">
+            @if ($settings->facebook_url)
+            <a href="{{ $settings->facebook_url }}" aria-label="Facebook"><x-icon.facebook /></a>
+            @endif
+            @if ($settings->instagram_url)
+            <a href="{{ $settings->instagram_url }}" aria-label="Instagram"><x-icon.instagram /></a>
+            @endif
+            @if ($settings->linkedin_url)
+            <a href="{{ $settings->linkedin_url }}" aria-label="LinkedIn"><x-icon.linkedin /></a>
+            @endif
+            @if ($settings->contact_email)
+            <a href="mailto:{{ $settings->contact_email }}" aria-label="Email {{ $settings->contact_email }}" title="{{ $settings->contact_email }}"><x-icon.email /></a>
+            @endif
+          </div>
         </div>
       </footer>
       <x-chat-widget />
