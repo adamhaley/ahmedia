@@ -49,6 +49,14 @@ class SiteSettings extends Page
                         TextInput::make('contact_email')->label('Email')->email(),
                         TextInput::make('phone')->tel(),
                     ]),
+                Section::make('Social profiles')
+                    ->description('Leave a field empty to hide that icon in the footer.')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('facebook_url')->label('Facebook')->url(),
+                        TextInput::make('instagram_url')->label('Instagram')->url(),
+                        TextInput::make('linkedin_url')->label('LinkedIn')->url(),
+                    ]),
                 Section::make('Branding')
                     ->description('The accent color used sitewide -- eyebrows, buttons, links, glow effects. Leave empty for the default neon cyan.')
                     ->schema([
