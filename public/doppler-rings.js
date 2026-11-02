@@ -175,8 +175,9 @@
     // Draws the frame on screen to an image. Each ring's position, size and
     // fade are read live from the page, so it matches mid-motion or frozen.
     // "instagram" reframes it as a 4:5 portrait JPEG at 1080 x 1350 (the
-    // tallest feed post Instagram takes), centred on the visible rings;
-    // rings beyond the stage's edges are still drawn, so the wider crop fills.
+    // tallest feed post Instagram takes). It keeps the stage's full width,
+    // source and empty space included, and extends above and below the axis
+    // instead; rings beyond the stage's edges are still drawn, so it fills.
     function saveImage(shape) {
       const current = settings();
       const stage = svg.parentElement;
@@ -192,24 +193,24 @@
       });
 
       const forInstagram = shape === 'instagram';
-      let frame = { left: 0, width: box.width };
+      let frame = { top: 0, width: box.width, height: box.height };
       if (forInstagram) {
         const instagramAspect = 4 / 5;
-        const visibleCentres = rings.filter(function (ring) { return ring.opacity > 0.15; }).map(function (ring) { return ring.x; });
-        const centre = visibleCentres.length ? (Math.min.apply(null, visibleCentres) + Math.max.apply(null, visibleCentres)) / 2 : box.width / 2;
-        frame = { left: centre - box.height * instagramAspect / 2, width: box.height * instagramAspect };
+        const height = box.width / instagramAspect;
+        const axis = rings.length ? rings[0].y : box.height / 2;
+        frame = { top: axis - height / 2, width: box.width, height: height };
       }
       const instagramWidth = 1080;
       const pixelRatio = forInstagram ? instagramWidth / frame.width : 2;
 
       const canvas = document.createElement('canvas');
       canvas.width = Math.round(frame.width * pixelRatio);
-      canvas.height = Math.round(box.height * pixelRatio);
+      canvas.height = Math.round(frame.height * pixelRatio);
       const context = canvas.getContext('2d');
       context.scale(pixelRatio, pixelRatio);
-      context.translate(-frame.left, 0);
+      context.translate(0, -frame.top);
       context.fillStyle = backgroundOf(stage);
-      context.fillRect(frame.left, 0, frame.width, box.height);
+      context.fillRect(0, frame.top, frame.width, frame.height);
       context.lineWidth = current.stroke;
       context.strokeStyle = getComputedStyle(svg.querySelector('circle')).stroke;
       context.shadowColor = getComputedStyle(svg).getPropertyValue('--glow-color').trim() || context.strokeStyle;
@@ -222,7 +223,7 @@
       });
 
       // A quiet credit in the corner, so a shared image leads back to the lab
-      const creditSize = Math.max(11, Math.round(Math.max(frame.width, box.height) / 70));
+      const creditSize = Math.max(11, Math.round(Math.max(frame.width, frame.height) / 70));
       const creditInset = creditSize;
       context.globalAlpha = 0.55;
       context.shadowBlur = 0;
@@ -230,7 +231,7 @@
       context.font = '600 ' + creditSize + 'px ' + getComputedStyle(document.body).fontFamily;
       context.textAlign = 'right';
       context.textBaseline = 'bottom';
-      context.fillText((location.host + location.pathname).replace(/\/$/, ''), frame.left + frame.width - creditInset, box.height - creditInset);
+      context.fillText((location.host + location.pathname).replace(/\/$/, ''), frame.width - creditInset, frame.top + frame.height - creditInset);
 
       const link = document.createElement('a');
       link.download = 'doppler-rings-seed-' + current.seed + (forInstagram ? '-instagram.jpg' : '.png');
