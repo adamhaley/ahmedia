@@ -487,8 +487,8 @@
   if (!header) return;
 
   // Turns solid alongside the back-to-top button (its threshold is 200)
-  const enterThreshold = 200;
-  const exitThreshold = 180;
+  const enterThreshold = 60;
+  const exitThreshold = 40;
   let isScrolled = false;
   let frameRequested = false;
 
