@@ -49,24 +49,10 @@
     @endunless
 
     <div class="doppler-lab-controls">
-      @foreach (['Geometry', 'Randomness', 'Style', 'Axis'] as $group)
+      @foreach (['Geometry', 'Motion', 'Randomness', 'Style', 'Axis'] as $group)
       <fieldset>
         <legend>{{ $group }}</legend>
-        @foreach ($ranges[$group] as $name => $range)
-        {!! $slider($name, $range, $settings->{$name}) !!}
-        @endforeach
-        @if ($group === 'Randomness' && ! $editor)
-        {!! $slider('tempo', ['label' => 'Tempo jitter (no repeats)', 'min' => 0, 'max' => 0.3, 'step' => 0.01], $tempo) !!}
-        @endif
-        @if ($group === 'Style')
-        <label class="doppler-lab-check"><input type="checkbox" name="frozen" @checked($frozen)> Freeze{{ $editor ? ' (preview only; use Still to save one)' : '' }}</label>
-        <label class="doppler-lab-check"><input type="checkbox" name="travelLeft" @checked($settings->travelLeft)> Travel left</label>
-        @endif
-      </fieldset>
-      @endforeach
-
-      <fieldset>
-        <legend>Motion</legend>
+        @if ($group === 'Motion')
         @foreach (\App\Enums\HeroRingsMotion::cases() as $motion)
         <label class="doppler-lab-check"><input type="radio" name="motion" value="{{ $motion->value }}" @checked($settings->motion === $motion)> {{ $motion->getLabel() }}</label>
         @endforeach
@@ -81,7 +67,20 @@
           {!! $slider($name, $range, $settings->{$name}) !!}
           @endforeach
         </div>
+        @else
+        @foreach ($ranges[$group] as $name => $range)
+        {!! $slider($name, $range, $settings->{$name}) !!}
+        @endforeach
+        @if ($group === 'Randomness' && ! $editor)
+        {!! $slider('tempo', ['label' => 'Tempo jitter (no repeats)', 'min' => 0, 'max' => 0.3, 'step' => 0.01], $tempo) !!}
+        @endif
+        @if ($group === 'Style')
+        <label class="doppler-lab-check"><input type="checkbox" name="frozen" @checked($frozen)> Freeze{{ $editor ? ' (preview only; use Still to save one)' : '' }}</label>
+        <label class="doppler-lab-check"><input type="checkbox" name="travelLeft" @checked($settings->travelLeft)> Travel left</label>
+        @endif
+        @endif
       </fieldset>
+      @endforeach
     </div>
     </div>
     </div>
