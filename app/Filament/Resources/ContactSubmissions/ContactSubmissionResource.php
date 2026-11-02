@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ContactSubmissions;
 
+use App\Enums\ContactSubmissionClassification;
 use App\Filament\Resources\ContactSubmissions\Pages\ListContactSubmissions;
 use App\Filament\Resources\ContactSubmissions\Pages\ViewContactSubmission;
 use App\Models\ContactSubmission;
@@ -10,11 +11,15 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class ContactSubmissionResource extends Resource
@@ -31,7 +36,7 @@ class ContactSubmissionResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $unread = ContactSubmission::query()->whereNull('read_at')->count();
+        $unread = ContactSubmission::query()->notSpam()->whereNull('read_at')->count();
 
         return $unread > 0 ? (string) $unread : null;
     }
@@ -45,6 +50,30 @@ class ContactSubmissionResource extends Resource
             TextEntry::make('submitted_from')->label('Page')->placeholder('—'),
             TextEntry::make('source')->badge(),
             TextEntry::make('message')->columnSpanFull()->prose(),
+            Section::make('Spam review')
+                ->columnSpanFull()
+                ->columns(2)
+                ->schema([
+                    TextEntry::make('classification')
+                        ->label('AI classification')
+                        ->badge()
+                        ->placeholder('Not classified yet'),
+                    TextEntry::make('classification_confidence')
+                        ->label('AI confidence')
+                        ->suffix('%')
+                        ->placeholder('Not classified yet'),
+                    TextEntry::make('classification_reason')
+                        ->label('AI reasoning')
+                        ->placeholder('No reasoning available')
+                        ->columnSpanFull(),
+                    TextEntry::make('human_classification')
+                        ->label('Human decision')
+                        ->badge()
+                        ->placeholder('Not reviewed yet'),
+                    TextEntry::make('reviewedBy.name')
+                        ->label('Reviewed by')
+                        ->placeholder('Not reviewed yet'),
+                ]),
         ]);
     }
 
@@ -61,9 +90,26 @@ class ContactSubmissionResource extends Resource
                     ->falseColor('primary'),
                 TextColumn::make('name')->searchable()->weight('bold'),
                 TextColumn::make('source')->badge(),
+                TextColumn::make('classification')
+                    ->label('AI classification')
+                    ->badge()
+                    ->placeholder('Pending'),
+                TextColumn::make('human_classification')
+                    ->label('Human review')
+                    ->badge()
+                    ->placeholder('Pending'),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('message')->limit(80),
                 TextColumn::make('created_at')->label('Received')->since()->sortable(),
+            ])
+            ->filters([
+                Filter::make('hide_spam')
+                    ->label('Hide spam')
+                    ->default()
+                    ->query(fn (Builder $query): Builder => $query->notSpam()),
+                SelectFilter::make('classification')
+                    ->label('AI classification')
+                    ->options(ContactSubmissionClassification::class),
             ])
             ->recordActions([
                 ViewAction::make(),

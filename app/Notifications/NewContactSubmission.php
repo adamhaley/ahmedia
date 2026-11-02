@@ -2,15 +2,36 @@
 
 namespace App\Notifications;
 
+use App\Enums\ContactSubmissionClassification;
 use App\Enums\ContactSubmissionSource;
 use App\Filament\Resources\ContactSubmissions\ContactSubmissionResource;
 use App\Models\ContactSubmission;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewContactSubmission extends Notification
+class NewContactSubmission extends Notification implements ShouldQueue
 {
+    use Queueable;
+
+    private const HighConfidenceSpamThreshold = 95;
+
     public function __construct(public ContactSubmission $submission) {}
+
+    /**
+     * Checked when the delayed notification finally sends, by which time the
+     * classifier has usually run: high-confidence spam stays in the admin
+     * but never reaches the inbox.
+     */
+    public function shouldSend(object $notifiable, string $channel): bool
+    {
+        $submission = $this->submission->fresh();
+
+        return $submission !== null
+            && ! ($submission->classification === ContactSubmissionClassification::Spam
+                && ($submission->classification_confidence ?? 0) >= self::HighConfidenceSpamThreshold);
+    }
 
     /**
      * @return array<int, string>
