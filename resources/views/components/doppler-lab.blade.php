@@ -37,7 +37,6 @@
       @unless ($editor)
       <button type="button" class="{{ $button('secondary') }}" data-doppler-action="copy-link">Copy link</button>
       <button type="button" class="{{ $button('secondary') }}" data-doppler-action="save-image">Save image</button>
-      <button type="button" class="{{ $button('secondary') }}" data-doppler-action="save-instagram">Save for Instagram</button>
       @endunless
     </div>
 
