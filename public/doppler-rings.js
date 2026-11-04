@@ -247,9 +247,10 @@
       linkField.addEventListener('input', function () { linkField.setCustomValidity(''); });
     }
 
-    // Scroll motion: scrolling over the rings plays them, as scrolling through
-    // the pinned hero does (a pin length's worth of scrolling runs the whole
-    // preview). Once the preview reaches either end, the page scrolls on.
+    // Scroll motion: scrolling anywhere in the lab (the page or the controls)
+    // plays the rings, as scrolling through the pinned hero does (a pin
+    // length's worth of scrolling runs the whole preview). Over the rings the
+    // page holds still until the preview reaches either end.
     function scrollPreview(distance) {
       const preview = lab.querySelector('[name="preview"]');
       if (!preview || settings().motion !== 'scroll') return false;
@@ -264,14 +265,16 @@
 
     const stage = svg.parentElement;
     const lineHeight = 16;
-    stage.addEventListener('wheel', function (event) {
-      if (scrollPreview(event.deltaY * (event.deltaMode === WheelEvent.DOM_DELTA_LINE ? lineHeight : 1))) event.preventDefault();
+    lab.addEventListener('wheel', function (event) {
+      const played = scrollPreview(event.deltaY * (event.deltaMode === WheelEvent.DOM_DELTA_LINE ? lineHeight : 1));
+      if (played && stage.contains(event.target)) event.preventDefault();
     }, { passive: false });
     let touchY = null;
-    stage.addEventListener('touchstart', function (event) { touchY = event.touches[0].clientY; }, { passive: true });
-    stage.addEventListener('touchmove', function (event) {
+    lab.addEventListener('touchstart', function (event) { touchY = event.touches[0].clientY; }, { passive: true });
+    lab.addEventListener('touchmove', function (event) {
       const y = event.touches[0].clientY;
-      if (touchY !== null && scrollPreview(touchY - y)) event.preventDefault();
+      const played = touchY !== null && scrollPreview(touchY - y);
+      if (played && stage.contains(event.target)) event.preventDefault();
       touchY = y;
     }, { passive: false });
 
