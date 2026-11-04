@@ -25,7 +25,7 @@ final readonly class DopplerRingSettings implements Castable
         'period' => ['label' => 'Cycle (seconds)', 'group' => 'Geometry', 'min' => 3, 'max' => 40, 'step' => 1, 'default' => 39],
         'reach' => ['label' => 'Reach', 'group' => 'Geometry', 'min' => 100, 'max' => 900, 'step' => 10, 'default' => 300],
         'spacing' => ['label' => 'Spacing jitter', 'group' => 'Randomness', 'min' => 0, 'max' => 1, 'step' => 0.05, 'default' => 1],
-        'size' => ['label' => 'Size jitter', 'group' => 'Randomness', 'min' => 0, 'max' => 1, 'step' => 0.05, 'default' => 0.55],
+        'size' => ['label' => 'Size jitter', 'group' => 'Randomness', 'min' => 0, 'max' => 1, 'step' => 0.05, 'default' => 1],
         'seed' => ['label' => 'Seed', 'group' => 'Randomness', 'min' => 1, 'max' => 999, 'step' => 1, 'default' => 7],
         'stroke' => ['label' => 'Stroke', 'group' => 'Style', 'min' => 0.5, 'max' => 4, 'step' => 0.25, 'default' => 2],
         'glow' => ['label' => 'Glow', 'group' => 'Style', 'min' => 0, 'max' => 16, 'step' => 1, 'default' => 12],
