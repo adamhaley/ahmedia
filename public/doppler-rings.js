@@ -38,6 +38,9 @@
       return input ? Number(input.value) : 0;
     };
     const checked = function (name) { return lab.querySelector('[name="' + name + '"]').checked; };
+    // How far through the pin the scroll preview is (0 to 1). Kept apart from
+    // the slider, whose steps would swallow small scrolls.
+    let previewProgress = value('preview');
 
     // mulberry32. App\Data\DopplerRingSettings::perRing() mirrors this and
     // settings() below draw for draw, so pages render what the lab previews.
@@ -111,13 +114,13 @@
         circle.style.setProperty('--tempo', ring.tempo);
       });
 
-      // Scroll motion: the preview slider stands in for scrolling through the pin
+      // Scroll motion: scrolling over the stage, or the preview slider, stands in for scrolling through the pin
       const isScroll = current.motion === 'scroll';
       const isStill = current.motion === 'still';
       scrollOnly.forEach(function (element) { element.hidden = !isScroll; });
       stillOnly.forEach(function (element) { element.hidden = !isStill; });
       if (isScroll) {
-        scrubRings(svg, current.scrollStart + value('preview') * (current.scrollEnd - current.scrollStart));
+        scrubRings(svg, current.scrollStart + previewProgress * (current.scrollEnd - current.scrollStart));
       } else if (isStill) {
         scrubRings(svg, current.frame);
       } else {
@@ -257,8 +260,37 @@
       linkField.addEventListener('input', function () { linkField.setCustomValidity(''); });
     }
 
+    // Scroll motion: scrolling over the rings plays them, as scrolling through
+    // the pinned hero does (a pin length's worth of scrolling runs the whole
+    // preview). Once the preview reaches either end, the page scrolls on.
+    function scrollPreview(distance) {
+      const preview = lab.querySelector('[name="preview"]');
+      if (!preview || settings().motion !== 'scroll') return false;
+      const pinDistance = Math.max((value('pinLength') / 100 - 1) * window.innerHeight, 1);
+      const progress = Math.min(Math.max(previewProgress + distance / pinDistance, 0), 1);
+      if (progress === previewProgress) return false;
+      previewProgress = progress;
+      preview.value = progress;
+      render();
+      return true;
+    }
+
+    const stage = svg.parentElement;
+    const lineHeight = 16;
+    stage.addEventListener('wheel', function (event) {
+      if (scrollPreview(event.deltaY * (event.deltaMode === WheelEvent.DOM_DELTA_LINE ? lineHeight : 1))) event.preventDefault();
+    }, { passive: false });
+    let touchY = null;
+    stage.addEventListener('touchstart', function (event) { touchY = event.touches[0].clientY; }, { passive: true });
+    stage.addEventListener('touchmove', function (event) {
+      const y = event.touches[0].clientY;
+      if (touchY !== null && scrollPreview(touchY - y)) event.preventDefault();
+      touchY = y;
+    }, { passive: false });
+
     lab.addEventListener('input', function (event) {
       if (event.target.name === 'link') return;
+      if (event.target.name === 'preview') previewProgress = value('preview');
       render();
       updateAddress();
     });
@@ -272,6 +304,7 @@
       } else if (action === 'reset') {
         ranges.forEach(function (input) { input.value = input.defaultValue; });
         toggles.forEach(function (input) { input.checked = input.defaultChecked; });
+        previewProgress = value('preview');
       } else if (action === 'save-image' || action === 'save-instagram') {
         saveImage(action === 'save-instagram' ? 'instagram' : 'stage');
         return;
