@@ -26,17 +26,17 @@ return [
     ],
     [
         'question' => 'How much do you charge?',
-        'answer' => '<p>Custom AI, automation and programming work is $95 an hour, or on a monthly retainer: $1,000 a month for up to 10 hours, or $2,000 a month for up to 25 hours.</p><p>Websites, voice receptionists and the fixed-price packages have their own set prices. See the Services pages for each one.</p>',
+        'answer' => '<p>It depends on what you need, so we quote each project once we understand it. Websites are the exception: they come in fixed-price packages, listed on <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p><p>For anything else, <a href="/contact">send us a message</a>. It\'s free, and we\'ll come back with an honest take and a clear quote.</p>',
         'keywords' => 'price, pricing, cost, rate, hourly, how much, budget, fees, charge, quote, expensive, cheap, per hour',
     ],
     [
         'question' => 'Do you offer monthly retainers?',
-        'answer' => '<p>Yes. The Starter retainer is $1,000 a month for up to 10 hours of custom automation or consulting work, and the Growth retainer is $2,000 a month for up to 25 hours. Retainers suit ongoing improvements and support after a project launches.</p>',
+        'answer' => '<p>Yes. Retainers are monthly blocks of hours for ongoing automation, consulting and support after a project launches. <a href="/contact">Get in touch</a> and we\'ll suggest the size that fits.</p>',
         'keywords' => 'retainer, monthly, ongoing, support, maintenance, subscription, after launch, continued help, long term',
     ],
     [
         'question' => 'How much does a website cost?',
-        'answer' => '<p>Websites come in four fixed-price packages, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages on Prism CMS, which you can edit yourself, custom design, a chatbot with AI-assisted content and up to two automations</li><li>$5,000: 10+ pages, fully dynamic, a product catalog or e-commerce if needed, and up to three automations</li></ul><p>Every package includes SEO and setup of your Google Business Profile. See <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p>',
+        'answer' => '<p>Websites come in four fixed-price packages, from a one-page site to a full custom build, all with hosting and maintenance. Every package includes SEO and setup of your Google Business Profile. Compare them on <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p>',
         'keywords' => 'website, website cost, website price, how much for a website, web site, web design, landing page, new site, build a site, ecommerce, online store, pages, cms',
     ],
     [
@@ -46,7 +46,7 @@ return [
     ],
     [
         'question' => 'What is an AI voice receptionist?',
-        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The phone number and accounts stay in your business\'s name.</p><p>Set-up is $950, then $500 a month for management and tuning, plus call usage billed directly to your own accounts (typically 10 to 15 cents a minute). Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
+        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The phone number and accounts stay in your business\'s name.</p><p>Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>, or <a href="/contact">get in touch</a> to talk through your calls.</p>',
         'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls, demo, phone number, front desk, voicemail',
     ],
     [
@@ -56,17 +56,17 @@ return [
     ],
     [
         'question' => 'What is the Brand Audit for AI-built sites?',
-        'answer' => '<p>AI website builders make every site look the same. The Brand Audit reviews up to five pages across six layers (type, colour, hero, layout, header and icons, and copy), rates each one, and gives you a fix plan ranked by effort and impact.</p><p>It costs $500 and takes 5 days. Add implementation for $700 and we make the changes for you.</p>',
+        'answer' => '<p>AI website builders make every site look the same. The Brand Audit reviews up to five pages across six layers (type, colour, hero, layout, header and icons, and copy), rates each one, and gives you a fix plan ranked by effort and impact.</p><p>It takes 5 days, and we can make the changes for you too.</p>',
         'keywords' => 'brand audit, branding, generic, looks like ai, template, design review, fonts, colours, colors, redesign, stand out, unique',
     ],
     [
         'question' => 'What is the Vibe-Coded App Go-Live Review?',
-        'answer' => '<p>If you built an app with an AI tool and are about to put real users on it, the 360° Go-Live Review checks every side of it first: security, data isolation, secrets, code quality, maintainability, performance, reliability and launch readiness. Every critical and high issue is fixed, and you get a plain-English report.</p><p>It costs $1,000 and takes 5 days. A codebase clean-up add-on is $750.</p>',
+        'answer' => '<p>If you built an app with an AI tool and are about to put real users on it, the 360° Go-Live Review checks every side of it first: security, data isolation, secrets, code quality, maintainability, performance, reliability and launch readiness. Every critical and high issue is fixed, and you get a plain-English report.</p><p>It takes 5 days, with an optional codebase clean-up.</p>',
         'keywords' => 'vibe coded, vibe coding, lovable, bolt, cursor, replit, launch, go live, security review, app audit, ai built app, supabase, before launch',
     ],
     [
         'question' => 'My website has been hacked. Can you help?',
-        'answer' => '<p>Yes. Hacked Site Recovery finds how they got in, removes the malware, backdoors and rogue accounts, hardens the site and asks browsers to lift any "deceptive site" warnings. You get a plain-English incident report and 30 days of cover if the same way in is used again.</p><p>It costs $1,000 with 3-day delivery. A rush 24-hour option is +$300, and a clean rebuild on fresh hosting is +$750. WordPress is the most common case, but we work on any site we can get server access to.</p>',
+        'answer' => '<p>Yes. Hacked Site Recovery finds how they got in, removes the malware, backdoors and rogue accounts, hardens the site and asks browsers to lift any "deceptive site" warnings. You get a plain-English incident report and 30 days of cover if the same way in is used again.</p><p>It\'s done in 3 days, or 24 hours if it\'s urgent. WordPress is the most common case, but we work on any site we can get server access to.</p>',
         'keywords' => 'hacked, hack, malware, virus, compromised, breach, red warning, deceptive site, wordpress, infected, spam, security, recovery',
     ],
     [
