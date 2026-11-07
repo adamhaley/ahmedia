@@ -251,6 +251,10 @@ return new class extends Migration
 
                 We design the conversation with you, train it on your data, and keep tuning it from real calls. Built on Twilio for the phone line.
 
+                ## Hear it for yourself
+
+                Call our demo receptionist at **[(765) 307-5537](tel:+17653075537)**. She answers for a sample med spa and can book you a consultation. Yours would be trained on your own business.
+
                 ## Pricing
 
                 Sold separately from the website packages.
