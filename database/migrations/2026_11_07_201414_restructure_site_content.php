@@ -1,8 +1,10 @@
 <?php
 
+use App\Data\DopplerRingSettings;
 use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
 use App\Models\Credential;
+use App\Models\DopplerRingStyle;
 use App\Models\FaqItem;
 use App\Models\Package;
 use App\Models\Page;
@@ -308,6 +310,42 @@ return new class extends Migration
 
         // Kept in the CMS, off the site for now
         $this->updatePage('services/security-and-launch', ['sort_order' => 6, 'is_published' => false]);
+
+        $this->addServiceRingStyles();
+    }
+
+    /**
+     * Each service gets its own rings: the Services style with spacing and size jitter maxed
+     * (where every seed looks good), varied only by seed.
+     */
+    private function addServiceRingStyles(): void
+    {
+        $base = DopplerRingStyle::query()->where('name', 'Services')->first()?->settings;
+        if (! $base) {
+            return;
+        }
+
+        $seeds = [
+            'automations' => 113,
+            'second-brain' => 242,
+            'web-design-and-branding' => 371,
+            'prism-cms' => 486,
+            'voice-ai-receptionists' => 529,
+            'consultations' => 657,
+            'security-and-launch' => 798,
+        ];
+
+        foreach ($seeds as $slug => $seed) {
+            $page = Page::query()->where('path', 'services/'.$slug)->first();
+            if (! $page || $page->doppler_ring_style_id || $page->hide_doppler_rings) {
+                continue;
+            }
+
+            $style = DopplerRingStyle::query()->firstOrCreate(['name' => 'Service: '.$page->title], [
+                'settings' => DopplerRingSettings::fromArray([...$base->toArray(), 'spacing' => 1, 'size' => 1, 'seed' => $seed, 'motion' => 'still']),
+            ]);
+            $page->update(['doppler_ring_style_id' => $style->id]);
+        }
     }
 
     private function addWebsitePackages(): void
