@@ -309,7 +309,8 @@ return new class extends Migration
             ],
         ]);
 
-        $this->updatePage('services/security-and-launch', ['sort_order' => 6]);
+        // Kept in the CMS, off the site for now
+        $this->updatePage('services/security-and-launch', ['sort_order' => 6, 'is_published' => false]);
     }
 
     /** @param array<string, mixed> $attributes */

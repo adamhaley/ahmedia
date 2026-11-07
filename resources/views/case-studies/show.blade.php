@@ -67,7 +67,7 @@
   </section>
   @endif
 
-  @if ($caseStudy->package?->is_published)
+  @if ($caseStudy->package?->is_published && $caseStudy->package->page?->is_published)
   <x-cta-band
     eyebrow="Want this for your site?"
     :heading="$caseStudy->package->title"
