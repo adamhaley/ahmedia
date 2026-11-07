@@ -95,6 +95,9 @@ class PageResource extends Resource
                 Toggle::make('show_in_nav')
                     ->label('Show in main navigation')
                     ->helperText('Top-level pages only; child pages appear in their parent\'s dropdown.'),
+                TextInput::make('nav_anchor')
+                    ->label('Homepage navigation anchor')
+                    ->helperText('When set, this page\'s nav link jumps to that homepage section (e.g. approach) instead of opening the page. Leave empty to link to the page itself.'),
             ]),
 
             Section::make('Hero')
@@ -220,9 +223,6 @@ class PageResource extends Resource
                     ->disk('public')
                     ->directory('pages')
                     ->visibility('public'),
-                TextInput::make('nav_anchor')
-                    ->label('Homepage navigation anchor')
-                    ->helperText('When set, this page\'s nav link jumps to that homepage section (e.g. #approach) instead of opening the page.'),
             ]),
         ]);
     }

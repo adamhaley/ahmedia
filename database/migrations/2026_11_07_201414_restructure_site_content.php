@@ -79,6 +79,7 @@ return new class extends Migration
             'sort_order' => 4,
             'is_published' => true,
             'show_in_nav' => true,
+            'nav_anchor' => null,
             'hero_heading' => 'Case Studies & Testimonials',
             'hero_subheading' => 'Selected projects, and what the people behind them had to say.',
             'section_eyebrow' => 'Case Studies',
@@ -104,7 +105,7 @@ return new class extends Migration
         ]);
 
         $this->updatePage('faq', ['sort_order' => 6, 'show_in_nav' => true]);
-        $this->updatePage('contact', ['sort_order' => 7]);
+        $this->updatePage('contact', ['sort_order' => 7, 'nav_anchor' => null]);
         $this->updatePage('approach', ['sort_order' => 8]);
 
         $this->addCredentials();

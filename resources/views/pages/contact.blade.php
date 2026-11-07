@@ -1,6 +1,5 @@
-{{-- The nav's Contact link currently points at the homepage #contact
-     section, which takes its eyebrow/heading/intro from this page's fields.
-     This page itself is reachable at /contact/. --}}
+{{-- The homepage #contact section also takes its eyebrow/heading/intro
+     from this page's fields. --}}
 <x-layouts.site :page="$page">
   <x-hero
     :ring-style="$page->heroRingStyle()"
