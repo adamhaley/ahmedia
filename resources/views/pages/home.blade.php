@@ -36,7 +36,8 @@
   />
   @endif
 
-  @if ($caseStudiesPage && $caseStudies->isNotEmpty())
+  <!--
+    @if ($caseStudiesPage && $caseStudies->isNotEmpty())
   <x-feature-grid
     id="case-studies"
     :eyebrow="$caseStudiesPage->section_eyebrow ?: 'Case Studies'"
@@ -51,7 +52,7 @@
     :actions="[['label' => 'View All Case Studies', 'href' => $caseStudiesPage->url(), 'variant' => 'secondary']]"
   />
   @endif
-
+-->
   @if ($testimonials->isNotEmpty())
   <x-testimonials :testimonials="$testimonials" />
   @endif
