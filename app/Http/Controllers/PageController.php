@@ -9,6 +9,7 @@ use App\Models\Credential;
 use App\Models\FaqItem;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -54,6 +55,9 @@ class PageController extends Controller
             ],
             PageTemplate::Blog => [
                 'posts' => Post::query()->published()->get(),
+            ],
+            PageTemplate::Contact => [
+                'address' => SiteSetting::current()->address,
             ],
             PageTemplate::Faq => [
                 'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),

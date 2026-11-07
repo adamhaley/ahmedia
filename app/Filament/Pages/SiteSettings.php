@@ -48,6 +48,10 @@ class SiteSettings extends Page
                     ->schema([
                         TextInput::make('contact_email')->label('Email')->email(),
                         TextInput::make('phone')->tel(),
+                        TextInput::make('address')
+                            ->placeholder('e.g. 5161 Lankershim Blvd, North Hollywood, CA 91601')
+                            ->helperText('Shown with the map on the Contact page.')
+                            ->columnSpanFull(),
                     ]),
                 Section::make('Social profiles')
                     ->description('Leave a field empty to hide that icon in the footer.')

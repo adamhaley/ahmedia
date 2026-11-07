@@ -29,6 +29,18 @@ class SiteSettingsTest extends TestCase
         $this->assertSame('Systems that ship.', SiteSetting::current()->footer_tagline);
     }
 
+    #[Test]
+    public function it_saves_the_address(): void
+    {
+        Livewire::actingAs($this->admin())
+            ->test(SiteSettings::class)
+            ->fillForm(['address' => '5161 Lankershim Blvd, North Hollywood, CA 91601'])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('5161 Lankershim Blvd, North Hollywood, CA 91601', SiteSetting::current()->address);
+    }
+
     private function admin(): User
     {
         $user = User::factory()->create();

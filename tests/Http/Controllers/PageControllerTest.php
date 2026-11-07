@@ -9,6 +9,7 @@ use App\Models\Credential;
 use App\Models\Package;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -267,6 +268,29 @@ class PageControllerTest extends TestCase
         $response = $this->get($blog->url());
 
         $response->assertOk()->assertDontSee('Unfinished draft');
+    }
+
+    #[Test]
+    public function it_shows_the_address_and_map_on_the_contact_page(): void
+    {
+        SiteSetting::current()->update(['address' => '5161 Lankershim Blvd, North Hollywood, CA 91601']);
+
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertSee('5161 Lankershim Blvd')->assertSee('/images/contact-map.jpg');
+    }
+
+    #[Test]
+    public function it_leaves_out_the_location_when_no_address_is_set(): void
+    {
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertDontSee('id="location"', false);
+    }
+
+    private function contactPage(): Page
+    {
+        return Page::query()->create(['title' => 'Contact', 'slug' => 'contact', 'template' => PageTemplate::Contact, 'is_published' => true]);
     }
 
     /** @param array<string, mixed> $attributes */

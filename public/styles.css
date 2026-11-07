@@ -2037,3 +2037,31 @@ a.chat-option {
 .post-cover {
   max-width: 44rem;
 }
+
+/* Contact location (pages/contact) */
+.contact-address {
+  margin: 1rem 0 1.25rem;
+  font-style: normal;
+}
+
+.contact-map {
+  margin: 0;
+}
+
+.contact-map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.contact-map figcaption {
+  margin-top: 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.contact-map figcaption a {
+  color: inherit;
+}
