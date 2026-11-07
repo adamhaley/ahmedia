@@ -2119,3 +2119,60 @@ a.chat-option {
   letter-spacing: -0.02em;
   color: var(--color-accent);
 }
+
+/* Track record stats (pages/about) */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--gutter);
+  margin-top: 1.5rem;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 1.5rem;
+}
+
+.stat-mark.doppler-rings {
+  --period: 4s;
+  --mach: 0.8;
+  --reach: 26;
+  --source-x: 12px;
+  --source-y: 30px;
+  --direction: 1;
+  --stroke: 1.25;
+  --glow: 3;
+  position: static;
+  width: 2.7rem;
+  height: 3.2rem;
+}
+
+.stat-value {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+}
+
+.stat-value.is-long {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--color-muted);
+}
+
+.stat-source {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+}

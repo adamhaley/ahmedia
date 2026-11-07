@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/** A certification shown on the About page */
-#[Fillable(['name', 'issuer', 'issued_on', 'url', 'badge_image', 'sort_order', 'is_active'])]
+/** A certification or track-record stat shown on the About page; featured ones are the big stat tiles */
+#[Fillable(['name', 'issuer', 'value', 'issued_on', 'url', 'badge_image', 'is_featured', 'sort_order', 'is_active'])]
 class Credential extends Model
 {
     /** @use HasFactory<CredentialFactory> */
@@ -23,6 +23,7 @@ class Credential extends Model
         return [
             'issued_on' => 'date',
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
         ];
     }
 

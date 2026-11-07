@@ -26,6 +26,11 @@ class CredentialFactory extends Factory
         ];
     }
 
+    public function featured(string $value = '100%'): static
+    {
+        return $this->state(['is_featured' => true, 'value' => $value]);
+    }
+
     public function inactive(): static
     {
         return $this->state(['is_active' => false]);

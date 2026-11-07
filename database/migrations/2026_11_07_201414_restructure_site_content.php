@@ -56,8 +56,8 @@ return new class extends Migration
                 MD,
             'bullets' => [
                 'Direct access to the person actually building your system',
+                'Top Rated Plus on Upwork, with a 100% Job Success Score',
                 'Certified in n8n workflow automation',
-                'Production software for Disney, Sony and Apple',
             ],
         ]);
 
@@ -309,15 +309,22 @@ return new class extends Migration
             return;
         }
 
+        $upwork = 'https://www.upwork.com/freelancers/~01f89cc7b2830c8fa4';
+
+        // [name, issuer, stat, issued on, link, badge, featured]
         $credentials = [
-            ['n8n Foundations Pathway', 'n8n', '2026-10-30', 'https://badges.n8n.io/921404a3-158e-4a46-9b11-edfd594ec66a', 'n8n-foundations-pathway.png'],
-            ['N8N101 Essentials: Your First Workflows', 'n8n', '2026-10-01', 'https://badges.n8n.io/758e6aa7-7925-43ad-9db7-695e82dcf4c9', 'n8n-101.png'],
-            ['N8N102 Integrations: APIs & Connected Workflows', 'n8n', '2026-10-01', 'https://badges.n8n.io/5c308c20-01b4-4b52-8a4d-d65615e06531', 'n8n-102.png'],
-            ['N8N103 In Practice: AI, Testing & Best Practices', 'n8n', '2026-10-01', 'https://learn.n8n.io/certificates/a854383223484b5a9b2405be345205b5', 'n8n-103.png'],
-            ['Google Prompting Essentials', 'Google (Coursera)', '2025-04-17', null, null],
+            ['Top Rated Plus', 'Upwork', null, null, $upwork, null, true],
+            ['Job Success Score', 'Upwork', '100%', null, $upwork, null, true],
+            ['Jobs completed', 'Upwork', '26', null, $upwork, null, true],
+            ['Years building software', 'Disney, Sony, Apple and more', '20+', null, null, null, true],
+            ['n8n Foundations Pathway', 'n8n', null, '2026-10-30', 'https://badges.n8n.io/921404a3-158e-4a46-9b11-edfd594ec66a', 'n8n-foundations-pathway.png', false],
+            ['N8N101 Essentials: Your First Workflows', 'n8n', null, '2026-10-01', 'https://badges.n8n.io/758e6aa7-7925-43ad-9db7-695e82dcf4c9', 'n8n-101.png', false],
+            ['N8N102 Integrations: APIs & Connected Workflows', 'n8n', null, '2026-10-01', 'https://badges.n8n.io/5c308c20-01b4-4b52-8a4d-d65615e06531', 'n8n-102.png', false],
+            ['N8N103 In Practice: AI, Testing & Best Practices', 'n8n', null, '2026-10-01', 'https://learn.n8n.io/certificates/a854383223484b5a9b2405be345205b5', 'n8n-103.png', false],
+            ['Google Prompting Essentials', 'Google (Coursera)', null, '2025-04-17', null, null, false],
         ];
 
-        foreach ($credentials as $sortOrder => [$name, $issuer, $issuedOn, $url, $badge]) {
+        foreach ($credentials as $sortOrder => [$name, $issuer, $value, $issuedOn, $url, $badge, $isFeatured]) {
             $badgePath = null;
             if ($badge) {
                 $badgePath = 'credentials/'.$badge;
@@ -327,9 +334,11 @@ return new class extends Migration
             Credential::query()->create([
                 'name' => $name,
                 'issuer' => $issuer,
+                'value' => $value,
                 'issued_on' => $issuedOn,
                 'url' => $url,
                 'badge_image' => $badgePath,
+                'is_featured' => $isFeatured,
                 'sort_order' => $sortOrder,
             ]);
         }

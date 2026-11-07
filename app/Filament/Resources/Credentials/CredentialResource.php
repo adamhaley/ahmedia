@@ -36,6 +36,10 @@ class CredentialResource extends Resource
         return $schema->columns(2)->components([
             TextInput::make('name')->required()->placeholder('e.g. N8N101 Essentials: Your First Workflows'),
             TextInput::make('issuer')->required()->placeholder('e.g. n8n'),
+            TextInput::make('value')
+                ->label('Stat')
+                ->placeholder('e.g. 100%')
+                ->helperText('The big figure on a featured tile. Leave empty to show the name large instead.'),
             DatePicker::make('issued_on')->label('Issued'),
             TextInput::make('url')->label('Verification link')->url(),
             FileUpload::make('badge_image')
@@ -44,6 +48,9 @@ class CredentialResource extends Resource
                 ->disk('public')
                 ->directory('credentials')
                 ->visibility('public'),
+            Toggle::make('is_featured')
+                ->label('Featured')
+                ->helperText('Shown as a big stat tile in the About page\'s Track record band, not in the badge grid.'),
             Toggle::make('is_active')->label('Show on the About page')->default(true),
         ]);
     }
@@ -56,6 +63,8 @@ class CredentialResource extends Resource
             ->columns([
                 ImageColumn::make('badge_image')->label('Badge')->disk('public'),
                 TextColumn::make('name')->description(fn (Credential $record): string => $record->issuer)->searchable(),
+                TextColumn::make('value')->label('Stat')->placeholder('—'),
+                ToggleColumn::make('is_featured')->label('Featured'),
                 TextColumn::make('issued_on')->label('Issued')->date('M Y'),
                 ToggleColumn::make('is_active')->label('On About page'),
             ])

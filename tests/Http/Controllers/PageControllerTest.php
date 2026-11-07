@@ -248,6 +248,26 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_featured_credentials_as_track_record_stats(): void
+    {
+        Credential::factory()->featured('100%')->create(['name' => 'Job Success Score', 'issuer' => 'Upwork']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['id="track-record"', '<p class="stat-value">100%</p>', 'Job Success Score'], false);
+    }
+
+    #[Test]
+    public function it_keeps_featured_credentials_out_of_the_badge_grid(): void
+    {
+        Credential::factory()->featured()->create();
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertDontSee('id="credentials"', false);
+    }
+
+    #[Test]
     public function it_hides_inactive_credentials(): void
     {
         Credential::factory()->inactive()->create(['name' => 'Retired Certificate']);
