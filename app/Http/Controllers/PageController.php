@@ -9,6 +9,7 @@ use App\Models\Credential;
 use App\Models\FaqItem;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\Project;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class PageController extends Controller
             ],
             PageTemplate::Service => [
                 'packages' => $page->packages()->where('is_published', true)->get(),
+                'projectGroups' => $page->projects()->published()->with(['images', 'caseStudy'])->get()->groupBy(fn (Project $project): string => $project->type->value),
             ],
             PageTemplate::Blog => [
                 'posts' => Post::query()->published()->get(),

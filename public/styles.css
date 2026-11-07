@@ -2176,3 +2176,41 @@ a.chat-option {
   color: var(--color-accent);
   font-size: 0.85rem;
 }
+
+/* Project cards (components/project-grid): cover plus gallery as a swipeable strip */
+.project-slides {
+  display: flex;
+  gap: 0.5rem;
+  margin: calc(-1 * clamp(1.5rem, 3vw, 2.25rem)) calc(-1 * clamp(1.5rem, 3vw, 2.25rem)) 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+.project-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.project-slide img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+}
+
+.project-slide-count {
+  margin: -0.75rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.project-card .case-study-tags {
+  margin: 0;
+}
+
+/* auto-fill (not auto-fit) so one or two cards keep card width instead of stretching */
+.project-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+}

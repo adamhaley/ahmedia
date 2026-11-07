@@ -16,6 +16,10 @@
   />
   @endif
 
+  @foreach ($projectGroups as $type => $projects)
+  <x-project-grid :type="\App\Enums\ProjectType::from($type)" :projects="$projects" />
+  @endforeach
+
   @if ($packages->isNotEmpty())
   <x-package-grid :packages="$packages" />
   @endif
