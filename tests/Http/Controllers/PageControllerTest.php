@@ -3,12 +3,15 @@
 namespace Tests\Http\Controllers;
 
 use App\Enums\PageTemplate;
+use App\Enums\ProjectType;
 use App\Http\Controllers\PageController;
 use App\Models\CaseStudy;
 use App\Models\Credential;
 use App\Models\Package;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\Project;
+use App\Models\ProjectImage;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -358,6 +361,58 @@ class PageControllerTest extends TestCase
         $response = $this->get($this->caseStudiesPage()->url());
 
         $response->assertOk()->assertSee('Adam rebuilt our site in a week.');
+    }
+
+    #[Test]
+    public function it_shows_a_service_pages_projects_under_their_type(): void
+    {
+        $page = $this->servicePage();
+        Project::factory()->for($page)->create([
+            'type' => ProjectType::Workflow,
+            'title' => 'Lead Intake Workflow',
+            'download_file' => 'projects/downloads/lead-intake.json',
+            'links' => [['label' => 'Buy on Gumroad', 'url' => 'https://gumroad.com/l/lead-intake']],
+            'tags' => ['n8n'],
+        ]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['Workflows', 'Lead Intake Workflow', 'n8n', 'lead-intake.json', 'Buy on Gumroad']);
+    }
+
+    #[Test]
+    public function it_shows_the_cover_and_gallery_as_slides(): void
+    {
+        $page = $this->servicePage();
+        $project = Project::factory()->for($page)->create(['cover_image' => 'projects/cover.jpg']);
+        ProjectImage::factory()->for($project)->create(['image' => 'projects/canvas.png']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['projects/cover.jpg', 'projects/canvas.png', '2 images']);
+    }
+
+    #[Test]
+    public function it_hides_draft_projects(): void
+    {
+        $page = $this->servicePage();
+        Project::factory()->for($page)->draft()->create(['title' => 'Unfinished Workflow']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('Unfinished Workflow');
+    }
+
+    #[Test]
+    public function it_links_a_project_to_its_published_case_study(): void
+    {
+        $page = $this->servicePage();
+        $caseStudy = CaseStudy::factory()->create(['slug' => 'lead-intake-rebuild', 'is_published' => true]);
+        Project::factory()->for($page)->for($caseStudy)->create();
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('/case-studies/lead-intake-rebuild');
     }
 
     private function caseStudiesPage(): Page

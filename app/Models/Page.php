@@ -84,6 +84,12 @@ class Page extends Model
         return $this->hasMany(Package::class)->orderBy('sort_order');
     }
 
+    /** @return HasMany<Project, $this> */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class)->orderBy('sort_order');
+    }
+
     public function url(): string
     {
         return $this->path === '' ? '/' : '/'.$this->path;

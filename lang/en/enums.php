@@ -6,6 +6,7 @@ use App\Enums\ContactSubmissionSource;
 use App\Enums\FaqMatchOutcome;
 use App\Enums\HeroRingsMotion;
 use App\Enums\PageTemplate;
+use App\Enums\ProjectType;
 
 return [
     ButtonStyle::class => [
@@ -43,5 +44,9 @@ return [
         'service' => 'Service',
         'services_index' => 'Services index',
         'standard' => 'Standard',
+    ],
+    ProjectType::class => [
+        'website' => 'Websites',
+        'workflow' => 'Workflows',
     ],
 ];
