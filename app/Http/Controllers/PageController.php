@@ -43,6 +43,7 @@ class PageController extends Controller
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->limit(3)->get(),
                 'contactPage' => Page::query()->where('template', PageTemplate::Contact)->first(),
                 'testimonials' => Testimonial::query()->active()->get(),
+                'tagline' => SiteSetting::current()->footer_tagline,
             ],
             PageTemplate::About => [
                 'credentials' => Credential::query()->active()->get(),

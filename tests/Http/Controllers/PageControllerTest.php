@@ -218,6 +218,26 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_the_brand_tagline_under_the_homepage_title(): void
+    {
+        SiteSetting::current()->update(['footer_tagline' => 'Use AI, Stay Human']);
+
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertSee('<p class="hero-tagline">Use AI, Stay Human</p>', false);
+    }
+
+    #[Test]
+    public function it_takes_the_homepage_spotlight_buttons_from_the_home_page(): void
+    {
+        $page = $this->homePage(['section_heading' => 'How we work', 'buttons' => [['label' => 'Meet Adam', 'url' => '/about', 'style' => 'secondary']]]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('href="/about">Meet Adam</a>', false)->assertDontSee('More on Our Approach');
+    }
+
+    #[Test]
     public function it_shows_active_credentials_on_the_about_page(): void
     {
         Credential::factory()->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);

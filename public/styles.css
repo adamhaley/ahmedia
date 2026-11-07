@@ -2098,3 +2098,13 @@ a.chat-option {
 .feature-tags {
   margin: 0;
 }
+
+/* Brand tagline under the homepage title (components/hero) */
+.hero-tagline {
+  margin: 1rem 0 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-accent);
+}

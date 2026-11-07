@@ -70,8 +70,8 @@ class SiteSettings extends Page
                             ->placeholder(SiteSetting::DefaultAccentColor)
                             ->rule('regex:/^#[0-9a-f]{6}$/i'),
                         TextInput::make('footer_tagline')
-                            ->label('Footer tagline')
-                            ->helperText('The line under "AH Media" in the footer. Leave empty to hide it.')
+                            ->label('Tagline')
+                            ->helperText('The brand line under "AH Media" in the homepage hero and the footer. Leave empty to hide it.')
                             ->maxLength(255),
                     ]),
             ]);

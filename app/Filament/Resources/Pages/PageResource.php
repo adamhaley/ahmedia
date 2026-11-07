@@ -132,7 +132,7 @@ class PageResource extends Resource
 
             Section::make('Content')
                 ->description(fn (Get $get): ?string => match (self::template($get)) {
-                    PageTemplate::Home => 'The Approach spotlight on the homepage.',
+                    PageTemplate::Home => 'The spotlight section on the homepage, with its buttons.',
                     PageTemplate::Contact => 'The eyebrow is also used above the contact form on the homepage.',
                     PageTemplate::CaseStudiesIndex => 'The eyebrow is also used above the case studies on the homepage.',
                     PageTemplate::Logo => 'The eyebrow sits above the lab; the heading, body and bullets tell the story below it. Leave a blank line between paragraphs. Buttons aren\'t shown on this page.',
