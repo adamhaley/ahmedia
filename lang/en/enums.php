@@ -33,6 +33,7 @@ return [
         'still' => 'Still (one held frame)',
     ],
     PageTemplate::class => [
+        'about' => 'About',
         'case_studies_index' => 'Case studies index',
         'contact' => 'Contact',
         'faq' => 'FAQ',

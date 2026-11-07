@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\DopplerRingSettings;
 use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
+use App\Models\Credential;
 use App\Models\FaqItem;
 use App\Models\Page;
 use App\Models\Testimonial;
@@ -40,6 +41,9 @@ class PageController extends Controller
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->limit(3)->get(),
                 'contactPage' => Page::query()->where('template', PageTemplate::Contact)->first(),
                 'testimonials' => Testimonial::query()->active()->get(),
+            ],
+            PageTemplate::About => [
+                'credentials' => Credential::query()->active()->get(),
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),

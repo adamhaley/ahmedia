@@ -151,7 +151,7 @@ class PageResource extends Resource
                         ->rows(5)
                         ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
                     Grid::make(1)
-                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
+                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::About, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
                         ->schema([
                             Repeater::make('bullets')
                                 ->simple(TextInput::make('bullet')->required())
@@ -167,6 +167,22 @@ class PageResource extends Resource
                                 ->reorderable()
                                 ->defaultItems(0),
                         ]),
+                ]),
+
+            Section::make('Portrait')
+                ->description('The round photo beside the story.')
+                ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::About)
+                ->columns(2)
+                ->schema([
+                    FileUpload::make('circle_image')
+                        ->label('Photo')
+                        ->image()
+                        ->imageEditor()
+                        ->imageEditorAspectRatios(['1:1'])
+                        ->disk('public')
+                        ->directory('pages')
+                        ->visibility('public'),
+                    TextInput::make('circle_image_alt')->label('Alt text')->placeholder('e.g. Adam Haley'),
                 ]),
 
             Section::make('Services card')

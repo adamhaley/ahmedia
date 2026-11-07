@@ -5,6 +5,7 @@ namespace Tests\Http\Controllers;
 use App\Enums\PageTemplate;
 use App\Http\Controllers\PageController;
 use App\Models\CaseStudy;
+use App\Models\Credential;
 use App\Models\Package;
 use App\Models\Page;
 use App\Models\Testimonial;
@@ -212,6 +213,42 @@ class PageControllerTest extends TestCase
         $response = $this->get($page->url().'?motion[]=scroll&seed[]=3&rings=banana');
 
         $response->assertOk()->assertSee('name="rings" min="2" max="14" step="1" value="8"', false);
+    }
+
+    #[Test]
+    public function it_shows_active_credentials_on_the_about_page(): void
+    {
+        Credential::factory()->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertSee('N8N101 Essentials')->assertSee('n8n');
+    }
+
+    #[Test]
+    public function it_hides_inactive_credentials(): void
+    {
+        Credential::factory()->inactive()->create(['name' => 'Retired Certificate']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertDontSee('Retired Certificate');
+    }
+
+    #[Test]
+    public function it_shows_the_portrait_beside_the_about_story(): void
+    {
+        $page = $this->aboutPage(['section_heading' => 'The story', 'circle_image' => 'pages/adam.jpg', 'circle_image_alt' => 'Adam Haley']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('pages/adam.jpg')->assertSee('alt="Adam Haley"', false);
+    }
+
+    /** @param array<string, mixed> $attributes */
+    private function aboutPage(array $attributes = []): Page
+    {
+        return Page::query()->create(['title' => 'About', 'slug' => 'about', 'template' => PageTemplate::About, 'is_published' => true, ...$attributes]);
     }
 
     /** @param array<string, mixed> $attributes */

@@ -1993,3 +1993,42 @@ a.chat-option {
   color: var(--color-muted);
   font-size: 0.9rem;
 }
+
+/* About (pages/about) */
+.about-portrait {
+  width: min(100%, 18rem);
+  margin: 0 0 2rem;
+}
+
+.credential-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--gutter);
+  margin-top: 2.5rem;
+}
+
+.credential-card {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem;
+}
+
+.credential-badge {
+  flex: none;
+  width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+}
+
+.credential-name {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.credential-meta {
+  margin: 0 0 0.5rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
