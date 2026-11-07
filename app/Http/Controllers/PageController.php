@@ -62,9 +62,7 @@ class PageController extends Controller
             PageTemplate::Faq => [
                 'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),
             ],
-            PageTemplate::CaseStudiesIndex => [
-                'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),
-            ],
+            PageTemplate::CaseStudiesIndex => $this->caseStudiesIndexData($request),
             // A shared lab link carries its arrangement in the query string (public/doppler-rings.js)
             PageTemplate::Logo => [
                 'labSettings' => DopplerRingSettings::fromArray(['motion' => 'still', ...array_filter($request->query(), is_string(...))]),
@@ -73,5 +71,21 @@ class PageController extends Controller
             ],
             default => [],
         };
+    }
+
+    /** @return array<string, mixed> */
+    private function caseStudiesIndexData(Request $request): array
+    {
+        $caseStudies = CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get();
+        $activeTag = $request->string('tag')->toString() ?: null;
+
+        return [
+            'tags' => $caseStudies->pluck('tags')->flatten()->filter()->unique()->sort()->values(),
+            'activeTag' => $activeTag,
+            'caseStudies' => $activeTag
+                ? $caseStudies->filter(fn (CaseStudy $caseStudy): bool => in_array($activeTag, $caseStudy->tags ?? [], true))->values()
+                : $caseStudies,
+            'testimonials' => Testimonial::query()->active()->get(),
+        ];
     }
 }

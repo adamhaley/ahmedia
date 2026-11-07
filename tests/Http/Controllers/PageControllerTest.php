@@ -288,6 +288,43 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertDontSee('id="location"', false);
     }
 
+    #[Test]
+    public function it_offers_each_case_study_tag_as_a_filter(): void
+    {
+        CaseStudy::factory()->create(['tags' => ['Branding']]);
+        CaseStudy::factory()->create(['tags' => ['AI Engineering']]);
+
+        $response = $this->get($this->caseStudiesPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['All projects', 'AI Engineering', 'Branding']);
+    }
+
+    #[Test]
+    public function it_filters_case_studies_by_tag(): void
+    {
+        CaseStudy::factory()->create(['title' => 'A brand pass', 'tags' => ['Branding']]);
+        CaseStudy::factory()->create(['title' => 'An agent build', 'tags' => ['AI Engineering']]);
+
+        $response = $this->get($this->caseStudiesPage()->url().'?tag=Branding');
+
+        $response->assertOk()->assertSee('A brand pass')->assertDontSee('An agent build');
+    }
+
+    #[Test]
+    public function it_shows_testimonials_on_the_case_studies_page(): void
+    {
+        Testimonial::factory()->create(['body' => 'Adam rebuilt our site in a week.']);
+
+        $response = $this->get($this->caseStudiesPage()->url());
+
+        $response->assertOk()->assertSee('Adam rebuilt our site in a week.');
+    }
+
+    private function caseStudiesPage(): Page
+    {
+        return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);
+    }
+
     private function contactPage(): Page
     {
         return Page::query()->create(['title' => 'Contact', 'slug' => 'contact', 'template' => PageTemplate::Contact, 'is_published' => true]);

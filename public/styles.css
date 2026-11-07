@@ -2065,3 +2065,36 @@ a.chat-option {
 .contact-map figcaption a {
   color: inherit;
 }
+
+/* Case study filters (pages/case_studies_index) */
+.tag-cloud-section {
+  padding-bottom: 0;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-cloud a {
+  display: inline-block;
+  padding: 0.45rem 0.95rem;
+  border: var(--border-subtle);
+  border-radius: 999px;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.tag-cloud a:hover,
+.tag-cloud a[aria-current="page"] {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.feature-tags {
+  margin: 0;
+}
