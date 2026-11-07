@@ -508,6 +508,16 @@ main > .section:first-child {
   grid-column: 7 / span 5;
 }
 
+/* Long-form copy (service pages): heading above, one reading column below */
+.split-grid-stacked > :first-child,
+.split-grid-stacked .split-body {
+  grid-column: 1 / -1;
+}
+
+.split-grid-stacked .split-body {
+  max-width: 48rem;
+}
+
 /* Reading width for the logo page's story (pages/logo) */
 .logo-story > * {
   max-width: 44rem;
@@ -1572,6 +1582,7 @@ body:has(.chat-widget) .back-to-top-link {
 
 .prose h2 {
   margin: 2.5rem 0 1rem;
+  color: var(--color-text);
   font-family: var(--font-heading);
   font-size: clamp(1.6rem, 3vw, 2.1rem);
   line-height: 1.1;
