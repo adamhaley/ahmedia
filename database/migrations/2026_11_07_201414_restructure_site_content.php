@@ -100,8 +100,8 @@ return new class extends Migration
             'cta_button_label' => 'Start a Project',
         ]);
 
-        $this->updatePage('contact', ['sort_order' => 6]);
-        $this->updatePage('faq', ['sort_order' => 7]);
+        $this->updatePage('faq', ['sort_order' => 6, 'show_in_nav' => true]);
+        $this->updatePage('contact', ['sort_order' => 7]);
         $this->updatePage('approach', ['sort_order' => 8]);
 
         $this->addCredentials();
