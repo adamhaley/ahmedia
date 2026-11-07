@@ -9,7 +9,7 @@
     </div>
     <div class="split-body">
       @if ($body)
-      <p class="section-copy">{{ $body }}</p>
+      <x-markdown class="section-copy" :text="$body" />
       @endif
       @if (count($bullets ?? []))
       <ul class="bullet-list">

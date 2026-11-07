@@ -8,7 +8,7 @@
       @endif
       <h2 class="section-title">{{ $heading }}</h2>
       @if ($body)
-      <p class="section-copy">{{ $body }}</p>
+      <x-markdown class="section-copy" :text="$body" />
       @endif
       @if (count($bullets ?? []))
       <ul class="bullet-list">

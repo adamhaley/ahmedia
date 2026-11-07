@@ -17,6 +17,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -140,7 +141,15 @@ class PageResource extends Resource
                 ->schema([
                     TextInput::make('section_eyebrow')->label('Eyebrow'),
                     TextInput::make('section_heading')->label('Heading'),
-                    Textarea::make('body')->rows(5),
+                    MarkdownEditor::make('body')
+                        ->helperText('Markdown: ## headings, **bold**, lists, links, tables and images.')
+                        ->fileAttachmentsDisk('public')
+                        ->fileAttachmentsDirectory('pages')
+                        ->hidden(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
+                    // The lab splits its story on blank lines itself (pages/logo)
+                    Textarea::make('body')
+                        ->rows(5)
+                        ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
                     Grid::make(1)
                         ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
                         ->schema([

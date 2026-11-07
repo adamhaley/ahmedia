@@ -1561,7 +1561,16 @@ body:has(.chat-widget) .back-to-top-link {
   line-height: 1.75;
 }
 
-.case-study-prose h2 {
+/* CMS Markdown (components/markdown) */
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose h2 {
   margin: 2.5rem 0 1rem;
   font-family: var(--font-heading);
   font-size: clamp(1.6rem, 3vw, 2.1rem);
@@ -1569,26 +1578,70 @@ body:has(.chat-widget) .back-to-top-link {
   letter-spacing: -0.02em;
 }
 
-.case-study-prose h2:first-child {
-  margin-top: 0;
-}
-
-.case-study-prose p,
-.case-study-prose li {
-  color: var(--color-muted);
-}
-
-.case-study-prose strong {
+.prose h3 {
+  margin: 2rem 0 0.75rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  line-height: 1.2;
   color: var(--color-text);
 }
 
-.case-study-prose ul,
-.case-study-prose ol {
+.prose p,
+.prose li {
+  color: var(--color-muted);
+}
+
+.prose strong,
+.prose a {
+  color: var(--color-text);
+}
+
+.prose ul,
+.prose ol {
   padding-left: 1.25rem;
 }
 
-.case-study-prose li + li {
+.prose li + li {
   margin-top: 0.4rem;
+}
+
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem 0;
+  border: var(--border-subtle);
+}
+
+.prose code {
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  background: var(--color-surface);
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 0.9rem;
+  border-bottom: var(--border-subtle);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  color: var(--color-text);
+}
+
+.prose td {
+  color: var(--color-muted);
 }
 
 .case-study-gallery {
