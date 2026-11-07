@@ -36,7 +36,7 @@ return [
     ],
     [
         'question' => 'How much does a website cost?',
-        'answer' => '<p>Websites come in three tiers, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page brochure site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages, a CMS you can edit yourself, custom design, a chatbot and up to two automations</li></ul><p>Every tier includes SEO and setup of your Google Business Profile. Bigger builds and e-commerce are quoted individually.</p>',
+        'answer' => '<p>Websites come in four fixed-price packages, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages on Prism CMS, which you can edit yourself, custom design, a chatbot with AI-assisted content and up to two automations</li><li>$5,000: 10+ pages, fully dynamic, a product catalog or e-commerce if needed, and up to three automations</li></ul><p>Every package includes SEO and setup of your Google Business Profile. See <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p>',
         'keywords' => 'website, website cost, website price, how much for a website, web site, web design, landing page, new site, build a site, ecommerce, online store, pages, cms',
     ],
     [

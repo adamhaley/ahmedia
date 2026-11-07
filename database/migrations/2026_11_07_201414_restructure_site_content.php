@@ -4,6 +4,7 @@ use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
 use App\Models\Credential;
 use App\Models\FaqItem;
+use App\Models\Package;
 use App\Models\Page;
 use App\Models\SiteSetting;
 use Illuminate\Database\Migrations\Migration;
@@ -199,23 +200,19 @@ return new class extends Migration
             'slug' => 'web-design-and-branding',
             'sort_order' => 2,
             'hero_subheading' => 'Fast, content-driven websites and a brand that looks like you, not like every other AI-built site.',
-            'card_excerpt' => 'Websites from $500 to $2,500, with SEO and a Google Business Profile included, and branding that doesn\'t look AI-generated.',
-            'section_heading' => 'Packages',
+            'card_excerpt' => 'Websites from $500 to $5,000, with SEO and a Google Business Profile included, and branding that doesn\'t look AI-generated.',
+            'section_heading' => 'What every site includes',
             'body' => <<<'MD'
-                Every website includes an **SEO treatment** (page titles, descriptions, social sharing images, structured data and a sitemap) and **setup of your Google Business Profile**, so you show up on Google Maps and local search from day one. Each tier has a $20/mo hosting and maintenance fee on top of the one-time price.
-
-                Bigger builds, with more than ten pages, a product catalog or e-commerce, are quoted individually.
+                Every website includes an **SEO treatment** (page titles, descriptions, social sharing images, structured data and a sitemap) and **setup of your Google Business Profile**, so you show up on Google Maps and local search from day one. Each package has a $20/mo hosting and maintenance fee on top of the one-time price.
 
                 ## Branding
 
                 Generic is the default for AI-built sites. We start from what makes you specific and build a visual identity around it, often generative: a mark made from rules and seeded variation rather than a single drawing, like the rings in our own logo.
                 MD,
-            'bullets' => [
-                '$500: a one-page brochure site, customized to your brand, with a contact form',
-                '$1,500: a multi-page site, a basic chatbot trained on your company data, and one automation',
-                '$2,500: up to 10 pages, a CMS you can edit yourself, custom design, a chatbot with AI-assisted content, and up to two automations',
-            ],
+            'bullets' => null,
         ]);
+
+        $this->addWebsitePackages();
 
         $this->createService('prism-cms', [
             'title' => 'Prism CMS',
@@ -238,7 +235,7 @@ return new class extends Migration
 
                 ## Who it's for
 
-                Businesses that want to edit their own site and grow into AI features over time. Prism CMS is the platform behind our $2,500 website tier, and can be extended with custom features.
+                Businesses that want to edit their own site and grow into AI features over time. Prism CMS is the platform behind our $2,500 and $5,000 website packages, and can be extended with custom features.
                 MD,
             'bullets' => null,
         ]);
@@ -311,6 +308,61 @@ return new class extends Migration
 
         // Kept in the CMS, off the site for now
         $this->updatePage('services/security-and-launch', ['sort_order' => 6, 'is_published' => false]);
+    }
+
+    private function addWebsitePackages(): void
+    {
+        $page = Page::query()->where('path', 'services/web-design-and-branding')->first();
+        if (! $page) {
+            return;
+        }
+
+        $hosting = 'Plus $20/mo hosting and maintenance';
+        $packages = [
+            ['One-Page Site', 'one-page-site', 500, 'A fast, single-page brochure site that tells visitors who you are and gets them in touch.', [
+                'One page, customized to your brand',
+                'Contact form that collects leads',
+                'SEO treatment and Google Business Profile setup',
+                $hosting,
+            ]],
+            ['Multi-Page Site', 'multi-page-site', 1500, 'Room for your services, story and contact details, plus a chatbot that answers visitors\' questions.', [
+                'Multiple pages, customized to your brand',
+                'A basic chatbot trained on your company data',
+                'One automation (for example, routing new leads)',
+                'SEO treatment and Google Business Profile setup',
+                $hosting,
+            ]],
+            ['CMS Site', 'cms-site', 2500, 'A custom-designed site on Prism CMS that you edit yourself, with AI helping you write.', [
+                'Up to 10 pages with a custom design',
+                'Prism CMS, so you can edit your own content',
+                'A chatbot plus AI-assisted content writing in the CMS',
+                'Up to two automations',
+                'SEO treatment and Google Business Profile setup',
+                $hosting,
+            ]],
+            ['Full Custom Build', 'full-custom-build', 5000, 'A fully dynamic, custom site for businesses with more to show and sell.', [
+                '10+ pages with a custom design',
+                'Fully dynamic, on Prism CMS',
+                'Product catalog or e-commerce if you need it',
+                'Up to three automations',
+                'SEO treatment and Google Business Profile setup',
+                $hosting,
+            ]],
+        ];
+
+        foreach ($packages as $sortOrder => [$title, $slug, $price, $summary, $includes]) {
+            Package::query()->firstOrCreate(['page_id' => $page->id, 'slug' => $slug], [
+                'title' => $title,
+                'price' => $price,
+                'summary' => $summary,
+                'includes' => $includes,
+                'is_published' => true,
+                'sort_order' => $sortOrder,
+            ]);
+        }
+
+        // The brand audit follows the website packages
+        Package::query()->where('page_id', $page->id)->where('slug', 'brand-audit')->update(['sort_order' => count($packages)]);
     }
 
     /** @param array<string, mixed> $attributes */
@@ -387,7 +439,7 @@ return new class extends Migration
         ]);
 
         FaqItem::query()->where('question', 'How much does a website cost?')->update([
-            'answer' => '<p>Websites come in three tiers, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page brochure site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages, a CMS you can edit yourself, custom design, a chatbot and up to two automations</li></ul><p>Every tier includes SEO and setup of your Google Business Profile. Bigger builds and e-commerce are quoted individually.</p>',
+            'answer' => '<p>Websites come in four fixed-price packages, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages on Prism CMS, which you can edit yourself, custom design, a chatbot with AI-assisted content and up to two automations</li><li>$5,000: 10+ pages, fully dynamic, a product catalog or e-commerce if needed, and up to three automations</li></ul><p>Every package includes SEO and setup of your Google Business Profile. See <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p>',
         ]);
 
         FaqItem::query()->where('question', 'What is an AI voice receptionist?')->update([
