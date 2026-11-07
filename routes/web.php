@@ -39,5 +39,10 @@ Route::post('/contact', StoreContactSubmissionController::class)
     ->middleware('throttle:5,1')
     ->name('contact.store');
 
+// Service pages renamed in the 2026-11 restructure
+Route::permanentRedirect('/services/ai-consulting', '/services/consultations');
+Route::permanentRedirect('/services/custom-programming', '/services/automations');
+Route::permanentRedirect('/services/website-design', '/services/web-design-and-branding');
+
 Route::get('/', PageController::class)->name('page.home');
 Route::fallback(PageController::class)->name('page.show');
