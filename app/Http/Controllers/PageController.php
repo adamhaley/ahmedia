@@ -8,6 +8,7 @@ use App\Models\CaseStudy;
 use App\Models\Credential;
 use App\Models\FaqItem;
 use App\Models\Page;
+use App\Models\Post;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -50,6 +51,9 @@ class PageController extends Controller
             ],
             PageTemplate::Service => [
                 'packages' => $page->packages()->where('is_published', true)->get(),
+            ],
+            PageTemplate::Blog => [
+                'posts' => Post::query()->published()->get(),
             ],
             PageTemplate::Faq => [
                 'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),

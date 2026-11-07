@@ -17,6 +17,7 @@ enum PageTemplate: string implements HasLabel
     case ServicesIndex = 'services_index';
     case Service = 'service';
     case CaseStudiesIndex = 'case_studies_index';
+    case Blog = 'blog';
     case Faq = 'faq';
     case Logo = 'logo';
     case Standard = 'standard';

@@ -34,6 +34,7 @@ return [
     ],
     PageTemplate::class => [
         'about' => 'About',
+        'blog' => 'Blog index',
         'case_studies_index' => 'Case studies index',
         'contact' => 'Contact',
         'faq' => 'FAQ',

@@ -2032,3 +2032,8 @@ a.chat-option {
   color: var(--color-muted);
   font-size: 0.9rem;
 }
+
+/* Blog post (posts/show) */
+.post-cover {
+  max-width: 44rem;
+}

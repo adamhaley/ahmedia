@@ -8,6 +8,7 @@ use App\Models\CaseStudy;
 use App\Models\Credential;
 use App\Models\Package;
 use App\Models\Page;
+use App\Models\Post;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -243,6 +244,29 @@ class PageControllerTest extends TestCase
         $response = $this->get($page->url());
 
         $response->assertOk()->assertSee('pages/adam.jpg')->assertSee('alt="Adam Haley"', false);
+    }
+
+    #[Test]
+    public function it_lists_published_posts_newest_first_on_the_blog_index(): void
+    {
+        Post::factory()->create(['title' => 'Older post', 'published_at' => now()->subWeek()]);
+        Post::factory()->create(['title' => 'Newer post', 'published_at' => now()->subDay()]);
+        $blog = Page::query()->create(['title' => 'Blog', 'slug' => 'blog', 'template' => PageTemplate::Blog, 'is_published' => true]);
+
+        $response = $this->get($blog->url());
+
+        $response->assertOk()->assertSeeInOrder(['Newer post', 'Older post']);
+    }
+
+    #[Test]
+    public function it_leaves_drafts_off_the_blog_index(): void
+    {
+        Post::factory()->draft()->create(['title' => 'Unfinished draft']);
+        $blog = Page::query()->create(['title' => 'Blog', 'slug' => 'blog', 'template' => PageTemplate::Blog, 'is_published' => true]);
+
+        $response = $this->get($blog->url());
+
+        $response->assertOk()->assertDontSee('Unfinished draft');
     }
 
     /** @param array<string, mixed> $attributes */

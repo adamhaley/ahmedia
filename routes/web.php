@@ -5,6 +5,7 @@ use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\Chat\AskChatQuestionController;
 use App\Http\Controllers\Chat\StoreChatLeadController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\StoreContactSubmissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::get('/preview/{token}', function (string $token) {
 })->name('coming-soon.preview');
 
 Route::get('/case-studies/{slug}', CaseStudyController::class)->name('case-studies.show');
+Route::get('/blog/{slug}', PostController::class)->name('posts.show');
 
 Route::post('/chat/ask', AskChatQuestionController::class)
     ->middleware('throttle:20,1')
