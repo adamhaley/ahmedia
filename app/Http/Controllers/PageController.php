@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Data\DopplerRingSettings;
 use App\Enums\PageTemplate;
 use App\Models\CaseStudy;
+use App\Models\Credential;
 use App\Models\FaqItem;
 use App\Models\Page;
+use App\Models\Post;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -40,6 +43,10 @@ class PageController extends Controller
                 'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->limit(3)->get(),
                 'contactPage' => Page::query()->where('template', PageTemplate::Contact)->first(),
                 'testimonials' => Testimonial::query()->active()->get(),
+                'tagline' => SiteSetting::current()->footer_tagline,
+            ],
+            PageTemplate::About => [
+                'credentials' => Credential::query()->active()->get(),
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),
@@ -47,12 +54,16 @@ class PageController extends Controller
             PageTemplate::Service => [
                 'packages' => $page->packages()->where('is_published', true)->get(),
             ],
+            PageTemplate::Blog => [
+                'posts' => Post::query()->published()->get(),
+            ],
+            PageTemplate::Contact => [
+                'address' => SiteSetting::current()->address,
+            ],
             PageTemplate::Faq => [
                 'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),
             ],
-            PageTemplate::CaseStudiesIndex => [
-                'caseStudies' => CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get(),
-            ],
+            PageTemplate::CaseStudiesIndex => $this->caseStudiesIndexData($request),
             // A shared lab link carries its arrangement in the query string (public/doppler-rings.js)
             PageTemplate::Logo => [
                 'labSettings' => DopplerRingSettings::fromArray(['motion' => 'still', ...array_filter($request->query(), is_string(...))]),
@@ -61,5 +72,21 @@ class PageController extends Controller
             ],
             default => [],
         };
+    }
+
+    /** @return array<string, mixed> */
+    private function caseStudiesIndexData(Request $request): array
+    {
+        $caseStudies = CaseStudy::query()->where('is_published', true)->orderBy('sort_order')->get();
+        $activeTag = $request->string('tag')->toString() ?: null;
+
+        return [
+            'tags' => $caseStudies->pluck('tags')->flatten()->filter()->unique()->sort()->values(),
+            'activeTag' => $activeTag,
+            'caseStudies' => $activeTag
+                ? $caseStudies->filter(fn (CaseStudy $caseStudy): bool => in_array($activeTag, $caseStudy->tags ?? [], true))->values()
+                : $caseStudies,
+            'testimonials' => Testimonial::query()->active()->get(),
+        ];
     }
 }

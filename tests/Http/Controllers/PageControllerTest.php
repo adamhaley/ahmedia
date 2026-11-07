@@ -5,8 +5,11 @@ namespace Tests\Http\Controllers;
 use App\Enums\PageTemplate;
 use App\Http\Controllers\PageController;
 use App\Models\CaseStudy;
+use App\Models\Credential;
 use App\Models\Package;
 use App\Models\Page;
+use App\Models\Post;
+use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -212,6 +215,165 @@ class PageControllerTest extends TestCase
         $response = $this->get($page->url().'?motion[]=scroll&seed[]=3&rings=banana');
 
         $response->assertOk()->assertSee('name="rings" min="2" max="14" step="1" value="8"', false);
+    }
+
+    #[Test]
+    public function it_shows_the_brand_tagline_under_the_homepage_title(): void
+    {
+        SiteSetting::current()->update(['footer_tagline' => 'Use AI, Stay Human']);
+
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertSee('<p class="hero-tagline">Use AI, Stay Human</p>', false);
+    }
+
+    #[Test]
+    public function it_takes_the_homepage_spotlight_buttons_from_the_home_page(): void
+    {
+        $page = $this->homePage(['section_heading' => 'How we work', 'buttons' => [['label' => 'Meet Adam', 'url' => '/about', 'style' => 'secondary']]]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('href="/about">Meet Adam</a>', false)->assertDontSee('More on Our Approach');
+    }
+
+    #[Test]
+    public function it_shows_active_credentials_on_the_about_page(): void
+    {
+        Credential::factory()->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertSee('N8N101 Essentials')->assertSee('n8n');
+    }
+
+    #[Test]
+    public function it_shows_featured_credentials_as_track_record_stats(): void
+    {
+        Credential::factory()->featured('100%')->create(['name' => 'Job Success Score', 'issuer' => 'Upwork']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['id="track-record"', '<p class="stat-value">100%</p>', 'Job Success Score'], false);
+    }
+
+    #[Test]
+    public function it_keeps_featured_credentials_out_of_the_badge_grid(): void
+    {
+        Credential::factory()->featured()->create();
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertDontSee('id="credentials"', false);
+    }
+
+    #[Test]
+    public function it_hides_inactive_credentials(): void
+    {
+        Credential::factory()->inactive()->create(['name' => 'Retired Certificate']);
+
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertDontSee('Retired Certificate');
+    }
+
+    #[Test]
+    public function it_shows_the_portrait_beside_the_about_story(): void
+    {
+        $page = $this->aboutPage(['section_heading' => 'The story', 'circle_image' => 'pages/adam.jpg', 'circle_image_alt' => 'Adam Haley']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('pages/adam.jpg')->assertSee('alt="Adam Haley"', false);
+    }
+
+    #[Test]
+    public function it_lists_published_posts_newest_first_on_the_blog_index(): void
+    {
+        Post::factory()->create(['title' => 'Older post', 'published_at' => now()->subWeek()]);
+        Post::factory()->create(['title' => 'Newer post', 'published_at' => now()->subDay()]);
+        $blog = Page::query()->create(['title' => 'Blog', 'slug' => 'blog', 'template' => PageTemplate::Blog, 'is_published' => true]);
+
+        $response = $this->get($blog->url());
+
+        $response->assertOk()->assertSeeInOrder(['Newer post', 'Older post']);
+    }
+
+    #[Test]
+    public function it_leaves_drafts_off_the_blog_index(): void
+    {
+        Post::factory()->draft()->create(['title' => 'Unfinished draft']);
+        $blog = Page::query()->create(['title' => 'Blog', 'slug' => 'blog', 'template' => PageTemplate::Blog, 'is_published' => true]);
+
+        $response = $this->get($blog->url());
+
+        $response->assertOk()->assertDontSee('Unfinished draft');
+    }
+
+    #[Test]
+    public function it_shows_the_address_and_map_on_the_contact_page(): void
+    {
+        SiteSetting::current()->update(['address' => '5161 Lankershim Blvd, North Hollywood, CA 91601']);
+
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertSee('5161 Lankershim Blvd')->assertSee('/images/contact-map.jpg');
+    }
+
+    #[Test]
+    public function it_leaves_out_the_location_when_no_address_is_set(): void
+    {
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertDontSee('id="location"', false);
+    }
+
+    #[Test]
+    public function it_offers_each_case_study_tag_as_a_filter(): void
+    {
+        CaseStudy::factory()->create(['tags' => ['Branding']]);
+        CaseStudy::factory()->create(['tags' => ['AI Engineering']]);
+
+        $response = $this->get($this->caseStudiesPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['All projects', 'AI Engineering', 'Branding']);
+    }
+
+    #[Test]
+    public function it_filters_case_studies_by_tag(): void
+    {
+        CaseStudy::factory()->create(['title' => 'A brand pass', 'tags' => ['Branding']]);
+        CaseStudy::factory()->create(['title' => 'An agent build', 'tags' => ['AI Engineering']]);
+
+        $response = $this->get($this->caseStudiesPage()->url().'?tag=Branding');
+
+        $response->assertOk()->assertSee('A brand pass')->assertDontSee('An agent build');
+    }
+
+    #[Test]
+    public function it_shows_testimonials_on_the_case_studies_page(): void
+    {
+        Testimonial::factory()->create(['body' => 'Adam rebuilt our site in a week.']);
+
+        $response = $this->get($this->caseStudiesPage()->url());
+
+        $response->assertOk()->assertSee('Adam rebuilt our site in a week.');
+    }
+
+    private function caseStudiesPage(): Page
+    {
+        return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);
+    }
+
+    private function contactPage(): Page
+    {
+        return Page::query()->create(['title' => 'Contact', 'slug' => 'contact', 'template' => PageTemplate::Contact, 'is_published' => true]);
+    }
+
+    /** @param array<string, mixed> $attributes */
+    private function aboutPage(array $attributes = []): Page
+    {
+        return Page::query()->create(['title' => 'About', 'slug' => 'about', 'template' => PageTemplate::About, 'is_published' => true, ...$attributes]);
     }
 
     /** @param array<string, mixed> $attributes */

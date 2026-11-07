@@ -9,6 +9,7 @@
 
   @if ($page->section_heading)
   <x-split-content
+    stacked
     :heading="$page->section_heading"
     :body="$page->body"
     :bullets="$page->bullets"

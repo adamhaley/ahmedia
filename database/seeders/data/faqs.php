@@ -16,7 +16,7 @@ declare(strict_types=1);
 return [
     [
         'question' => 'What does AH Media do?',
-        'answer' => '<p>AH Media designs, builds and ships the AI systems businesses actually run on: custom chatbots and assistants trained on your own content, automation that connects the tools you already use (often with n8n), custom web apps, websites and AI voice receptionists.</p><p>We also offer fixed-price packages for securing vibe-coded apps before launch, recovering hacked sites, and making AI-built sites look like your brand.</p>',
+        'answer' => '<p>AH Media designs, builds and ships the AI systems businesses actually run on: n8n automations that connect the tools you already use, second brains (your own agentic OS), chat and voice assistants trained on your own content, and fast websites on Prism CMS, our AI-ready CMS.</p><p>We also offer branding, consultations and fixed-price packages for securing vibe-coded apps before launch and recovering hacked sites.</p>',
         'keywords' => 'services, what do you do, what you offer, offerings, help with, capabilities, about, who are you',
     ],
     [
@@ -36,7 +36,7 @@ return [
     ],
     [
         'question' => 'How much does a website cost?',
-        'answer' => '<p>Websites come in four tiers, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page brochure site, SEO-optimized, with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages, a CMS you can edit yourself, custom design, chatbot and up to two automations</li><li>$5,000: 10+ pages, fully dynamic, product catalogue or e-commerce if needed, and up to three automations</li></ul>',
+        'answer' => '<p>Websites come in four fixed-price packages, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages on Prism CMS, which you can edit yourself, custom design, a chatbot with AI-assisted content and up to two automations</li><li>$5,000: 10+ pages, fully dynamic, a product catalog or e-commerce if needed, and up to three automations</li></ul><p>Every package includes SEO and setup of your Google Business Profile. See <a href="/services/web-design-and-branding">Web Design &amp; Branding</a>.</p>',
         'keywords' => 'website, website cost, website price, how much for a website, web site, web design, landing page, new site, build a site, ecommerce, online store, pages, cms',
     ],
     [
@@ -46,8 +46,8 @@ return [
     ],
     [
         'question' => 'What is an AI voice receptionist?',
-        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It handles calls, answers common questions and takes messages or bookings, with the conversation flow and voice designed around how you work.</p><p>Set-up is $950, then $500 a month.</p>',
-        'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls',
+        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The phone number and accounts stay in your business\'s name.</p><p>Set-up is $950, then $500 a month for management and tuning, plus call usage billed directly to your own accounts (typically 10 to 15 cents a minute). Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
+        'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls, demo, phone number, front desk, voicemail',
     ],
     [
         'question' => 'What can you automate?',
@@ -93,5 +93,15 @@ return [
         'question' => 'How long does a project take?',
         'answer' => '<p>The fixed-price packages take 3 to 5 days. Websites and custom builds depend on scope: a simple site can be live within a week or two, while larger apps and automations are planned in stages, and you see working progress along the way.</p>',
         'keywords' => 'timeline, how long, turnaround, delivery, deadline, duration, fast, quickly, when, weeks, days',
+    ],
+    [
+        'question' => 'What is a second brain?',
+        'answer' => '<p>A second brain is where your business remembers things: a folder of plain Markdown files (projects, plans, people, notes), AI agents that read and write it for you, and small scripts that handle the steps that must come out the same every time. You talk to it by voice, chat or Obsidian. See <a href="/services/second-brain">Second Brain</a>.</p>',
+        'keywords' => 'second brain, agentic os, knowledge base, notes, obsidian, memory, personal knowledge management, pkm, claude code, organize',
+    ],
+    [
+        'question' => 'What is Prism CMS?',
+        'answer' => '<p>Prism CMS is the content management system this site runs on: WordPress for the Agentic Age. You edit your own pages, services and blog, with an FAQ chatbot and spam filtering built in, and no third-party plugins to keep patched. See <a href="/services/prism-cms">Prism CMS</a>.</p>',
+        'keywords' => 'prism, prism cms, cms, wordpress, wordpress alternative, edit my site, content management, laravel, plugins',
     ],
 ];

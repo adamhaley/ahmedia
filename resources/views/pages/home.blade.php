@@ -1,8 +1,8 @@
 <x-layouts.site :page="$page">
   <x-hero
-    eyebrow="AI Systems & Automation"
     :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
+    :tagline="$tagline"
     :copy="$page->hero_subheading"
     :ring-style="$page->heroRingStyle()"
     :actions="[
@@ -32,7 +32,7 @@
     :heading="$page->section_heading"
     :body="$page->body"
     :bullets="$page->bullets"
-    :actions="[['label' => 'More on Our Approach', 'href' => '/approach', 'variant' => 'secondary']]"
+    :actions="collect($page->buttons ?? [])->map(fn ($button) => ['label' => $button['label'], 'href' => $button['url'], 'variant' => $button['style'] ?? 'secondary'])->all()"
   />
   @endif
 

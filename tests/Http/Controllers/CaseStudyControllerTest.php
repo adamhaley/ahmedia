@@ -63,6 +63,18 @@ class CaseStudyControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_drops_the_package_link_when_the_service_page_is_unpublished(): void
+    {
+        $page = Page::query()->create(['title' => 'Security & Launch', 'slug' => 'security-and-launch', 'template' => PageTemplate::Service, 'is_published' => false]);
+        $package = Package::factory()->for($page)->create(['title' => 'Hacked Site Recovery', 'slug' => 'hacked-site-recovery']);
+        $caseStudy = CaseStudy::factory()->create(['package_id' => $package->id]);
+
+        $response = $this->get($caseStudy->url());
+
+        $response->assertOk()->assertDontSee('#hacked-site-recovery')->assertSee('Have something like this in mind?');
+    }
+
+    #[Test]
     public function it_hides_an_unpublished_case_study_from_guests(): void
     {
         $caseStudy = CaseStudy::factory()->create(['is_published' => false]);

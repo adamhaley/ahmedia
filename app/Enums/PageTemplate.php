@@ -12,10 +12,12 @@ enum PageTemplate: string implements HasLabel
     use TranslatesLabels;
 
     case Home = 'home';
+    case About = 'about';
     case Contact = 'contact';
     case ServicesIndex = 'services_index';
     case Service = 'service';
     case CaseStudiesIndex = 'case_studies_index';
+    case Blog = 'blog';
     case Faq = 'faq';
     case Logo = 'logo';
     case Standard = 'standard';

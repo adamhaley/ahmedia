@@ -1,4 +1,4 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'copy' => null, 'actions' => [], 'ringStyle' => null])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'actions' => [], 'ringStyle' => null])
 @php
   $rings = $ringStyle?->settings;
   $pin = $rings?->motion === \App\Enums\HeroRingsMotion::Scroll;
@@ -20,6 +20,9 @@
       <p class="eyebrow">{{ $eyebrow }}</p>
       @endif
       <h1 class="display-title">{{ $title }}@if ($accent)<span class="text-accent">{{ $accent }}</span>@endif</h1>
+      @if ($tagline)
+      <p class="hero-tagline">{{ $tagline }}</p>
+      @endif
       @if ($copy)
       <p class="lede">{{ $copy }}</p>
       @endif

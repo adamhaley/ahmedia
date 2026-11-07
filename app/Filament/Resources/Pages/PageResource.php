@@ -17,6 +17,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -94,6 +95,9 @@ class PageResource extends Resource
                 Toggle::make('show_in_nav')
                     ->label('Show in main navigation')
                     ->helperText('Top-level pages only; child pages appear in their parent\'s dropdown.'),
+                TextInput::make('nav_anchor')
+                    ->label('Homepage navigation anchor')
+                    ->helperText('When set, this page\'s nav link jumps to that homepage section (e.g. approach) instead of opening the page. Leave empty to link to the page itself.'),
             ]),
 
             Section::make('Hero')
@@ -131,7 +135,7 @@ class PageResource extends Resource
 
             Section::make('Content')
                 ->description(fn (Get $get): ?string => match (self::template($get)) {
-                    PageTemplate::Home => 'The Approach spotlight on the homepage.',
+                    PageTemplate::Home => 'The spotlight section on the homepage, with its buttons.',
                     PageTemplate::Contact => 'The eyebrow is also used above the contact form on the homepage.',
                     PageTemplate::CaseStudiesIndex => 'The eyebrow is also used above the case studies on the homepage.',
                     PageTemplate::Logo => 'The eyebrow sits above the lab; the heading, body and bullets tell the story below it. Leave a blank line between paragraphs. Buttons aren\'t shown on this page.',
@@ -140,9 +144,17 @@ class PageResource extends Resource
                 ->schema([
                     TextInput::make('section_eyebrow')->label('Eyebrow'),
                     TextInput::make('section_heading')->label('Heading'),
-                    Textarea::make('body')->rows(5),
+                    MarkdownEditor::make('body')
+                        ->helperText('Markdown: ## headings, **bold**, lists, links, tables and images.')
+                        ->fileAttachmentsDisk('public')
+                        ->fileAttachmentsDirectory('pages')
+                        ->hidden(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
+                    // The lab splits its story on blank lines itself (pages/logo)
+                    Textarea::make('body')
+                        ->rows(5)
+                        ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Logo),
                     Grid::make(1)
-                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
+                        ->visible(fn (Get $get): bool => in_array(self::template($get), [PageTemplate::Home, PageTemplate::About, PageTemplate::Standard, PageTemplate::Service, PageTemplate::Logo], true))
                         ->schema([
                             Repeater::make('bullets')
                                 ->simple(TextInput::make('bullet')->required())
@@ -158,6 +170,22 @@ class PageResource extends Resource
                                 ->reorderable()
                                 ->defaultItems(0),
                         ]),
+                ]),
+
+            Section::make('Portrait')
+                ->description('The round photo beside the story.')
+                ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::About)
+                ->columns(2)
+                ->schema([
+                    FileUpload::make('circle_image')
+                        ->label('Photo')
+                        ->image()
+                        ->imageEditor()
+                        ->imageEditorAspectRatios(['1:1'])
+                        ->disk('public')
+                        ->directory('pages')
+                        ->visibility('public'),
+                    TextInput::make('circle_image_alt')->label('Alt text')->placeholder('e.g. Adam Haley'),
                 ]),
 
             Section::make('Services card')
@@ -195,9 +223,6 @@ class PageResource extends Resource
                     ->disk('public')
                     ->directory('pages')
                     ->visibility('public'),
-                TextInput::make('nav_anchor')
-                    ->label('Homepage navigation anchor')
-                    ->helperText('When set, this page\'s nav link jumps to that homepage section (e.g. #approach) instead of opening the page.'),
             ]),
         ]);
     }

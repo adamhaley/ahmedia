@@ -30,9 +30,7 @@
         <img class="case-study-hero-image" src="{{ $disk->url($caseStudy->hero_image) }}" alt="{{ $caseStudy->title }}" />
         @endif
         @if ($caseStudy->narrative)
-        <div class="case-study-prose">
-          {!! \Illuminate\Support\Str::markdown($caseStudy->narrative, ['html_input' => 'escape', 'allow_unsafe_links' => false]) !!}
-        </div>
+        <x-markdown class="case-study-prose" :text="$caseStudy->narrative" />
         @endif
       </div>
     </div>
@@ -69,7 +67,7 @@
   </section>
   @endif
 
-  @if ($caseStudy->package?->is_published)
+  @if ($caseStudy->package?->is_published && $caseStudy->package->page?->is_published)
   <x-cta-band
     eyebrow="Want this for your site?"
     :heading="$caseStudy->package->title"
