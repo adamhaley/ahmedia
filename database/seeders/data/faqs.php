@@ -46,8 +46,8 @@ return [
     ],
     [
         'question' => 'What is an AI voice receptionist?',
-        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It handles calls, answers common questions and takes messages or bookings, with the conversation flow and voice designed around how you work.</p><p>Set-up is $950, then $500 a month.</p>',
-        'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls',
+        'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The number stays in your business\'s name.</p><p>Set-up is $950, then $500 a month. Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
+        'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls, demo, phone number, front desk, voicemail',
     ],
     [
         'question' => 'What can you automate?',

@@ -245,20 +245,51 @@ return new class extends Migration
 
         $this->updatePage('services/voice-ai-receptionists', [
             'sort_order' => 4,
-            'section_heading' => 'How it works',
+            'hero_subheading' => 'A real phone line, answered by an AI receptionist trained on your business. Call the demo: (765) 307-5537.',
+            'section_heading' => 'Never miss a call',
             'body' => <<<'MD'
-                Your AI receptionist answers on a real phone number, around the clock. It greets callers in a voice that fits your brand, answers questions from your own information (hours, services, prices, policies), takes messages, and routes calls the way you would.
-
-                We design the conversation with you, train it on your data, and keep tuning it from real calls. Built on Twilio for the phone line.
+                Your AI receptionist answers on a real phone number, around the clock, on the first ring. It greets callers in a voice that fits your brand, answers questions from your own information (hours, services, prices, policies), takes messages, and books consultations or routes calls the way you would.
 
                 ## Hear it for yourself
 
                 Call our demo receptionist at **[(765) 307-5537](tel:+17653075537)**. She answers for a sample med spa and can book you a consultation. Yours would be trained on your own business.
 
+                ## What a missed call costs
+
+                Every call that goes to voicemail is a customer who might call the next business on the list. The math is simple:
+
+                **missed calls a week × average job value × how often a call books = revenue walking away**
+
+                Say you miss 5 calls a week, an average booking is worth $300, and 3 in 10 callers book. That's $450 a week, more than $23,000 a year, against $6,000 a year (plus the one-time setup) for a receptionist that never misses. We run this with your real numbers on the first call.
+
+                ## You own your number
+
+                Your phone number and phone account are in your business's name, not ours. We set it up, connect it to your receptionist, and walk you through the carrier registration that keeps your calls from being flagged as spam. If you ever leave, your number goes with you.
+
+                ## How it works
+
+                1. **Discovery:** a call about your business, what callers usually ask, and roughly how many calls you get on a busy day.
+                2. **Conversation design:** we script how she greets, answers, books and hands off, and pick a voice that fits your brand.
+                3. **Training:** she learns your services, prices, hours and policies from your own information.
+                4. **Go live:** we connect your number and test it with you before real callers reach her.
+                5. **Tuning:** we review real calls and keep tightening her answers.
+
+                ## Connects to the rest of your business
+
+                Pair her with [Automations](/services/automations) to send call summaries to your inbox, log callers in your CRM, or follow up by email after a booking.
+
+                ## Who it's for
+
+                Med spas, clinics, salons and service businesses where a missed call is a missed booking, especially when the front desk is busy with the people already in the room.
+
                 ## Pricing
 
-                Sold separately from the website packages.
+                Sold separately from the website packages. Calls on your phone line are billed to your own phone account, typically around a cent a minute.
                 MD,
+            'bullets' => [
+                '$950 setup: conversation design, voice character and training on your data',
+                '$500/mo ongoing, including tuning from real calls',
+            ],
         ]);
 
         $this->updatePage('services/ai-consulting', [
@@ -356,6 +387,11 @@ return new class extends Migration
 
         FaqItem::query()->where('question', 'How much does a website cost?')->update([
             'answer' => '<p>Websites come in three tiers, each with a $20 a month hosting and maintenance fee:</p><ul><li>$500: a one-page brochure site with a contact form</li><li>$1,500: a multi-page site plus a basic chatbot trained on your company data and one automation</li><li>$2,500: up to 10 pages, a CMS you can edit yourself, custom design, a chatbot and up to two automations</li></ul><p>Every tier includes SEO and setup of your Google Business Profile. Bigger builds and e-commerce are quoted individually.</p>',
+        ]);
+
+        FaqItem::query()->where('question', 'What is an AI voice receptionist?')->update([
+            'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The number stays in your business\'s name.</p><p>Set-up is $950, then $500 a month. Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
+            'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls, demo, phone number, front desk, voicemail',
         ]);
 
         $nextSortOrder = (int) FaqItem::query()->max('sort_order') + 1;

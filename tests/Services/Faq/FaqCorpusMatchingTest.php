@@ -55,6 +55,7 @@ class FaqCorpusMatchingTest extends TestCase
     {
         yield 'services' => ['what services do you offer', 'What does AH Media do?'];
         yield 'second brain' => ['what is a second brain', 'What is a second brain?'];
+        yield 'voice demo' => ['is there a demo number i can call', 'What is an AI voice receptionist?'];
         yield 'obsidian' => ['can you set up obsidian with ai for my notes', 'What is a second brain?'];
         yield 'prism' => ['what is prism cms', 'What is Prism CMS?'];
         yield 'wordpress alternative' => ['i want an alternative to wordpress', 'What is Prism CMS?'];
