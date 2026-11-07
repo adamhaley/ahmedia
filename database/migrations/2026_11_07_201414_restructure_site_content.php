@@ -296,7 +296,7 @@ return new class extends Migration
             'hero_subheading' => 'Talk it through with a senior developer before you spend money on the wrong tool.',
             'card_excerpt' => 'Strategy, opportunity mapping and a clear path to production, not just a slide deck. Book a call, or keep us on retainer.',
             'section_heading' => 'Pricing',
-            'body' => 'Start with a single call to map where AI and automation would actually help, or keep us on retainer for ongoing work.',
+            'body' => "Message us first, free: tell us what's eating your week and we'll tell you honestly whether we can help. Then a paid call maps it out and gives you a plan with costs. Or keep us on retainer for ongoing work.",
             'bullets' => [
                 '30-minute consultation: $50',
                 '60-minute consultation: $100',
