@@ -260,11 +260,11 @@ return new class extends Migration
 
                 **missed calls a week × average job value × how often a call books = revenue walking away**
 
-                Say you miss 5 calls a week, an average booking is worth $300, and 3 in 10 callers book. That's $450 a week, more than $23,000 a year, against $6,000 a year (plus the one-time setup) for a receptionist that never misses. We run this with your real numbers on the first call.
+                Say you miss 5 calls a week, an average booking is worth $300, and 3 in 10 callers book. That's $450 a week, more than $23,000 a year, against $6,000 a year (plus setup and call usage) for a receptionist that never misses. We run this with your real numbers on the first call.
 
-                ## You own your number
+                ## You own everything
 
-                Your phone number and phone account are in your business's name, not ours. We set it up, connect it to your receptionist, and walk you through the carrier registration that keeps your calls from being flagged as spam. If you ever leave, your number goes with you.
+                Your phone number, phone account and AI voice account are all in your business's name, on your own card, not ours. We set them up, connect them, and walk you through the carrier registration that keeps your calls from being flagged as spam. We manage and tune your receptionist with access you grant, and if you ever leave, all of it goes with you.
 
                 ## How it works
 
@@ -284,11 +284,11 @@ return new class extends Migration
 
                 ## Pricing
 
-                Sold separately from the website packages. Calls on your phone line are billed to your own phone account, typically around a cent a minute.
+                Sold separately from the website packages. Call usage is billed directly to the accounts in your name, typically 10 to 15 cents a minute for the AI voice and phone line together, with no markup from us. We estimate yours from your call volume on the first call.
                 MD,
             'bullets' => [
                 '$950 setup: conversation design, voice character and training on your data',
-                '$500/mo ongoing, including tuning from real calls',
+                '$500/mo for management and tuning from real calls',
             ],
         ]);
 
@@ -390,7 +390,7 @@ return new class extends Migration
         ]);
 
         FaqItem::query()->where('question', 'What is an AI voice receptionist?')->update([
-            'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The number stays in your business\'s name.</p><p>Set-up is $950, then $500 a month. Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
+            'answer' => '<p>A real phone line answered by an AI receptionist trained on your business. It picks up on the first ring, around the clock, answers common questions, takes messages and books consultations. The phone number and accounts stay in your business\'s name.</p><p>Set-up is $950, then $500 a month for management and tuning, plus call usage billed directly to your own accounts (typically 10 to 15 cents a minute). Hear it for yourself: call our demo receptionist at <a href="tel:+17653075537">(765) 307-5537</a>. See <a href="/services/voice-ai-receptionists">Voice AI Receptionists</a>.</p>',
             'keywords' => 'phone, voice, receptionist, calls, answering service, voice ai, call answering, bookings, appointments, missed calls, demo, phone number, front desk, voicemail',
         ]);
 
