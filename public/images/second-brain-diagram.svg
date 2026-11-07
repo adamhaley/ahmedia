@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" role="img" aria-labelledby="sb-title sb-desc" font-family="Arial, Helvetica, sans-serif">
+  <title id="sb-title">How a second brain fits together</title>
+  <desc id="sb-desc">You talk to the second brain through a Human:IO layer of voice notes, chat and Obsidian. Everything lands in a folder of plain Markdown files. LLM agents read and write those files using context files and skills, and deterministic scripts and hooks handle the repeatable steps.</desc>
+  <defs>
+    <marker id="sb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#00ffff"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="540" fill="#004a4a"/>
+
+  <!-- Human:IO -->
+  <rect x="30" y="150" width="230" height="240" rx="18" fill="none" stroke="#00ffff" stroke-width="2"/>
+  <text x="145" y="190" fill="#00ffff" font-size="22" font-weight="bold" text-anchor="middle">Human:IO</text>
+  <text x="145" y="216" fill="#ffffff" fill-opacity="0.7" font-size="14" text-anchor="middle">how you talk to it</text>
+  <g fill="#ffffff" font-size="16" text-anchor="middle">
+    <text x="145" y="262">Voice notes</text>
+    <text x="145" y="296">Chat</text>
+    <text x="145" y="330">Obsidian</text>
+    <text x="145" y="364">Daily briefs</text>
+  </g>
+
+  <!-- Files -->
+  <rect x="375" y="110" width="250" height="320" rx="18" fill="#006666" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2"/>
+  <text x="500" y="150" fill="#ffffff" font-size="22" font-weight="bold" text-anchor="middle">Your files</text>
+  <text x="500" y="176" fill="#ffffff" fill-opacity="0.7" font-size="14" text-anchor="middle">plain Markdown you own</text>
+  <g fill="#ffffff" font-size="16" text-anchor="middle">
+    <text x="500" y="222">projects/</text>
+    <text x="500" y="254">plans · session logs</text>
+    <text x="500" y="286">people (CRM)</text>
+    <text x="500" y="318">patterns · references</text>
+    <text x="500" y="350">journal</text>
+    <text x="500" y="382">todo.md</text>
+  </g>
+
+  <!-- LLM agents -->
+  <rect x="740" y="60" width="230" height="190" rx="18" fill="none" stroke="#00ffff" stroke-width="2"/>
+  <text x="855" y="100" fill="#00ffff" font-size="22" font-weight="bold" text-anchor="middle">LLM agents</text>
+  <text x="855" y="126" fill="#ffffff" fill-opacity="0.7" font-size="14" text-anchor="middle">judgement and language</text>
+  <g fill="#ffffff" font-size="16" text-anchor="middle">
+    <text x="855" y="170">Context files</text>
+    <text x="855" y="202">Skills</text>
+    <text x="855" y="234">Memory</text>
+  </g>
+
+  <!-- Deterministic -->
+  <rect x="740" y="290" width="230" height="190" rx="18" fill="none" stroke="#00ffff" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="855" y="330" fill="#00ffff" font-size="22" font-weight="bold" text-anchor="middle">Scripts &amp; hooks</text>
+  <text x="855" y="356" fill="#ffffff" fill-opacity="0.7" font-size="14" text-anchor="middle">the same result every time</text>
+  <g fill="#ffffff" font-size="16" text-anchor="middle">
+    <text x="855" y="400">Session hooks</text>
+    <text x="855" y="432">Edit scripts</text>
+    <text x="855" y="464">n8n workflows</text>
+  </g>
+
+  <!-- Arrows -->
+  <g stroke="#00ffff" stroke-width="2" fill="none">
+    <path d="M262 270H372" marker-start="url(#sb-arrow)" marker-end="url(#sb-arrow)"/>
+    <path d="M628 220L738 160" marker-start="url(#sb-arrow)" marker-end="url(#sb-arrow)"/>
+    <path d="M628 320L738 380" marker-start="url(#sb-arrow)" marker-end="url(#sb-arrow)"/>
+    <path d="M855 252V288" marker-end="url(#sb-arrow)"/>
+  </g>
+  <text x="868" y="276" fill="#ffffff" fill-opacity="0.7" font-size="13">calls</text>
+</svg>

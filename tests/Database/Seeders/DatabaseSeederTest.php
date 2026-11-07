@@ -58,7 +58,7 @@ class DatabaseSeederTest extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
 
-        $this->assertSame(16, FaqItem::query()->count());
+        $this->assertSame(18, FaqItem::query()->count());
         $this->assertSame(PageTemplate::Faq, Page::query()->where('path', 'faq')->value('template'));
     }
 
