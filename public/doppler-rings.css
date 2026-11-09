@@ -28,6 +28,18 @@
   height: 100%;
 }
 
+/*
+ * Sized from the width (with a floor), never the hero's height: under `slice`
+ * a taller hero (a longer title) scaled the rings up, so they jumped between
+ * pages. They overflow downwards and the hero clips them.
+ */
+.hero-rings .doppler-rings {
+  bottom: auto;
+  height: auto;
+  aspect-ratio: 1000 / 600;
+  min-height: 600px;
+}
+
 .doppler-rings {
   --period: 39s;
   --mach: 2.8;
