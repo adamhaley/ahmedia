@@ -113,6 +113,32 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_renders_the_mobile_menu_button_controlling_the_primary_nav(): void
+    {
+        $home = $this->homePage();
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()
+            ->assertSee('<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">', false)
+            ->assertSee('<nav class="site-nav" id="site-nav"', false);
+    }
+
+    #[Test]
+    public function it_renders_an_expanded_toggle_for_a_nav_items_child_pages(): void
+    {
+        $home = $this->homePage();
+        $parent = $this->aboutPage(['show_in_nav' => true]);
+        $this->servicePage(['parent_id' => $parent->id]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()
+            ->assertSee('class="nav-subtoggle" aria-expanded="true" aria-controls="nav-sub-0"', false)
+            ->assertSee('<ul class="nav-dropdown" id="nav-sub-0">', false);
+    }
+
+    #[Test]
     public function it_takes_the_homepage_hero_from_the_home_page(): void
     {
         $home = $this->homePage(['hero_subheading' => 'Editable from the CMS.']);
