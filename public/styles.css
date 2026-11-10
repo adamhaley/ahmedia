@@ -137,6 +137,11 @@ a {
   fill: currentColor;
 }
 
+/* Mobile-only toggle for a nav item's child pages */
+.nav-subtoggle {
+  display: none;
+}
+
 .nav-dropdown {
   position: absolute;
   top: 100%;
@@ -318,10 +323,53 @@ a {
   .js-nav .site-nav .nav-dropdown a {
     padding: 0.45rem 0.6rem;
   }
+
+  /* Child pages collapse under their parent; the caret button opens them */
+  .js-nav .nav-item.has-dropdown {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .js-nav .nav-item.has-dropdown > a {
+    flex: 1;
+  }
+
+  .js-nav .nav-subtoggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .js-nav .nav-subtoggle .nav-caret {
+    width: 0.9rem;
+    height: 0.9rem;
+    transition: transform 200ms ease-in-out;
+  }
+
+  .js-nav .nav-subtoggle[aria-expanded="true"] .nav-caret {
+    transform: rotate(180deg);
+  }
+
+  .js-nav .nav-item.has-dropdown .nav-dropdown {
+    flex-basis: 100%;
+  }
+
+  .js-nav .nav-subtoggle[aria-expanded="false"] + .nav-dropdown {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .nav-toggle-icon,
+  .js-nav .nav-subtoggle .nav-caret,
   .js-nav .site-nav,
   .js-nav .site-header.is-menu-open .site-nav {
     transition: none;

@@ -493,9 +493,17 @@
     return toggle.getAttribute('aria-expanded') === 'true';
   }
 
+  const subtoggles = nav.querySelectorAll('.nav-subtoggle');
+
+  // Closing the menu also reopens any folded child-page lists (their default).
   function setOpen(open) {
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     header.classList.toggle('is-menu-open', open);
+    if (!open) {
+      subtoggles.forEach(function (button) {
+        button.setAttribute('aria-expanded', 'true');
+      });
+    }
   }
 
   document.documentElement.classList.add('js-nav');
@@ -504,9 +512,30 @@
     setOpen(!isOpen());
   });
 
-  // Covers the home page's #anchor links, which don't navigate away.
+  function toggleSub(button) {
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  }
+
+  subtoggles.forEach(function (button) {
+    button.addEventListener('click', function () {
+      toggleSub(button);
+    });
+  });
+
   nav.addEventListener('click', function (event) {
-    if (event.target.closest('a')) setOpen(false);
+    const link = event.target.closest('a');
+    if (!link) return;
+    // On mobile a parent's own link opens its child pages instead of navigating.
+    const sub = mobile.matches && link.parentElement.classList.contains('has-dropdown')
+      && link.parentElement.querySelector('.nav-subtoggle');
+    if (sub) {
+      event.preventDefault();
+      toggleSub(sub);
+      return;
+    }
+    // Covers the home page's #anchor links, which don't navigate away.
+    setOpen(false);
   });
 
   document.addEventListener('keydown', function (event) {

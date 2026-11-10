@@ -53,7 +53,12 @@
               @if ($publishedChildren->isNotEmpty())
               <div class="nav-item has-dropdown">
                 <a href="{{ $navHref }}">{{ $navPage->title }} <svg class="nav-caret" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 7H16L10 15Z"/></svg></a>
-                <ul class="nav-dropdown">@foreach ($publishedChildren as $child)<li><a href="{{ $child->url() }}">{{ $child->title }}</a></li>@endforeach</ul>
+                {{-- Mobile only: opens and closes this item's child pages --}}
+                <button type="button" class="nav-subtoggle" aria-expanded="true" aria-controls="nav-sub-{{ $loop->index }}">
+                  <span class="sr-only">{{ $navPage->title }} pages</span>
+                  <svg class="nav-caret" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 7H16L10 15Z"/></svg>
+                </button>
+                <ul class="nav-dropdown" id="nav-sub-{{ $loop->index }}">@foreach ($publishedChildren as $child)<li><a href="{{ $child->url() }}">{{ $child->title }}</a></li>@endforeach</ul>
               </div>
               @else
               <a href="{{ $navHref }}">{{ $navPage->title }}</a>
