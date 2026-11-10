@@ -477,6 +477,55 @@
   if (!panel.hidden) panel.scrollIntoView({ block: 'start' });
 })();
 
+// Mobile menu: below 760px the primary nav sits behind a hamburger button
+// (after monkmagazine.com's). The links are only hidden once this has run
+// (html.js-nav), so they stay reachable if the script fails. Runs before the
+// header block below so its first height measurement sees the one-row header.
+(function () {
+  const header = document.querySelector('.site-header');
+  const toggle = header && header.querySelector('.nav-toggle');
+  const nav = toggle && document.getElementById(toggle.getAttribute('aria-controls'));
+  if (!nav) return;
+
+  const mobile = window.matchMedia('(max-width: 760px)');
+
+  function isOpen() {
+    return toggle.getAttribute('aria-expanded') === 'true';
+  }
+
+  function setOpen(open) {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    header.classList.toggle('is-menu-open', open);
+  }
+
+  document.documentElement.classList.add('js-nav');
+
+  toggle.addEventListener('click', function () {
+    setOpen(!isOpen());
+  });
+
+  // Covers the home page's #anchor links, which don't navigate away.
+  nav.addEventListener('click', function (event) {
+    if (event.target.closest('a')) setOpen(false);
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape' || !isOpen()) return;
+    setOpen(false);
+    toggle.focus();
+  });
+
+  function closeOnDesktop(event) {
+    if (!event.matches) setOpen(false);
+  }
+
+  if (mobile.addEventListener) {
+    mobile.addEventListener('change', closeOnDesktop);
+  } else {
+    mobile.addListener(closeOnDesktop);
+  }
+})();
+
 // Header: floats transparent over the hero and turns solid once scrolled.
 // Hysteresis (separate enter/exit points) stops momentum scrolling that
 // settles near one value from flickering the class. Also publishes the

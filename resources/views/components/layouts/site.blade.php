@@ -40,7 +40,13 @@
             </svg>
             AH Media
           </a>
-          <nav class="site-nav" aria-label="Primary">
+          {{-- Mobile menu toggle (icons from monkmagazine.com); scripts.js shows it and wires it up --}}
+          <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+            <span class="sr-only">Menu</span>
+            <svg class="nav-toggle-icon nav-toggle-open" viewBox="0 0 459 459" aria-hidden="true" focusable="false"><path d="M0 382.5h459v-51H0v51zM0 255h459v-51H0v51zM0 76.5v51h459v-51H0z"/></svg>
+            <svg class="nav-toggle-icon nav-toggle-close" viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M27.123 25.002l-2.12 2.12-11.44-11.438-11.44 11.44L.003 25l11.438-11.44L.003 2.122l2.12-2.12 11.44 11.44L25.002 0l2.12 2.12-11.438 11.44 11.44 11.44z" fill-rule="evenodd"/></svg>
+          </button>
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
             @foreach ($navPages as $navPage)
               @php($navHref = $navPage->nav_anchor ? ($page?->template === \App\Enums\PageTemplate::Home ? '#'.$navPage->nav_anchor : '/#'.$navPage->nav_anchor) : $navPage->url())
               @php($publishedChildren = $navPage->children->where('is_published', true))

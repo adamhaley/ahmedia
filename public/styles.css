@@ -179,6 +179,155 @@ a {
   background: var(--color-strong-surface);
 }
 
+/* Mobile menu toggle, after monkmagazine.com's hamburger: the bars swap for
+   a cross while open. Hidden unless scripts.js has run (html.js-nav), so the
+   nav links stay visible without JS. */
+.nav-toggle {
+  display: none;
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: -0.5rem -0.5rem -0.5rem 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.nav-toggle-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: -0.625rem 0 0 -0.625rem;
+  fill: currentColor;
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+}
+
+.nav-toggle-icon.nav-toggle-close {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: -0.525rem 0 0 -0.525rem;
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.site-header.is-menu-open .nav-toggle-open {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.site-header.is-menu-open .nav-toggle-close {
+  opacity: 1;
+  transform: rotate(0);
+}
+
+@media (max-width: 760px) {
+  /* No hover on touch: child pages show inline under their parent */
+  .nav-item.has-dropdown {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-dropdown,
+  .nav-item.has-dropdown:hover .nav-dropdown,
+  .nav-item.has-dropdown:focus-within .nav-dropdown {
+    position: static;
+    min-width: 0;
+    margin: 0.25rem 0 0;
+    padding: 0 0 0 1rem;
+    background: none;
+    border: 0;
+    border-left: var(--border-subtle);
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: none;
+  }
+
+  .nav-dropdown a {
+    white-space: normal;
+  }
+
+  .nav-item.has-dropdown > a .nav-caret {
+    display: none;
+  }
+
+  .js-nav .header-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .js-nav .nav-toggle {
+    display: inline-flex;
+  }
+
+  .js-nav .site-header.is-menu-open {
+    backdrop-filter: blur(18px);
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+    border-bottom: var(--border-subtle);
+  }
+
+  /* The menu drops open under the header bar, accordion-style; it sits
+     outside the header's flow so --header-height doesn't change */
+  .js-nav .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+    max-height: 0;
+    padding: 0 var(--gutter);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+    border-bottom: 1px solid transparent;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition: max-height 250ms ease-in-out, padding 250ms ease-in-out, opacity 200ms linear,
+      transform 200ms ease-in-out, visibility 0s linear 250ms;
+  }
+
+  .js-nav .site-header.is-menu-open .site-nav {
+    max-height: calc(100vh - var(--header-height, 4rem));
+    max-height: calc(100dvh - var(--header-height, 4rem));
+    padding: 0.5rem var(--gutter) 1rem;
+    overflow-y: auto;
+    border-bottom: var(--border-subtle);
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: max-height 250ms ease-in-out, padding 250ms ease-in-out, opacity 200ms linear,
+      transform 200ms ease-in-out, visibility 0s;
+  }
+
+  .js-nav .site-nav a {
+    display: block;
+    padding: 0.6rem 0;
+  }
+
+  .js-nav .site-nav .nav-dropdown a {
+    padding: 0.45rem 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle-icon,
+  .js-nav .site-nav,
+  .js-nav .site-header.is-menu-open .site-nav {
+    transition: none;
+  }
+}
+
 .site-footer {
   padding: 1rem 0 3rem;
 }
