@@ -3,9 +3,9 @@
   --container-width: 72rem;
   --gutter: clamp(1rem, 2vw, 1.5rem);
   --section-space: clamp(4rem, 8vw, 8rem);
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --shadow-soft: none;
   --border-subtle: 1px solid var(--border-color);
 }
@@ -434,7 +434,7 @@ a {
   justify-content: center;
   min-height: 3rem;
   padding: 0.8rem 1.25rem;
-  border-radius: 0;
+  border-radius: var(--radius-md);
   border: 0;
   text-decoration: none;
   font-weight: 700;
@@ -453,6 +453,18 @@ a {
 .button-secondary {
   background: var(--color-strong-surface);
   color: var(--color-text);
+}
+
+.hero-panel,
+.feature-card,
+.package-card,
+.testimonial-card,
+.credential-card,
+.cta-band,
+.signup-band,
+.quote-band,
+.contact-card {
+  overflow: hidden;
 }
 
 .surface-card {
@@ -1116,13 +1128,14 @@ main > .section:first-child {
   min-height: 3rem;
   padding: 0.85rem 1rem;
   border: var(--border-subtle);
-  border-radius: 0;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.72);
   color: var(--color-text);
 }
 
 .contact-card {
   padding: 1.5rem;
+  border-radius: var(--radius-lg);
 }
 
 .contact-form {
@@ -1148,7 +1161,7 @@ main > .section:first-child {
 .contact-form-row textarea {
   padding: 0.75rem 1rem;
   border: var(--border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text);
   font: inherit;
