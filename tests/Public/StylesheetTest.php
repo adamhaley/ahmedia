@@ -26,6 +26,14 @@ class StylesheetTest extends TestCase
         $this->assertSame(substr_count($css, '{'), substr_count($css, '}'));
     }
 
+    #[Test]
+    public function it_starts_with_the_header_comment(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $this->assertStringStartsWith("/* ahmedia site styles: main stylesheet */\n", $css);
+    }
+
     public static function radiusTokenProvider(): Generator
     {
         yield 'small radius' => ['--radius-sm', '6px'];

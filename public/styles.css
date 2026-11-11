@@ -1,4 +1,4 @@
-/* ahmedia site styles */
+/* ahmedia site styles: main stylesheet */
 :root {
   --container-width: 72rem;
   --gutter: clamp(1rem, 2vw, 1.5rem);
