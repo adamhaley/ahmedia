@@ -7,6 +7,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Deploy secrets live in this environment, which only master may use, so
+    # workflows pushed on other branches (e.g. agent/**) can't read them.
+    environment: production
     steps:
       - uses: actions/checkout@v3
       - name: Deploy to server
