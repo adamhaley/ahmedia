@@ -5,9 +5,11 @@ namespace Tests\Filament\Pages\Auth;
 use App\Filament\Pages\Auth\Login;
 use App\Models\AuthorizedEmail;
 use App\Models\User;
+use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -30,10 +32,17 @@ class LoginTest extends TestCase
         $this->assertGuest();
     }
 
-    #[Test]
-    public function it_allows_password_login_locally(): void
+    public static function breakGlassEnvironmentProvider(): Generator
     {
-        $this->app['env'] = 'local';
+        yield 'local' => ['local'];
+        yield 'agent preview site' => ['preview'];
+    }
+
+    #[Test]
+    #[DataProvider('breakGlassEnvironmentProvider')]
+    public function it_allows_password_login_in_break_glass_environments(string $env): void
+    {
+        $this->app['env'] = $env;
         $user = $this->authorizedUser();
 
         Livewire::test(Login::class)
