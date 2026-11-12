@@ -8,8 +8,9 @@ use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Schemas\Schema;
 
 /**
- * Google sign-in everywhere. Email and password login is a local-only break-glass (Google OAuth
- * isn't registered for ahmedia.test), so production accepts Google accounts only.
+ * Google sign-in everywhere. Email and password login is a break-glass for local and for the
+ * agent preview site (Google OAuth isn't registered for either), so production accepts Google
+ * accounts only.
  */
 class Login extends BaseLogin
 {
@@ -39,6 +40,6 @@ class Login extends BaseLogin
 
     private function allowsPasswordLogin(): bool
     {
-        return app()->isLocal();
+        return app()->environment(['local', 'preview']);
     }
 }
