@@ -9,6 +9,7 @@
 
   <x-feature-grid
     eyebrow="Capabilities"
+    :link-cards="true"
     :title="$page->section_heading"
     :copy="$page->body"
     :items="$page->children->map(fn ($child) => [
