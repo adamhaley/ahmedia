@@ -39,8 +39,11 @@ Adam edits content in the Filament admin at `/admin` (Google OAuth, allow-listed
 
 `DatabaseSeeder` runs `AhmediaContentSeeder` (pages), `PackageAndCaseStudyContentSeeder`
 (packages, case studies; copies images and sample PDFs from
-`database/seeders/content/` to the public disk) and `FaqContentSeeder` (FAQs from
-`database/seeders/data/faqs.php` plus the `/faq/` page). Each seeder **only runs against an empty
+`database/seeders/content/` to the public disk), `FaqContentSeeder` (FAQs from
+`database/seeders/data/faqs.php` plus the `/faq/` page), `TestimonialContentSeeder` and
+`ProjectContentSeeder` (n8n workflow cards on `services/automations`, from
+`database/seeders/data/projects.php`; covers are 1920px WebP renders made by the n8n repo's
+`screenshots/capture.py`, copied from `database/seeders/content/projects/`). Each seeder **only runs against an empty
 table** (`Page::exists()` / `Package::exists() || CaseStudy::exists()`, the same gate as
 dreamworldcirque's `ContentSeeder`), so re-running `php artisan db:seed --force` is always safe and
 never overwrites CMS edits. Content changes after first launch are made in the admin, or by a

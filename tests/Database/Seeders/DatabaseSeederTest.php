@@ -7,11 +7,13 @@ use App\Models\CaseStudy;
 use App\Models\FaqItem;
 use App\Models\Package;
 use App\Models\Page;
+use App\Models\Project;
 use App\Models\Testimonial;
 use Database\Seeders\AhmediaContentSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\FaqContentSeeder;
 use Database\Seeders\PackageAndCaseStudyContentSeeder;
+use Database\Seeders\ProjectContentSeeder;
 use Database\Seeders\TestimonialContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +26,7 @@ use Tests\TestCase;
 #[CoversClass(PackageAndCaseStudyContentSeeder::class)]
 #[CoversClass(FaqContentSeeder::class)]
 #[CoversClass(TestimonialContentSeeder::class)]
+#[CoversClass(ProjectContentSeeder::class)]
 class DatabaseSeederTest extends TestCase
 {
     use RefreshDatabase;
@@ -94,6 +97,33 @@ class DatabaseSeederTest extends TestCase
     }
 
     #[Test]
+    public function it_seeds_the_workflow_projects_on_the_automations_page(): void
+    {
+        $automations = $this->seedWithAutomationsPage();
+
+        $this->assertSame(7, $automations->projects()->published()->count());
+    }
+
+    #[Test]
+    public function it_publishes_the_project_images_to_the_public_disk(): void
+    {
+        $this->seedWithAutomationsPage();
+
+        Storage::disk('public')->assertExists(Project::query()->pluck('cover_image')->all());
+    }
+
+    #[Test]
+    public function it_never_overwrites_edited_projects(): void
+    {
+        $this->seedWithAutomationsPage();
+        Project::query()->where('slug', 'ai-assistant-core')->update(['title' => 'Edited in the CMS']);
+
+        $this->seed(ProjectContentSeeder::class);
+
+        $this->assertSame('Edited in the CMS', Project::query()->where('slug', 'ai-assistant-core')->value('title'));
+    }
+
+    #[Test]
     public function it_never_overwrites_edited_pages(): void
     {
         $this->seed(DatabaseSeeder::class);
@@ -129,14 +159,33 @@ class DatabaseSeederTest extends TestCase
     #[Test]
     public function it_contains_no_em_dashes(): void
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seedWithAutomationsPage();
 
         $content = Page::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .Package::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .CaseStudy::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
             .FaqItem::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
-            .Testimonial::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
+            .Testimonial::query()->get()->toJson(JSON_UNESCAPED_UNICODE)
+            .Project::query()->get()->toJson(JSON_UNESCAPED_UNICODE);
 
         $this->assertStringNotContainsString('—', $content);
+    }
+
+    /**
+     * The page seeder predates the Automations page, which a later migration adds,
+     * so tests create it before seeding the projects that hang off it.
+     */
+    private function seedWithAutomationsPage(): Page
+    {
+        $this->seed(DatabaseSeeder::class);
+        $automations = Page::query()->create([
+            'parent_id' => Page::query()->where('path', 'services')->value('id'),
+            'slug' => 'automations',
+            'title' => 'Automations',
+            'template' => PageTemplate::Service,
+        ]);
+        $this->seed(ProjectContentSeeder::class);
+
+        return $automations;
     }
 }
