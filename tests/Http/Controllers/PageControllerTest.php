@@ -441,6 +441,40 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSee('/case-studies/lead-intake-rebuild');
     }
 
+    #[Test]
+    public function it_makes_homepage_service_cards_fully_clickable(): void
+    {
+        $home = $this->homePage();
+        $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true]);
+        $service = $this->servicePage(['parent_id' => $services->id]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSee('feature-card-linked', false)->assertSee('feature-card-link" href="'.$service->url().'"', false);
+    }
+
+    #[Test]
+    public function it_makes_services_index_cards_fully_clickable(): void
+    {
+        $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true]);
+        $service = $this->servicePage(['parent_id' => $services->id]);
+
+        $response = $this->get($services->url());
+
+        $response->assertOk()->assertSee('feature-card-linked', false)->assertSee('feature-card-link" href="'.$service->url().'"', false);
+    }
+
+    #[Test]
+    public function it_keeps_blog_cards_unlinked(): void
+    {
+        Post::factory()->create(['title' => 'A post', 'published_at' => now()->subDay()]);
+        $blog = Page::query()->create(['title' => 'Blog', 'slug' => 'blog', 'template' => PageTemplate::Blog, 'is_published' => true]);
+
+        $response = $this->get($blog->url());
+
+        $response->assertOk()->assertDontSee('feature-card-linked', false);
+    }
+
     private function caseStudiesPage(): Page
     {
         return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);

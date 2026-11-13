@@ -14,6 +14,7 @@
   @if ($services)
   <x-feature-grid
     eyebrow="What We Do"
+    :link-cards="true"
     :title="$services->section_heading ?? 'Three ways we help businesses run on AI'"
     :copy="$services->body"
     :items="$services->children->map(fn ($child) => [

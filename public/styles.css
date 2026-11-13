@@ -709,6 +709,24 @@ main > .section:first-child {
   line-height: 1.7;
 }
 
+.feature-card-linked {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card-linked:hover,
+.feature-card-linked:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong, 0 18px 40px rgba(0, 0, 0, 0.12));
+}
+
+.feature-card-link::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
 .split-grid > :first-child {
   grid-column: span 5;
 }
