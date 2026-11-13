@@ -1,4 +1,4 @@
-@props(['id' => 'services', 'eyebrow' => null, 'title', 'copy' => null, 'items' => [], 'actions' => []])
+@props(['id' => 'services', 'eyebrow' => null, 'title', 'copy' => null, 'items' => [], 'actions' => [], 'linkCards' => false])
 <section class="section" id="{{ $id }}">
   <div class="container">
     @if ($eyebrow)
@@ -21,7 +21,8 @@
     </div>
     <div class="feature-grid">
       @foreach ($items as $index => $item)
-      <article class="surface-card feature-card">
+      @php($linked = $linkCards && ! empty($item['href']))
+      <article @class(['surface-card', 'feature-card', 'feature-card-linked' => $linked])>
         <p class="feature-index">{{ $item['label'] ?? str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</p>
         <h3>{{ $item['title'] }}</h3>
         <p>{{ $item['copy'] }}</p>
@@ -33,7 +34,7 @@
         </ul>
         @endif
         @if (! empty($item['href']))
-        <a class="preview-link" href="{{ $item['href'] }}">{{ $item['linkLabel'] ?? 'Learn more' }}</a>
+        <a @class(['preview-link', 'feature-card-link' => $linked]) href="{{ $item['href'] }}">{{ $item['linkLabel'] ?? 'Learn more' }}</a>
         @endif
       </article>
       @endforeach
