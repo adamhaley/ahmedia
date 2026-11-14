@@ -7,26 +7,32 @@
     :actions="[['label' => 'Start a Project', 'href' => '/#contact', 'variant' => 'primary']]"
   />
 
-  @if ($page->section_heading)
+  @php
+    $segments = collect($page->bodySegments());
+    $placed = $segments->pluck('section')->filter();
+    $lastText = $segments->filter(fn ($segment) => $segment->section === null)->keys()->last();
+  @endphp
+
+  {{-- The body, with any sections its [[token]] lines place --}}
+  @foreach ($segments as $index => $segment)
+  @if ($segment->section)
+  @include('pages.partials.service-section', ['section' => $segment->section])
+  @elseif ($page->section_heading)
   <x-split-content
     stacked
-    :heading="$page->section_heading"
-    :body="$page->body"
-    :bullets="$page->bullets"
+    :heading="$loop->first ? $page->section_heading : null"
+    :body="$segment->markdown"
+    :bullets="$index === $lastText ? $page->bullets : []"
   />
   @endif
-
-  @if ($credentials->isNotEmpty())
-  <x-credential-grid :credentials="$credentials" />
-  @endif
-
-  @foreach ($projectGroups as $type => $projects)
-  <x-project-grid :type="\App\Enums\ProjectType::from($type)" :projects="$projects" />
   @endforeach
 
-  @if ($packages->isNotEmpty())
-  <x-package-grid :packages="$packages" />
-  @endif
+  {{-- Default spots for the sections the body doesn't place --}}
+  @foreach (['credentials', 'projects', 'packages'] as $section)
+  @unless ($placed->contains($section))
+  @include('pages.partials.service-section', ['section' => $section])
+  @endunless
+  @endforeach
 
   <x-cta-band
     :eyebrow="$page->cta_eyebrow"

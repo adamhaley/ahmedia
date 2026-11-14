@@ -138,6 +138,7 @@ class PageResource extends Resource
                     PageTemplate::Home => 'The spotlight section on the homepage, with its buttons.',
                     PageTemplate::Contact => 'The eyebrow is also used above the contact form on the homepage.',
                     PageTemplate::CaseStudiesIndex => 'The eyebrow is also used above the case studies on the homepage.',
+                    PageTemplate::Service => 'To put a section inside the body, give its token a line of its own: [[credentials]], [[projects]], [[projects:workflow]], [[projects:website]] or [[packages]]. Sections you don\'t place keep their default spot after the body.',
                     PageTemplate::Logo => 'The eyebrow sits above the lab; the heading, body and bullets tell the story below it. Leave a blank line between paragraphs. Buttons aren\'t shown on this page.',
                     default => null,
                 })

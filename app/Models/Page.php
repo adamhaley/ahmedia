@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Data\BodySegment;
 use App\Enums\PageTemplate;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -94,6 +95,34 @@ class Page extends Model
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class)->orderBy('sort_order');
+    }
+
+    /**
+     * A line holding only a section token places that section in the body: `[[credentials]]`,
+     * `[[packages]]`, `[[projects]]` (every type) or `[[projects:workflow]]` (one type). Anything
+     * else in double brackets, typos included, stays visible as text.
+     */
+    public const SectionToken = '/^[ \t]*\[\[(credentials|packages|projects(?::[a-z-]+)?)\]\][ \t]*$/m';
+
+    /**
+     * The body split at its section tokens. The first segment is always Markdown, possibly
+     * empty, so the section heading always has a place.
+     *
+     * @return list<BodySegment>
+     */
+    public function bodySegments(): array
+    {
+        $parts = preg_split(self::SectionToken, (string) $this->body, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $segments = [];
+        foreach ($parts as $index => $part) {
+            if ($index % 2 === 1) {
+                $segments[] = new BodySegment(section: $part);
+            } elseif ($index === 0 || trim($part) !== '') {
+                $segments[] = new BodySegment(markdown: trim($part));
+            }
+        }
+
+        return $segments;
     }
 
     public function url(): string
