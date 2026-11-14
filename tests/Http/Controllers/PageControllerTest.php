@@ -482,7 +482,7 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_shows_the_cover_and_gallery_as_slides(): void
+    public function it_shows_the_cover_and_gallery_in_order_inside_a_carousel(): void
     {
         $page = $this->servicePage();
         $project = Project::factory()->for($page)->create(['cover_image' => 'projects/cover.jpg']);
@@ -490,7 +490,49 @@ class PageControllerTest extends TestCase
 
         $response = $this->get($page->url());
 
-        $response->assertOk()->assertSeeInOrder(['projects/cover.jpg', 'projects/canvas.png', '2 images']);
+        $response->assertOk()->assertSeeInOrder(['data-carousel', 'projects/cover.jpg', 'projects/canvas.png']);
+    }
+
+    #[Test]
+    public function it_renders_carousel_controls_and_dots_for_multiple_slides(): void
+    {
+        $page = $this->servicePage();
+        $project = Project::factory()->for($page)->create(['cover_image' => 'projects/cover.jpg']);
+        ProjectImage::factory()->for($project)->create(['image' => 'projects/canvas.png']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()
+            ->assertSeeInOrder(['Previous image', 'Next image', 'Show image 1 of 2', 'Show image 2 of 2'])
+            ->assertDontSee('2 images')
+            ->assertSee('aria-roledescription="carousel"', false);
+    }
+
+    #[Test]
+    public function it_marks_the_first_dot_as_current(): void
+    {
+        $page = $this->servicePage();
+        $project = Project::factory()->for($page)->create(['cover_image' => 'projects/cover.jpg']);
+        ProjectImage::factory()->for($project)->create(['image' => 'projects/canvas.png']);
+
+        $response = $this->get($page->url());
+
+        $response->assertSee('aria-label="Show image 1 of 2" aria-current="true"', false);
+    }
+
+    #[Test]
+    public function it_renders_no_carousel_for_a_cover_only_project(): void
+    {
+        $page = $this->servicePage();
+        Project::factory()->for($page)->create(['cover_image' => 'projects/cover.jpg']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()
+            ->assertSee('projects/cover.jpg')
+            ->assertDontSee('data-carousel', false)
+            ->assertDontSee('Previous image')
+            ->assertDontSee('Show image');
     }
 
     #[Test]

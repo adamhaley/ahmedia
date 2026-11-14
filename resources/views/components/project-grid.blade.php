@@ -15,15 +15,33 @@
       <article class="surface-card package-card project-card" id="{{ $project->slug }}">
         @if ($slides->isNotEmpty())
         {{-- Swipe or scroll sideways through the cover and gallery; each image opens full size --}}
-        <div class="project-slides" @if ($slides->count() > 1) tabindex="0" aria-label="{{ $project->title }} images, scroll sideways for more" @endif>
+        @if ($slides->count() > 1)
+        <div class="project-carousel" data-carousel role="region" aria-roledescription="carousel" aria-label="{{ $project->title }} images">
+          <div class="project-carousel-stage">
+            <div class="project-slides" data-carousel-track tabindex="0" aria-label="{{ $project->title }} images, scroll sideways for more">
+              @foreach ($slides as $slide)
+              <a class="project-slide" href="{{ $disk->url($slide['image']) }}" target="_blank">
+                <img src="{{ $disk->url($slide['image']) }}" alt="{{ $slide['alt'] }}" loading="lazy" />
+              </a>
+              @endforeach
+            </div>
+            <button type="button" class="project-carousel-button project-carousel-prev" data-carousel-prev aria-label="Previous image" disabled>&#8249;</button>
+            <button type="button" class="project-carousel-button project-carousel-next" data-carousel-next aria-label="Next image">&#8250;</button>
+          </div>
+          <div class="project-carousel-dots">
+            @foreach ($slides as $slide)
+            <button type="button" class="project-carousel-dot" data-carousel-dot aria-label="Show image {{ $loop->iteration }} of {{ $slides->count() }}"{!! $loop->first ? ' aria-current="true"' : '' !!}></button>
+            @endforeach
+          </div>
+        </div>
+        @else
+        <div class="project-slides">
           @foreach ($slides as $slide)
           <a class="project-slide" href="{{ $disk->url($slide['image']) }}" target="_blank">
             <img src="{{ $disk->url($slide['image']) }}" alt="{{ $slide['alt'] }}" loading="lazy" />
           </a>
           @endforeach
         </div>
-        @if ($slides->count() > 1)
-        <p class="project-slide-count">{{ $slides->count() }} images</p>
         @endif
         @endif
         <header class="package-header">
