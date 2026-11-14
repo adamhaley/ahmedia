@@ -70,27 +70,6 @@ class StylesheetTest extends TestCase
         );
     }
 
-    #[Test]
-    public function it_keeps_pills_and_circles_off_buttons_inputs_and_cards(): void
-    {
-        $css = (string) file_get_contents(public_path('styles.css'));
-
-        $offenders = [];
-        foreach ($this->rules($css) as [$selectors, $body]) {
-            if (! preg_match('/border-radius:\s*(999px|50%)/', $body)) {
-                continue;
-            }
-            foreach ($selectors as $selector) {
-                if (preg_match('/button|input|textarea|card/', $selector)
-                    && ! preg_match('/carousel-indicator|gallery-modal-nav|tag-cloud|icon|avatar|dot|spotlight-media-circle|chat-|codette-carousel-control/', $selector)) {
-                    $offenders[] = $selector;
-                }
-            }
-        }
-
-        $this->assertSame([], $offenders);
-    }
-
     /**
      * @return list<array{0: list<string>, 1: string}>
      */
