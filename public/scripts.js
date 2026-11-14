@@ -595,3 +595,76 @@
   measure();
   update();
 })();
+
+(function () {
+  function initCarousel(root) {
+    const track = root.querySelector('[data-carousel-track]');
+    const prev = root.querySelector('[data-carousel-prev]');
+    const next = root.querySelector('[data-carousel-next]');
+    const dots = Array.from(root.querySelectorAll('[data-carousel-dot]'));
+    const slides = track ? Array.from(track.children) : [];
+    if (!track || slides.length < 2) return;
+
+    let current = 0;
+
+    function show(index) {
+      current = index;
+      dots.forEach(function (dot, i) {
+        if (i === index) {
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.removeAttribute('aria-current');
+        }
+      });
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+    }
+
+    function goTo(index) {
+      const target = Math.max(0, Math.min(slides.length - 1, index));
+      track.scrollTo({ left: slides[target].offsetLeft - slides[0].offsetLeft, behavior: 'smooth' });
+    }
+
+    let frameRequested = false;
+    function sync() {
+      frameRequested = false;
+      const width = slides[1].offsetLeft - slides[0].offsetLeft || track.clientWidth;
+      const index = Math.round(track.scrollLeft / width);
+      show(Math.max(0, Math.min(slides.length - 1, index)));
+    }
+
+    track.addEventListener('scroll', function () {
+      if (frameRequested) return;
+      frameRequested = true;
+      window.requestAnimationFrame(sync);
+    }, { passive: true });
+
+    if (prev) prev.addEventListener('click', function () { goTo(current - 1); });
+    if (next) next.addEventListener('click', function () { goTo(current + 1); });
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () { goTo(i); });
+    });
+
+    track.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goTo(current - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goTo(current + 1);
+      }
+    });
+
+    show(0);
+  }
+
+  function init() {
+    document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
