@@ -2253,6 +2253,25 @@ a.chat-option {
   padding: 1.25rem;
 }
 
+/* A full certificate: a wide card across the grid, image beside its details */
+.credential-card-certificate {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+}
+
+.credential-certificate {
+  flex: 0 1 17rem;
+  max-width: 17rem;
+}
+
+.credential-certificate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+
 .credential-badge {
   flex: none;
   width: 4.5rem;

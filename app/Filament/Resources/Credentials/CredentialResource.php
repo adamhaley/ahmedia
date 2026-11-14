@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Credentials;
 
+use App\Enums\PageTemplate;
 use App\Filament\Resources\Credentials\Pages\ManageCredentials;
 use App\Models\Credential;
 use BackedEnum;
@@ -10,6 +11,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -19,6 +21,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class CredentialResource extends Resource
@@ -48,10 +51,26 @@ class CredentialResource extends Resource
                 ->disk('public')
                 ->directory('credentials')
                 ->visibility('public'),
+            FileUpload::make('certificate_image')
+                ->label('Certificate')
+                ->helperText('The full certificate, shown as a wide card above the badges.')
+                ->image()
+                ->disk('public')
+                ->directory('credentials')
+                ->visibility('public'),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->helperText('Shown as a big stat tile in the About page\'s Track record band, not in the badge grid.'),
-            Toggle::make('is_active')->label('Show on the About page')->default(true),
+            Toggle::make('is_active')
+                ->label('Show on the site')
+                ->default(true)
+                ->helperText('On the About page, and on the service page below if one is set.'),
+            Select::make('page_id')
+                ->label('Also show on')
+                ->relationship('page', 'title', fn (Builder $query) => $query->where('template', PageTemplate::Service))
+                ->preload()
+                ->placeholder('Only the About page')
+                ->helperText('A Certifications section on that service page. Featured stats stay on About.'),
         ]);
     }
 
@@ -66,7 +85,8 @@ class CredentialResource extends Resource
                 TextColumn::make('value')->label('Stat')->placeholder('—'),
                 ToggleColumn::make('is_featured')->label('Featured'),
                 TextColumn::make('issued_on')->label('Issued')->date('M Y'),
-                ToggleColumn::make('is_active')->label('On About page'),
+                TextColumn::make('page.title')->label('Also on')->placeholder('—'),
+                ToggleColumn::make('is_active')->label('Shown'),
             ])
             ->headerActions([
                 CreateAction::make(),

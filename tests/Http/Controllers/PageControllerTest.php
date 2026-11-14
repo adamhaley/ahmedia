@@ -307,6 +307,81 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_a_service_pages_certifications(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['id="credentials"', 'N8N101 Essentials'], false);
+    }
+
+    #[Test]
+    public function it_keeps_other_credentials_off_a_service_page(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->create(['name' => 'About Only Certificate']);
+        Credential::factory()->for($page)->inactive()->create(['name' => 'Retired Certificate']);
+        Credential::factory()->for($page)->featured()->create(['name' => 'Job Success Score']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('id="credentials"', false);
+    }
+
+    #[Test]
+    public function it_leads_the_certifications_with_full_certificates(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials', 'sort_order' => 1]);
+        Credential::factory()->for($page)->create([
+            'name' => 'n8n Foundations Pathway',
+            'certificate_image' => 'credentials/pathway-certificate.webp',
+            'sort_order' => 2,
+        ]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['credential-card-certificate', 'credentials/pathway-certificate.webp', 'n8n Foundations Pathway', 'N8N101 Essentials'], false);
+    }
+
+    #[Test]
+    public function it_places_a_section_where_its_token_sits_in_the_body(): void
+    {
+        $page = $this->servicePage(['section_heading' => 'Automation with n8n', 'body' => "Before the badges.\n\n[[credentials]]\n\nAfter the badges."]);
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['Automation with n8n', 'Before the badges.', 'N8N101 Essentials', 'After the badges.']);
+    }
+
+    #[Test]
+    public function it_keeps_unplaced_sections_in_their_default_spot(): void
+    {
+        $page = $this->servicePage(['section_heading' => 'Automation with n8n', 'body' => "Intro.\n\n[[projects:workflow]]\n\nOutro."]);
+        Project::factory()->for($page)->create(['type' => ProjectType::Workflow, 'title' => 'Lead Intake Workflow']);
+        Project::factory()->for($page)->create(['type' => ProjectType::Website, 'title' => 'Bakery Site']);
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['Intro.', 'Lead Intake Workflow', 'Outro.', 'N8N101 Essentials', 'Bakery Site']);
+    }
+
+    #[Test]
+    public function it_renders_a_placed_section_only_once(): void
+    {
+        $page = $this->servicePage(['section_heading' => 'Automation with n8n', 'body' => "[[credentials]]\n\nOutro."]);
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials']);
+
+        $response = $this->get($page->url());
+
+        $this->assertSame(1, substr_count($response->getContent(), 'id="credentials"'));
+    }
+
+    #[Test]
     public function it_shows_the_portrait_beside_the_about_story(): void
     {
         $page = $this->aboutPage(['section_heading' => 'The story', 'circle_image' => 'pages/adam.jpg', 'circle_image_alt' => 'Adam Haley']);

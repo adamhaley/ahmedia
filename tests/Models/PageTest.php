@@ -2,11 +2,14 @@
 
 namespace Tests\Models;
 
+use App\Data\BodySegment;
 use App\Enums\PageTemplate;
 use App\Models\DopplerRingStyle;
 use App\Models\Page;
+use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -14,6 +17,37 @@ use Tests\TestCase;
 class PageTest extends TestCase
 {
     use RefreshDatabase;
+
+    public static function bodySegmentsProvider(): Generator
+    {
+        yield 'no tokens' => ["Intro\n\nMore", [new BodySegment('Intro'."\n\n".'More')]];
+        yield 'a token between paragraphs' => [
+            "Intro\n\n[[credentials]]\n\nMore",
+            [new BodySegment('Intro'), new BodySegment(section: 'credentials'), new BodySegment('More')],
+        ];
+        yield 'a token first keeps an empty lead segment for the heading' => [
+            "[[projects:workflow]]\nAfter",
+            [new BodySegment(''), new BodySegment(section: 'projects:workflow'), new BodySegment('After')],
+        ];
+        yield 'adjacent tokens' => [
+            "[[projects]]\n[[packages]]",
+            [new BodySegment(''), new BodySegment(section: 'projects'), new BodySegment(section: 'packages')],
+        ];
+        yield 'an unknown or inline token stays text' => [
+            "[[credentails]]\n\nSee [[packages]] below",
+            [new BodySegment("[[credentails]]\n\nSee [[packages]] below")],
+        ];
+    }
+
+    /** @param list<BodySegment> $expected */
+    #[Test]
+    #[DataProvider('bodySegmentsProvider')]
+    public function it_splits_its_body_at_section_tokens(string $body, array $expected): void
+    {
+        $page = new Page(['body' => $body]);
+
+        $this->assertEquals($expected, $page->bodySegments());
+    }
 
     #[Test]
     public function it_shows_its_own_rings_style(): void
