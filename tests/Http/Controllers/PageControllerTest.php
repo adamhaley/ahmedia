@@ -331,6 +331,22 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_leads_the_certifications_with_full_certificates(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials', 'sort_order' => 1]);
+        Credential::factory()->for($page)->create([
+            'name' => 'n8n Foundations Pathway',
+            'certificate_image' => 'credentials/pathway-certificate.webp',
+            'sort_order' => 2,
+        ]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['credential-card-certificate', 'credentials/pathway-certificate.webp', 'n8n Foundations Pathway', 'N8N101 Essentials'], false);
+    }
+
+    #[Test]
     public function it_places_a_section_where_its_token_sits_in_the_body(): void
     {
         $page = $this->servicePage(['section_heading' => 'Automation with n8n', 'body' => "Before the badges.\n\n[[credentials]]\n\nAfter the badges."]);

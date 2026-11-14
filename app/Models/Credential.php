@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** A certification or track-record stat shown on the About page (featured ones are the big stat tiles); a certification can also appear on one service page */
-#[Fillable(['page_id', 'name', 'issuer', 'value', 'issued_on', 'url', 'badge_image', 'is_featured', 'sort_order', 'is_active'])]
+#[Fillable(['page_id', 'name', 'issuer', 'value', 'issued_on', 'url', 'badge_image', 'certificate_image', 'is_featured', 'sort_order', 'is_active'])]
 class Credential extends Model
 {
     /** @use HasFactory<CredentialFactory> */

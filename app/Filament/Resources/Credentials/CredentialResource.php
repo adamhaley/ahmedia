@@ -51,6 +51,13 @@ class CredentialResource extends Resource
                 ->disk('public')
                 ->directory('credentials')
                 ->visibility('public'),
+            FileUpload::make('certificate_image')
+                ->label('Certificate')
+                ->helperText('The full certificate, shown as a wide card above the badges.')
+                ->image()
+                ->disk('public')
+                ->directory('credentials')
+                ->visibility('public'),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->helperText('Shown as a big stat tile in the About page\'s Track record band, not in the badge grid.'),

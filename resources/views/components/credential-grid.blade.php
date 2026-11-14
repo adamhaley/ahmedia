@@ -5,9 +5,13 @@
     <p class="eyebrow">{{ $eyebrow }}</p>
     <h2 class="section-title">{{ $heading }}</h2>
     <div class="credential-grid">
-      @foreach ($credentials as $credential)
-      <article class="surface-card credential-card">
-        @if ($credential->badge_image)
+      @foreach ($credentials->sortByDesc(fn ($credential) => (bool) $credential->certificate_image) as $credential)
+      <article @class(['surface-card', 'credential-card', 'credential-card-certificate' => $credential->certificate_image])>
+        @if ($credential->certificate_image)
+        <a class="credential-certificate" href="{{ $disk->url($credential->certificate_image) }}" target="_blank">
+          <img src="{{ $disk->url($credential->certificate_image) }}" alt="{{ $credential->name }} certificate" loading="lazy" />
+        </a>
+        @elseif ($credential->badge_image)
         <img class="credential-badge" src="{{ $disk->url($credential->badge_image) }}" alt="" loading="lazy" />
         @endif
         <div>
