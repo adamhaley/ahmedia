@@ -54,6 +54,7 @@ class PageController extends Controller
             ],
             PageTemplate::Service => [
                 'packages' => $page->packages()->where('is_published', true)->get(),
+                'credentials' => $page->credentials()->active()->where('is_featured', false)->get(),
                 'projectGroups' => $page->projects()->published()->with(['images', 'caseStudy'])->get()->groupBy(fn (Project $project): string => $project->type->value),
             ],
             PageTemplate::Blog => [

@@ -16,6 +16,10 @@
   />
   @endif
 
+  @if ($credentials->isNotEmpty())
+  <x-credential-grid :credentials="$credentials" />
+  @endif
+
   @foreach ($projectGroups as $type => $projects)
   <x-project-grid :type="\App\Enums\ProjectType::from($type)" :projects="$projects" />
   @endforeach

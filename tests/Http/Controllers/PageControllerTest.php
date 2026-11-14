@@ -307,6 +307,30 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_a_service_pages_certifications(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->for($page)->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['id="credentials"', 'N8N101 Essentials'], false);
+    }
+
+    #[Test]
+    public function it_keeps_other_credentials_off_a_service_page(): void
+    {
+        $page = $this->servicePage();
+        Credential::factory()->create(['name' => 'About Only Certificate']);
+        Credential::factory()->for($page)->inactive()->create(['name' => 'Retired Certificate']);
+        Credential::factory()->for($page)->featured()->create(['name' => 'Job Success Score']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('id="credentials"', false);
+    }
+
+    #[Test]
     public function it_shows_the_portrait_beside_the_about_story(): void
     {
         $page = $this->aboutPage(['section_heading' => 'The story', 'circle_image' => 'pages/adam.jpg', 'circle_image_alt' => 'Adam Haley']);

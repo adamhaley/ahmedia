@@ -84,6 +84,12 @@ class Page extends Model
         return $this->hasMany(Package::class)->orderBy('sort_order');
     }
 
+    /** @return HasMany<Credential, $this> */
+    public function credentials(): HasMany
+    {
+        return $this->hasMany(Credential::class);
+    }
+
     /** @return HasMany<Project, $this> */
     public function projects(): HasMany
     {
