@@ -130,8 +130,8 @@ class PageResource extends Resource
                     Hidden::make('hide_doppler_rings')
                         ->dehydrateStateUsing(fn (Get $get): bool => $get('doppler_ring_style_id') === self::NoRings),
                     FileUpload::make('hero_image')
-                        ->label('Hero image')
-                        ->helperText('Not currently used by any ahmedia template (the current hero is a text/glow treatment) -- kept for future use.')
+                        ->label('Side image')
+                        ->helperText('Shown beside the body text on service pages (below the heading on narrow screens). Leave empty for no image.')
                         ->image()
                         ->imageEditor()
                         ->disk('public')
