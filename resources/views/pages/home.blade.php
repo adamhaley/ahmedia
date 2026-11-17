@@ -13,7 +13,7 @@
 
   @if ($services)
   <x-service-rows
-    eyebrow="What We Do"
+    eyebrow="What we do"
     :title="$services->section_heading ?? 'Three ways we help businesses run on AI'"
     :services="$services->children"
     :link="['label' => 'View All Services', 'href' => $services->url()]"
@@ -54,7 +54,7 @@
 
   <x-contact-form
     :eyebrow="$contactPage?->section_eyebrow"
-    :heading="$contactPage?->hero_heading ?: 'Let\'s talk about what you\'re building'"
+    :heading="$contactPage?->hero_heading ?: 'What\'s getting in the way?'"
     :copy="$contactPage?->hero_subheading"
   />
 </x-layouts.site>

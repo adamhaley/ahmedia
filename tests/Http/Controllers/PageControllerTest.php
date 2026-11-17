@@ -657,6 +657,26 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSeeInOrder(['is-featured', 'A much longer endorsement', 'Short.'], false);
     }
 
+    #[Test]
+    public function it_shows_the_pages_own_call_to_action_line(): void
+    {
+        $page = $this->servicePage(['cta_heading' => 'Where are you losing calls?', 'cta_copy' => 'Hear it for yourself first.']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee('Hear it for yourself first.');
+    }
+
+    #[Test]
+    public function it_falls_back_to_the_default_call_to_action_line(): void
+    {
+        $page = $this->servicePage(['cta_heading' => 'Where are you losing calls?']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSee(Page::DefaultCtaCopy);
+    }
+
     private function caseStudiesPage(): Page
     {
         return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);

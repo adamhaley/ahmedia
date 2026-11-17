@@ -19,30 +19,13 @@
   let pendingReplies = 0;
   let replyQueue = Promise.resolve();
 
+  // Two starter chips pinned by likely intent: what AH Media does (FAQ 1) and website
+  // pricing (FAQ 5). If either is deleted in the CMS, the first FAQs fill in.
   function selectStarterFaqs() {
-    const storageKey = 'ahmedia.chat.starterFaqIds';
-    let savedIds = [];
-    try {
-      const saved = JSON.parse(sessionStorage.getItem(storageKey) || '[]');
-      if (Array.isArray(saved)) savedIds = saved;
-    } catch (error) {
-      // The widget still works when browser storage is unavailable.
-    }
-
-    const selected = [...new Set(savedIds)]
-      .map(function (id) { return faqs.find(function (faq) { return faq.id === id; }); })
-      .filter(Boolean).slice(0, 2);
-    const remaining = faqs.filter(function (faq) { return !selected.includes(faq); });
-    while (selected.length < 2 && remaining.length) {
-      selected.push(remaining.splice(Math.floor(Math.random() * remaining.length), 1)[0]);
-    }
-
-    try {
-      sessionStorage.setItem(storageKey, JSON.stringify(selected.map(function (faq) { return faq.id; })));
-    } catch (error) {
-      // Keep the selected pair in memory for this page instead.
-    }
-    return selected;
+    const pinned = [1, 5].map(function (id) {
+      return faqs.find(function (faq) { return faq.id === id; });
+    }).filter(Boolean);
+    return pinned.concat(faqs.filter(function (faq) { return !pinned.includes(faq); })).slice(0, 2);
   }
 
   function delay(ms) {
@@ -170,7 +153,7 @@
       typingIndicator.remove();
       return addMessage(answer, false, true);
     }).then(function () {
-      renderConversionCta(question);
+      renderConversionCta(question, answer);
     }).finally(function () {
       setBusy(false);
     });
@@ -219,15 +202,32 @@
   // conversation -- every answered FAQ (chip, option, or confident match)
   // ends with a direct path onward, rather than leaving the visitor to find
   // the FAQ page or contact form on their own.
-  function renderConversionCta(question) {
+  function renderConversionCta(question, answer) {
     const cta = document.createElement('div');
     cta.className = 'chat-options chat-cta-row';
 
-    const faqLink = document.createElement('a');
-    faqLink.href = '/faq';
-    faqLink.className = 'chat-option';
-    faqLink.textContent = 'View the FAQs';
-    cta.appendChild(faqLink);
+    // Offer the page the answer names, or else a related question.
+    const namedPage = new DOMParser().parseFromString(answer, 'text/html').querySelector('a[href^="/services/"]');
+    const related = faqs.find(function (faq) { return [15, 5, 1].includes(faq.id) && faq.answer !== answer; });
+    if (namedPage) {
+      const pageLink = document.createElement('a');
+      pageLink.href = namedPage.getAttribute('href');
+      pageLink.className = 'chat-option';
+      pageLink.textContent = namedPage.textContent;
+      cta.appendChild(pageLink);
+    } else if (related) {
+      const relatedButton = document.createElement('button');
+      relatedButton.type = 'button';
+      relatedButton.className = 'chat-option';
+      relatedButton.textContent = related.question;
+      relatedButton.addEventListener('click', function () {
+        if (isBusy) return;
+        cta.remove();
+        addMessage(related.question, true);
+        respondAfterThinking(related.question, related.answer);
+      });
+      cta.appendChild(relatedButton);
+    }
 
     const projectLink = document.createElement('a');
     projectLink.href = '/#contact';
@@ -255,13 +255,16 @@
     const form = document.createElement('form');
     form.className = 'chat-lead-form';
     form.innerHTML =
-      '<input type="text" class="chat-lead-field" name="name" placeholder="Your name" required />' +
-      '<input type="email" class="chat-lead-field" name="email" placeholder="Your email" required />' +
+      '<label for="chat-lead-name">Name</label>' +
+      '<input type="text" class="chat-lead-field" id="chat-lead-name" name="name" placeholder="Your name" required />' +
+      '<label for="chat-lead-email">Email</label>' +
+      '<input type="email" class="chat-lead-field" id="chat-lead-email" name="email" placeholder="Your email" required />' +
       // Hidden from real visitors via CSS (see .chat-lead-form input[name="website"]
       // in styles.css) -- a bot filling every field it sees will fill this
       // one too, which is exactly what marks it as a bot server-side.
       '<input type="text" class="chat-lead-honeypot" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />' +
       '<button type="submit" class="chat-lead-submit">Send to Adam</button>' +
+      '<p class="form-next-step">We reply within 24 hours. Then we talk through the bottleneck, and we propose an approach and a price before any work begins.</p>' +
       '<p class="chat-field-error" hidden></p>';
 
     const errorEl = form.querySelector('.chat-field-error');
@@ -286,7 +289,7 @@
         .then(function (result) {
           if (!result.ok) {
             const firstError = result.data.errors && Object.values(result.data.errors)[0];
-            errorEl.textContent = (firstError && firstError[0]) || 'Something went wrong. Please send it again.';
+            errorEl.textContent = (firstError && firstError[0]) || 'Something went wrong. Please try again, or email adam@ahmedia.ai.';
             errorEl.hidden = false;
             submitButton.disabled = false;
             return;
@@ -296,7 +299,7 @@
           addMessage(result.data.message, false);
         })
         .catch(function () {
-          errorEl.textContent = 'Something went wrong. Please send it again.';
+          errorEl.textContent = 'Something went wrong. Please try again, or email adam@ahmedia.ai.';
           errorEl.hidden = false;
           submitButton.disabled = false;
         });
@@ -307,7 +310,7 @@
   }
 
   function renderFallback(question) {
-    return addMessage("I can help with services, pricing, packages and how projects work. Ask about one of those, or send your question straight to Adam.", false)
+    return addMessage("We can answer questions about services, website pricing and how projects work. Ask about one of those, or send your question straight to Adam.", false)
       .then(function () {
         const options = document.createElement('div');
         options.className = 'chat-options';
@@ -333,14 +336,14 @@
 
     if (data.outcome === 'confident' && data.matches.length > 0) {
       return addMessage(data.matches[0].answer, false, true).then(function () {
-        renderConversionCta(question);
+        renderConversionCta(question, data.matches[0].answer);
       });
     }
 
     if (data.outcome === 'ambiguous' && data.matches.length > 0) {
       const optionsBlock = document.createElement('div');
       optionsBlock.className = 'chat-options';
-      return addMessage("Here's what I can help with:", false).then(function () {
+      return addMessage("Here's what we can help with:", false).then(function () {
         messages.appendChild(optionsBlock);
         renderOptions(optionsBlock, data.matches);
         messages.scrollTop = messages.scrollHeight;
@@ -376,7 +379,7 @@
       })
       .catch(function () {
         typingIndicator.remove();
-        return addMessage("Something went wrong on our end. Ask again in a moment, or use the contact form below.", false);
+        return addMessage('Something went wrong. Ask again in a moment, or use the <a href="/contact">Contact page</a>.', false, true);
       })
       .finally(function () {
         setBusy(false);
@@ -400,7 +403,7 @@
 
     if (!hasOpenedBefore) {
       hasOpenedBefore = true;
-      addMessage("Hi! I can answer questions about AH Media: services, pricing, packages and how projects work.", false)
+      addMessage("Hi! This is AH Media's automated assistant, and it answers from the FAQ. Ask about services, how projects work, or website pricing.", false)
         .then(renderChips);
     }
   });

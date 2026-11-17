@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'parent_id', 'title', 'slug', 'template', 'doppler_ring_style_id', 'hide_doppler_rings', 'sort_order', 'is_published', 'show_in_nav', 'nav_anchor',
     'meta_title', 'meta_description', 'hero_heading', 'hero_subheading', 'hero_image', 'og_image',
     'section_eyebrow', 'section_heading', 'body', 'bullets', 'buttons', 'circle_image', 'circle_image_alt',
-    'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_button_label',
+    'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_copy', 'cta_button_label',
 ])]
 class Page extends Model
 {
@@ -96,6 +96,9 @@ class Page extends Model
     {
         return $this->hasMany(Project::class)->orderBy('sort_order');
     }
+
+    /** The supporting line under a page's call-to-action heading when the CMS leaves it empty. */
+    public const DefaultCtaCopy = "Tell us about the bottleneck. You work directly with Adam, and we'll tell you honestly whether AI is the right tool for it.";
 
     /**
      * A line holding only a section token places that section in the body: `[[credentials]]`,

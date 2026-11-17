@@ -211,6 +211,11 @@ class PageResource extends Resource
                     TextInput::make('cta_eyebrow')->label('Eyebrow'),
                     TextInput::make('cta_heading')->label('Heading'),
                     TextInput::make('cta_button_label')->label('Button label')->placeholder('Start a Project'),
+                    Textarea::make('cta_copy')
+                        ->label('Supporting line')
+                        ->placeholder(Page::DefaultCtaCopy)
+                        ->rows(2)
+                        ->columnSpanFull(),
                 ]),
 
             Section::make('Search engines')->collapsed()->schema([

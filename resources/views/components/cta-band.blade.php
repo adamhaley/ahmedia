@@ -16,9 +16,7 @@
         <p class="eyebrow">{{ $eyebrow }}</p>
         @endif
         <h2 class="section-title">{{ $heading }}</h2>
-        @if ($copy)
-        <p class="section-copy">{{ $copy }}</p>
-        @endif
+        <p class="section-copy">{{ $copy ?: \App\Models\Page::DefaultCtaCopy }}</p>
       </div>
       <div class="button-row">
         <a class="button button-{{ $buttonVariant }}" href="{{ $buttonHref }}" @if ($revealsContactForm) aria-controls="cta-contact-form" aria-expanded="{{ $contactFormOpen ? 'true' : 'false' }}" @endif>{{ $buttonLabel ?: 'Start a Project' }}</a>

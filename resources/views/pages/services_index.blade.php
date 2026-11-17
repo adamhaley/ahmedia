@@ -17,7 +17,7 @@
   <x-cta-band
     :eyebrow="$page->cta_eyebrow"
     :heading="$page->cta_heading"
-    copy="Tell us what you're building - we'll tell you honestly whether AI is the right tool for it."
+    :copy="$page->cta_copy"
     :buttonLabel="$page->cta_button_label"
     buttonHref="/#contact"
   />

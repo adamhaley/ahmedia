@@ -5,7 +5,7 @@
     <div class="chat-messages" role="log" aria-label="Chat messages" aria-live="polite"></div>
     <div class="chat-input-row">
       <label class="sr-only" for="chat-input">Message the FAQ assistant</label>
-      <input type="text" class="chat-input" id="chat-input" placeholder="Type your message…" />
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask about services, pricing or how projects work" />
       <button class="chat-send-button" type="button" aria-label="Send message"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10 18 2l-5 16-3-6-6-2Z"/></svg></button>
     </div>
   </div>
