@@ -1,5 +1,6 @@
 <x-layouts.site :page="$page">
   <x-hero
+    :back="false"
     :title="$page->hero_heading ?: 'AH Media'"
     accent=".ai"
     :tagline="$tagline"

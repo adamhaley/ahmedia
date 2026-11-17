@@ -1,4 +1,4 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'points' => [], 'ringStyle' => null, 'compact' => false])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'points' => [], 'ringStyle' => null, 'compact' => false, 'back' => true])
 @php
   $rings = $ringStyle?->settings;
   $pin = $rings?->motion === \App\Enums\HeroRingsMotion::Scroll;
@@ -29,8 +29,13 @@
       @if ($stance)
       <p class="hero-stance">{{ $stance }}</p>
       @endif
-      @if (count($actions))
+      @if ($back || count($actions))
       <div class="button-row">
+        @if ($back)
+        <a class="hero-back" href="{{ route('page.home') }}" aria-label="Back to home">
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M17 10H5M9 5l-5 5 5 5"/></svg>
+        </a>
+        @endif
         @foreach ($actions as $action)
         <a class="button button-{{ $action['variant'] ?? 'secondary' }}" href="{{ $action['href'] }}">{{ $action['label'] }}</a>
         @endforeach
