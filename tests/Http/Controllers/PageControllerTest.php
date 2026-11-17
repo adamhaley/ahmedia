@@ -646,6 +646,34 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSeeInOrder(['is-featured', 'A much longer endorsement', 'Short.'], false);
     }
 
+    #[Test]
+    public function it_shows_the_hero_points_under_the_button_with_links(): void
+    {
+        $home = $this->homePage(['hero_points' => ['Seven five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSeeInOrder(['proof-line', 'Seven five-star client reviews', '<a href="tel:+17653075537">(765) 307-5537</a>'], false);
+    }
+
+    #[Test]
+    public function it_escapes_html_in_hero_points(): void
+    {
+        $home = $this->homePage(['hero_points' => ['<script>alert(1)</script>']]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertDontSee('<script>alert(1)</script>', false);
+    }
+
+    #[Test]
+    public function it_leaves_out_the_hero_points_when_there_are_none(): void
+    {
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertDontSee('proof-line', false);
+    }
+
     private function caseStudiesPage(): Page
     {
         return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);
