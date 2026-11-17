@@ -622,7 +622,18 @@ class PageControllerTest extends TestCase
 
         $response = $this->get($page->url());
 
-        $response->assertOk()->assertSeeInOrder(['package-ladder', 'Ladder Package', 'package-standalone', 'Upwork Offer', 'Order on Upwork'], false);
+        $response->assertOk()->assertSeeInOrder(['package-ladder', 'Ladder Package', 'package-standalone', 'Upwork Offer'], false);
+    }
+
+    #[Test]
+    public function it_leads_with_direct_contact_and_offers_upwork_second(): void
+    {
+        $page = $this->servicePage();
+        Package::factory()->for($page)->create(['upwork_url' => 'https://www.upwork.com/services/product/1']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['button button-primary" href="/#contact">Start a Project', 'button button-secondary" href="https://www.upwork.com/services/product/1"'], false);
     }
 
     #[Test]
