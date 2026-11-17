@@ -11,11 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property list<string>|null $bullets
+ * @property list<string>|null $hero_points
  * @property list<array<string, string>>|null $buttons
  */
 #[Fillable([
     'parent_id', 'title', 'slug', 'template', 'doppler_ring_style_id', 'hide_doppler_rings', 'sort_order', 'is_published', 'show_in_nav', 'nav_anchor',
-    'meta_title', 'meta_description', 'hero_heading', 'hero_subheading', 'hero_image', 'og_image',
+    'meta_title', 'meta_description', 'hero_heading', 'hero_subheading', 'hero_points', 'hero_image', 'og_image',
     'section_eyebrow', 'section_heading', 'body', 'bullets', 'buttons', 'circle_image', 'circle_image_alt',
     'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_copy', 'cta_button_label',
 ])]
@@ -29,6 +30,7 @@ class Page extends Model
         return [
             'template' => PageTemplate::class,
             'bullets' => 'array',
+            'hero_points' => 'array',
             'buttons' => 'array',
             'is_published' => 'boolean',
             'show_in_nav' => 'boolean',

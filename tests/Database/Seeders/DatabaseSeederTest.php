@@ -57,6 +57,14 @@ class DatabaseSeederTest extends TestCase
     }
 
     #[Test]
+    public function it_seeds_the_homepage_hero_points(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->assertCount(4, Page::query()->where('path', '')->first()->hero_points);
+    }
+
+    #[Test]
     public function it_seeds_the_faqs_and_the_faq_page(): void
     {
         $this->seed(DatabaseSeeder::class);

@@ -25,6 +25,34 @@ class PageControllerTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
+    public function it_shows_the_hero_points_under_the_button_with_links(): void
+    {
+        $home = $this->homePage(['hero_points' => ['Five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSeeInOrder(['proof-line', 'Five-star client reviews', '<a href="tel:+17653075537">(765) 307-5537</a>'], false);
+    }
+
+    #[Test]
+    public function it_escapes_html_in_hero_points(): void
+    {
+        $home = $this->homePage(['hero_points' => ['<script>alert(1)</script>']]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertDontSee('<script>alert(1)</script>', false);
+    }
+
+    #[Test]
+    public function it_leaves_out_the_hero_points_when_there_are_none(): void
+    {
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertDontSee('proof-line', false);
+    }
+
+    #[Test]
     public function it_renders_published_packages_on_a_service_page(): void
     {
         $page = $this->servicePage();

@@ -43,6 +43,12 @@ class AhmediaContentSeeder extends Seeder
                 'show_in_nav' => false,
                 'hero_heading' => 'AH Media',
                 'hero_subheading' => 'We design, build, and ship the AI systems businesses actually run on - from custom chat and RAG assistants to end-to-end automation with n8n.',
+                'hero_points' => [
+                    'You work directly with the person building your system',
+                    'Five-star client reviews',
+                    "n8n's Foundations pathway",
+                    'Demo receptionist: [(765) 307-5537](tel:+17653075537)',
+                ],
                 'section_eyebrow' => 'Approach',
                 'section_heading' => "Static where it's simple, AI where it earns its keep",
                 'body' => 'Most of what a business needs from a website is speed and clarity. The AI does the actual work behind it - qualifying leads, answering questions, and automating the busywork between the tools you already use.',

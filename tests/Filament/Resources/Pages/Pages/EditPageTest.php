@@ -8,6 +8,7 @@ use App\Models\AuthorizedEmail;
 use App\Models\DopplerRingStyle;
 use App\Models\Page;
 use App\Models\User;
+use Filament\Forms\Components\Repeater;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -31,6 +32,23 @@ class EditPageTest extends TestCase
             ->assertHasNoFormErrors();
 
         $this->assertSame([true, null], [$page->fresh()->hide_doppler_rings, $page->fresh()->doppler_ring_style_id]);
+    }
+
+    #[Test]
+    public function it_saves_the_hero_points_on_the_home_page(): void
+    {
+        $home = Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        $undoRepeaterFake = Repeater::fake();
+
+        Livewire::actingAs($this->admin())
+            ->test(EditPage::class, ['record' => $home->getKey()])
+            ->fillForm(['hero_points' => [['point' => 'Five-star client reviews'], ['point' => "n8n's Foundations pathway"]]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $undoRepeaterFake();
+
+        $this->assertSame(['Five-star client reviews', "n8n's Foundations pathway"], $home->fresh()->hero_points);
     }
 
     #[Test]

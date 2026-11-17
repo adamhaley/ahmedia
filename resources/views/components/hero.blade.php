@@ -1,4 +1,4 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'ringStyle' => null, 'compact' => false])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'points' => [], 'ringStyle' => null, 'compact' => false])
 @php
   $rings = $ringStyle?->settings;
   $pin = $rings?->motion === \App\Enums\HeroRingsMotion::Scroll;
@@ -35,6 +35,13 @@
         <a class="button button-{{ $action['variant'] ?? 'secondary' }}" href="{{ $action['href'] }}">{{ $action['label'] }}</a>
         @endforeach
       </div>
+      @endif
+      @if (count($points ?? []))
+      <ul class="proof-line" aria-label="Why work with us">
+        @foreach ($points as $point)
+        <li>{{ str($point)->inlineMarkdown(['html_input' => 'escape', 'allow_unsafe_links' => false])->toHtmlString() }}</li>
+        @endforeach
+      </ul>
       @endif
     </div>
   </div>

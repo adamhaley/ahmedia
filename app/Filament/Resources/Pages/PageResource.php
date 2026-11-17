@@ -107,6 +107,13 @@ class PageResource extends Resource
                 ->schema([
                     TextInput::make('hero_heading')->label('Heading')->placeholder('Defaults to the page title'),
                     TextInput::make('hero_subheading')->label('Subheading'),
+                    Repeater::make('hero_points')
+                        ->label('Points under the button')
+                        ->helperText('Short proof points, shown in a line under the hero button. Links work as [text](url), e.g. [(765) 307-5537](tel:+17653075537).')
+                        ->simple(TextInput::make('point')->required())
+                        ->reorderable()
+                        ->defaultItems(0)
+                        ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Home),
                     // Empty means "inherit" on a child page, so "No rings" is its own option there,
                     // stored as hide_doppler_rings
                     Select::make('doppler_ring_style_id')
