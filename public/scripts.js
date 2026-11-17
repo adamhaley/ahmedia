@@ -230,7 +230,7 @@
     }
 
     const projectLink = document.createElement('a');
-    projectLink.href = '/contact';
+    projectLink.href = '/#contact';
     projectLink.className = 'chat-option chat-cta-option';
     projectLink.textContent = 'Start a Project';
     cta.appendChild(projectLink);
