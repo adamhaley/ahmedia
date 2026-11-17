@@ -61,7 +61,7 @@ class PageController extends Controller
                 'posts' => Post::query()->published()->get(),
             ],
             PageTemplate::Contact => [
-                'address' => SiteSetting::current()->address,
+                'settings' => SiteSetting::current(),
             ],
             PageTemplate::Faq => [
                 'faqItems' => FaqItem::query()->orderBy('sort_order')->orderBy('id')->get(),

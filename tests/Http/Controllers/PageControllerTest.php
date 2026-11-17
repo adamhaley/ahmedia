@@ -559,7 +559,7 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_makes_homepage_service_cards_fully_clickable(): void
+    public function it_links_each_homepage_service_row_by_its_name(): void
     {
         $home = $this->homePage();
         $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true]);
@@ -567,18 +567,18 @@ class PageControllerTest extends TestCase
 
         $response = $this->get($home->url());
 
-        $response->assertOk()->assertSee('feature-card-linked', false)->assertSee('feature-card-link" href="'.$service->url().'"', false);
+        $response->assertOk()->assertSee('<h3 class="service-row-name"><a href="'.$service->url().'">'.e($service->title).'</a></h3>', false);
     }
 
     #[Test]
-    public function it_makes_services_index_cards_fully_clickable(): void
+    public function it_links_each_services_index_row_by_its_name(): void
     {
         $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true]);
         $service = $this->servicePage(['parent_id' => $services->id]);
 
         $response = $this->get($services->url());
 
-        $response->assertOk()->assertSee('feature-card-linked', false)->assertSee('feature-card-link" href="'.$service->url().'"', false);
+        $response->assertOk()->assertSee('<h3 class="service-row-name"><a href="'.$service->url().'">'.e($service->title).'</a></h3>', false);
     }
 
     #[Test]
@@ -590,6 +590,60 @@ class PageControllerTest extends TestCase
         $response = $this->get($blog->url());
 
         $response->assertOk()->assertDontSee('feature-card-linked', false);
+    }
+
+    #[Test]
+    public function it_marks_the_current_page_in_the_nav(): void
+    {
+        $faq = Page::query()->create(['title' => 'FAQ', 'slug' => 'faq', 'template' => PageTemplate::Faq, 'is_published' => true, 'show_in_nav' => true]);
+
+        $response = $this->get($faq->url());
+
+        $response->assertOk()->assertSee('<a href="'.$faq->url().'"  aria-current="page" >FAQ</a>', false);
+    }
+
+    #[Test]
+    public function it_marks_the_services_nav_item_on_a_service_page(): void
+    {
+        $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true, 'show_in_nav' => true]);
+        $service = $this->servicePage(['parent_id' => $services->id]);
+
+        $response = $this->get($service->url());
+
+        $response->assertOk()->assertSee('nav-item has-dropdown is-current-section', false);
+    }
+
+    #[Test]
+    public function it_sets_upwork_offers_apart_from_the_package_ladder(): void
+    {
+        $page = $this->servicePage();
+        Package::factory()->for($page)->create(['title' => 'Ladder Package', 'upwork_url' => null]);
+        Package::factory()->for($page)->create(['title' => 'Upwork Offer', 'upwork_url' => 'https://www.upwork.com/services/product/1']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['package-ladder', 'Ladder Package', 'package-standalone', 'Upwork Offer', 'Order on Upwork'], false);
+    }
+
+    #[Test]
+    public function it_puts_the_contact_details_beside_the_contact_form(): void
+    {
+        SiteSetting::current()->update(['contact_email' => 'adam@example.com', 'address' => '5161 Lankershim Blvd, North Hollywood, CA 91601']);
+
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['contact-layout', '<form', 'contact-details', 'adam@example.com', '5161 Lankershim Blvd'], false);
+    }
+
+    #[Test]
+    public function it_features_the_longest_testimonial_first(): void
+    {
+        Testimonial::factory()->create(['body' => 'Short.']);
+        Testimonial::factory()->create(['body' => 'A much longer endorsement that should be the featured quote.']);
+
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['is-featured', 'A much longer endorsement', 'Short.'], false);
     }
 
     private function caseStudiesPage(): Page

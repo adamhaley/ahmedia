@@ -7,17 +7,11 @@
     :actions="[['label' => 'Start a Project', 'href' => '/#contact', 'variant' => 'primary']]"
   />
 
-  <x-feature-grid
+  <x-service-rows
     eyebrow="Capabilities"
-    :link-cards="true"
     :title="$page->section_heading"
     :copy="$page->body"
-    :items="$page->children->map(fn ($child) => [
-        'title' => $child->title,
-        'copy' => $child->card_excerpt,
-        'href' => $child->url(),
-        'linkLabel' => 'Learn more',
-    ])->all()"
+    :services="$page->children"
   />
 
   <x-cta-band

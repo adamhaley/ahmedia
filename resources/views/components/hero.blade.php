@@ -1,4 +1,4 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'actions' => [], 'ringStyle' => null])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'ringStyle' => null, 'compact' => false])
 @php
   $rings = $ringStyle?->settings;
   $pin = $rings?->motion === \App\Enums\HeroRingsMotion::Scroll;
@@ -6,7 +6,7 @@
 @if ($pin)
 <div class="hero-pin" data-hero-pin data-start="{{ $rings->scrollStart }}" data-end="{{ $rings->scrollEnd }}" style="--pin-length: {{ $rings->pinLength }}svh">
 @endif
-<section @class(['section', 'hero-section', 'hero-has-rings' => $rings])>
+<section @class(['section', 'hero-section', 'hero-has-rings' => $rings, 'hero-compact' => $compact])>
   @if ($rings)
   <div class="hero-rings">
     <div class="container hero-rings-frame">
@@ -25,6 +25,9 @@
       @endif
       @if ($copy)
       <p class="lede">{{ $copy }}</p>
+      @endif
+      @if ($stance)
+      <p class="hero-stance">{{ $stance }}</p>
       @endif
       @if (count($actions))
       <div class="button-row">

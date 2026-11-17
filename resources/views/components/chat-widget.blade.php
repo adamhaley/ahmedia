@@ -4,7 +4,8 @@
     <button class="chat-close-button" type="button" aria-label="Close chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
     <div class="chat-messages" role="log" aria-label="Chat messages" aria-live="polite"></div>
     <div class="chat-input-row">
-      <input type="text" class="chat-input" placeholder="Type your message..." />
+      <label class="sr-only" for="chat-input">Message the FAQ assistant</label>
+      <input type="text" class="chat-input" id="chat-input" placeholder="Type your message…" />
       <button class="chat-send-button" type="button" aria-label="Send message"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10 18 2l-5 16-3-6-6-2Z"/></svg></button>
     </div>
   </div>

@@ -495,16 +495,23 @@
 
   const subtoggles = nav.querySelectorAll('.nav-subtoggle');
 
-  // Closing the menu also reopens any folded child-page lists (their default).
+  // Child-page lists start open inside the phone menu and closed as
+  // dropdowns above 760px, where the caret button opens them (tablets have
+  // no hover to do it).
+  function resetSubs() {
+    subtoggles.forEach(function (button) {
+      button.setAttribute('aria-expanded', mobile.matches ? 'true' : 'false');
+    });
+  }
+
+  // Closing the menu also resets any folded child-page lists.
   function setOpen(open) {
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     header.classList.toggle('is-menu-open', open);
-    if (!open) {
-      subtoggles.forEach(function (button) {
-        button.setAttribute('aria-expanded', 'true');
-      });
-    }
+    if (!open) resetSubs();
   }
+
+  resetSubs();
 
   document.documentElement.classList.add('js-nav');
 
@@ -539,13 +546,32 @@
   });
 
   document.addEventListener('keydown', function (event) {
-    if (event.key !== 'Escape' || !isOpen()) return;
-    setOpen(false);
-    toggle.focus();
+    if (event.key !== 'Escape') return;
+    if (isOpen()) {
+      setOpen(false);
+      toggle.focus();
+      return;
+    }
+    // Desktop and tablet dropdowns: close the open one and return focus to its button
+    const openSub = !mobile.matches && nav.querySelector('.nav-subtoggle[aria-expanded="true"]');
+    if (openSub) {
+      openSub.setAttribute('aria-expanded', 'false');
+      openSub.focus();
+    }
   });
 
-  function closeOnDesktop(event) {
-    if (!event.matches) setOpen(false);
+  // Above 760px a dropdown closes when a tap, click or focus lands outside it
+  function closeSubsOutside(event) {
+    if (mobile.matches) return;
+    subtoggles.forEach(function (button) {
+      if (!button.parentElement.contains(event.target)) button.setAttribute('aria-expanded', 'false');
+    });
+  }
+  document.addEventListener('click', closeSubsOutside);
+  document.addEventListener('focusin', closeSubsOutside);
+
+  function closeOnDesktop() {
+    setOpen(false);
   }
 
   if (mobile.addEventListener) {
@@ -667,4 +693,102 @@
   } else {
     init();
   }
+})();
+
+// Phones: tuck the floating chat button away while the reader scrolls down
+// and bring it back on any scroll up, or near the end of the page.
+// styles.css only acts on .is-scrolling-down below 760px.
+(function () {
+  let lastY = window.scrollY;
+  let frameRequested = false;
+  const minDelta = 8;
+
+  function update() {
+    frameRequested = false;
+    const y = window.scrollY;
+    const nearEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
+    if (Math.abs(y - lastY) < minDelta && !nearEnd) return;
+    document.body.classList.toggle('is-scrolling-down', y > lastY && y > 200 && !nearEnd);
+    lastY = y;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(update);
+  }, { passive: true });
+})();
+
+// Contact forms: inline, styled validation in place of the browser's bubble.
+// Errors use the same p.contact-form-error the Blade view renders
+// for server errors, tied to the field with aria-describedby. A field is
+// checked when it loses focus (once something was typed) and on submit, and
+// re-checked as it is corrected.
+(function () {
+  const messages = {
+    name: { valueMissing: 'Please enter your name.' },
+    email: {
+      valueMissing: 'Please enter your email address.',
+      typeMismatch: 'Please enter an email address like name@example.com.',
+    },
+    message: { valueMissing: 'Please add a message.' },
+  };
+
+  function errorFor(field) {
+    const set = messages[field.name] || {};
+    if (field.validity.valueMissing) return set.valueMissing || 'Please fill in this field.';
+    if (field.validity.typeMismatch) return set.typeMismatch || 'Please check this field.';
+    if (field.validity.tooLong) return 'Please shorten this a little.';
+    return '';
+  }
+
+  function show(field, text) {
+    const id = field.id + '-error';
+    let error = document.getElementById(id);
+    const described = (field.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
+    if (!text) {
+      if (error) error.remove();
+      field.removeAttribute('aria-invalid');
+      field.setAttribute('aria-describedby', described.filter(function (d) { return d !== id; }).join(' '));
+      if (!field.getAttribute('aria-describedby')) field.removeAttribute('aria-describedby');
+      return;
+    }
+    if (!error) {
+      error = document.createElement('p');
+      error.className = 'contact-form-error';
+      error.id = id;
+      error.setAttribute('aria-live', 'polite');
+      field.closest('.contact-form-row').appendChild(error);
+    }
+    error.textContent = text;
+    field.setAttribute('aria-invalid', 'true');
+    if (described.indexOf(id) === -1) described.push(id);
+    field.setAttribute('aria-describedby', described.join(' '));
+  }
+
+  document.querySelectorAll('form.contact-form').forEach(function (form) {
+    const fields = form.querySelectorAll('.contact-form-row:not(.contact-form-honeypot) input, .contact-form-row textarea');
+
+    fields.forEach(function (field) {
+      field.addEventListener('blur', function () {
+        if (field.value.trim() !== '' || field.hasAttribute('aria-invalid')) show(field, errorFor(field));
+      });
+      field.addEventListener('input', function () {
+        if (field.hasAttribute('aria-invalid')) show(field, errorFor(field));
+      });
+    });
+
+    form.addEventListener('submit', function (event) {
+      let firstInvalid = null;
+      fields.forEach(function (field) {
+        const text = errorFor(field);
+        show(field, text);
+        if (text && !firstInvalid) firstInvalid = field;
+      });
+      if (firstInvalid) {
+        event.preventDefault();
+        firstInvalid.focus();
+      }
+    });
+  });
 })();

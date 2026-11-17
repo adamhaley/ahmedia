@@ -1,13 +1,59 @@
 
+/* Self-hosted so the site makes no third-party font requests. Gantari and
+   IBM Plex Mono (both SIL Open Font License), latin subset, from Fontsource.
+   Gantari: geometric with round bowls, chosen by Adam 2026-11-16 from
+   Jost, Gantari, Readex Pro and a Hanken Grotesk control. */
+@font-face {
+  font-family: "Gantari";
+  src: url("fonts/gantari-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --container-width: 72rem;
   --gutter: clamp(1rem, 2vw, 1.5rem);
-  --section-space: clamp(4rem, 8vw, 8rem);
+  --section-space: clamp(3.5rem, 6vw, 6rem);
+  /* The main offer on a page (services, packages) gets more room around it */
+  --section-space-major: clamp(4.5rem, 9vw, 8.5rem);
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --shadow-soft: none;
   --border-subtle: 1px solid var(--border-color);
+
+  /* Type scale (direction A): fluid between 390 and 1440 */
+  --step-display: clamp(2.75rem, 1.6rem + 5vw, 5.5rem);
+  --step-h2: clamp(1.875rem, 1.4rem + 2.4vw, 3rem);
+  --step-h3: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --step-h4: clamp(1.25rem, 1.05rem + 0.65vw, 1.5rem);
+  --step-lede: clamp(1.0625rem, 0.95rem + 0.7vw, 1.25rem);
+  --step-body: clamp(1rem, 0.95rem + 0.15vw, 1.0625rem);
+  --step-small: 0.875rem;
+  --leading-tight: 1.05;
+  --leading-snug: 1.15;
+  --leading-body: 1.58;
+  --tracking-tight: -0.02em;
+  /* Running text stops at about 65 characters */
+  --measure: 29em;
+}
+
+/* Form controls take the page's font (submit buttons rendered at 13.3px) */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
 }
 
 * {
@@ -22,6 +68,8 @@ html {
 body {
   margin: 0;
   font-family: var(--font-body);
+  font-size: var(--step-body);
+  line-height: var(--leading-body);
   color: var(--color-text);
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.75), transparent 38%),
@@ -30,6 +78,8 @@ body {
 
 img {
   max-width: 100%;
+  /* width/height attributes reserve the space; the ratio sets the height */
+  height: auto;
   display: block;
 }
 
@@ -137,9 +187,53 @@ a {
   fill: currentColor;
 }
 
-/* Mobile-only toggle for a nav item's child pages */
+/* Toggle for a nav item's child pages. Without scripts.js the dropdown
+   still opens on hover and the caret inside the link shows instead. */
 .nav-subtoggle {
   display: none;
+}
+
+.js-nav .nav-subtoggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -0.75rem -0.75rem -0.75rem -0.6rem;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.js-nav .nav-item.has-dropdown > a .nav-caret {
+  display: none;
+}
+
+.js-nav .nav-subtoggle .nav-caret {
+  width: 0.8rem;
+  height: 0.8rem;
+  transition: transform 200ms ease-in-out;
+}
+
+.js-nav .nav-subtoggle[aria-expanded="true"] .nav-caret {
+  transform: rotate(180deg);
+}
+
+/* You are here: the current page, or the section a service page sits in */
+.site-nav a[aria-current="page"],
+.nav-item.is-current-section > a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.45em;
+}
+
+.nav-dropdown a[aria-current="page"] {
+  text-decoration: none;
+  box-shadow: inset 2px 0 0 var(--color-accent);
 }
 
 .nav-dropdown {
@@ -150,6 +244,7 @@ a {
   margin: 0.5rem 0 0;
   padding: 0.5rem;
   min-width: 14rem;
+  max-width: calc(100vw - 2 * var(--gutter));
   list-style: none;
   background: var(--color-surface);
   border: var(--border-subtle);
@@ -160,8 +255,18 @@ a {
   transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
 }
 
-.nav-item.has-dropdown:hover .nav-dropdown,
-.nav-item.has-dropdown:focus-within .nav-dropdown {
+/* Above 760px the dropdown opens from the caret button (scripts.js sets
+   aria-expanded), and on hover where the device has hover. Tablets have no
+   hover, so the button is the tap-to-open control there. */
+@media (hover: hover) {
+  .nav-item.has-dropdown:hover .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.js-nav .nav-subtoggle[aria-expanded="true"] + .nav-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -190,9 +295,9 @@ a {
 .nav-toggle {
   display: none;
   position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin: -0.5rem -0.5rem -0.5rem 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -0.625rem -0.625rem -0.625rem 0;
   padding: 0;
   border: 0;
   background: transparent;
@@ -274,9 +379,9 @@ a {
     display: inline-flex;
   }
 
+  /* Opaque while open, so the hero can't be read through the menu */
   .js-nav .site-header.is-menu-open {
-    backdrop-filter: blur(18px);
-    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+    background: var(--color-surface);
     border-bottom: var(--border-subtle);
   }
 
@@ -293,7 +398,7 @@ a {
     max-height: 0;
     padding: 0 var(--gutter);
     overflow: hidden;
-    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
+    background: var(--color-surface);
     border-bottom: 1px solid transparent;
     opacity: 0;
     visibility: hidden;
@@ -316,12 +421,14 @@ a {
   }
 
   .js-nav .site-nav a {
-    display: block;
-    padding: 0.6rem 0;
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.4rem 0;
   }
 
   .js-nav .site-nav .nav-dropdown a {
-    padding: 0.45rem 0.6rem;
+    padding: 0.4rem 0.6rem;
   }
 
   /* Child pages collapse under their parent; the caret button opens them */
@@ -336,26 +443,12 @@ a {
   }
 
   .js-nav .nav-subtoggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    color: inherit;
-    background: none;
-    border: 0;
-    cursor: pointer;
+    margin: 0;
   }
 
   .js-nav .nav-subtoggle .nav-caret {
     width: 0.9rem;
     height: 0.9rem;
-    transition: transform 200ms ease-in-out;
-  }
-
-  .js-nav .nav-subtoggle[aria-expanded="true"] .nav-caret {
-    transform: rotate(180deg);
   }
 
   .js-nav .nav-item.has-dropdown .nav-dropdown {
@@ -389,12 +482,27 @@ a {
   padding: var(--section-space) 0;
 }
 
+.section-major {
+  padding: var(--section-space-major) 0;
+}
+
+/* Space between a section heading and the text under it (the h2 ran into
+   the paragraph in Home "Approach") */
+.section-title + .section-copy,
+.section-title + .prose,
+.section-title + p,
+.section-title + .bullet-list,
+.spotlight-copy .prose + .bullet-list {
+  margin-top: clamp(1rem, 1.6vw, 1.5rem);
+}
+
 .eyebrow {
   margin: 0 0 1rem;
   color: var(--color-accent);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -402,23 +510,33 @@ a {
 .display-title {
   margin: 0;
   font-family: var(--font-heading);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 .section-title {
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-size: var(--step-h2);
+  max-width: 20ch;
+  text-wrap: balance;
 }
 
 .display-title {
-  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-size: var(--step-display);
+  line-height: 1;
 }
 
 .lede,
 .section-copy {
   color: var(--color-muted);
-  font-size: clamp(1rem, 1.8vw, 1.15rem);
-  line-height: 1.7;
+  font-size: var(--step-lede);
+  line-height: var(--leading-body);
+  max-width: var(--measure);
+}
+
+/* Long prose blocks share .section-copy but read at body size; the lede size
+   is for one or two sentences */
+.prose.section-copy {
+  font-size: var(--step-body);
 }
 
 .button-row {
@@ -484,14 +602,16 @@ a {
 
 
 :root {
-  --font-body: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+  --font-body: "Gantari", "Helvetica Neue", Arial, sans-serif;
+  /* Headings and the wordmark stay in Arial (Adam, 2026-11-16); Gantari carries the copy */
   --font-heading: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --color-page-top: #005e5e;
   --color-page-bottom: #004a4a;
   --color-surface: #006666;
   --color-strong-surface: #007a7a;
   --color-text: #ffffff;
-  --color-muted: rgba(255, 255, 255, 0.7);
+  --color-muted: rgba(255, 255, 255, 0.82);
   --color-accent: #00ffff;
   --color-accent-2: #00cccc;
   --border-color: rgba(255, 255, 255, 0.15);
@@ -580,6 +700,18 @@ main > .section:first-child {
   justify-content: flex-end;
 }
 
+/* Phones: hero copy reads from the left edge like everything below it */
+@media (max-width: 760px) {
+  .hero-align-right .hero-copy {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .hero-align-right .button-row {
+    justify-content: flex-start;
+  }
+}
+
 /* Header logo mark: four nested rings frozen mid-cycle, travelling right */
 .site-brand {
   display: inline-flex;
@@ -610,16 +742,17 @@ main > .section:first-child {
 .feature-index {
   margin: 0 0 0.75rem;
   color: var(--color-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .hero-panel-title {
   margin: 0 0 1rem;
   font-family: var(--font-heading);
-  font-size: 1.35rem;
+  font-size: var(--step-h4);
 }
 
 .hero-panel-list,
@@ -627,7 +760,7 @@ main > .section:first-child {
   margin: 1.25rem 0 0;
   padding-left: 1.2rem;
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .section-heading {
@@ -654,6 +787,17 @@ main > .section:first-child {
 
 .spotlight-media {
   order: 2;
+}
+
+/* No media: the copy takes a measured column instead of leaving a blank panel */
+.spotlight-copy:only-child {
+  grid-column: 1 / -1;
+  max-width: 44rem;
+}
+
+/* Guard for the CMS: a media slot with nothing in it never renders as a panel */
+.media-placeholder:empty {
+  display: none;
 }
 
 .spotlight-copy {
@@ -700,13 +844,14 @@ main > .section:first-child {
 .feature-card h3 {
   margin: 0 0 0.75rem;
   font-family: var(--font-heading);
-  font-size: 1.4rem;
+  font-size: var(--step-h4);
+  line-height: var(--leading-snug);
 }
 
 .feature-card p {
   margin: 0;
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .feature-card-linked {
@@ -784,13 +929,14 @@ main > .section:first-child {
 .promo-copy h3 {
   margin: 0 0 0.75rem;
   font-family: var(--font-heading);
-  font-size: 1.7rem;
+  font-size: var(--step-h3);
+  line-height: var(--leading-tight);
 }
 
 .preview-copy p,
 .promo-copy p {
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .preview-link {
@@ -897,7 +1043,7 @@ main > .section:first-child {
 .codette-carousel-caption p {
   margin: 0;
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .carousel-indicator,
@@ -1114,9 +1260,9 @@ main > .section:first-child {
 .quote-text {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  font-size: var(--step-h3);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
 }
 
 .quote-attribution {
@@ -1188,7 +1334,7 @@ main > .section:first-child {
 
 .contact-form-row input::placeholder,
 .contact-form-row textarea::placeholder {
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 
 .contact-form-row input:focus,
@@ -1204,6 +1350,7 @@ main > .section:first-child {
 .contact-kicker {
   margin: 0 0 0.8rem;
   color: var(--color-accent);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -1487,7 +1634,8 @@ body:has(.chat-widget) .back-to-top-link {
   border: 1px solid var(--color-accent);
   border-radius: 20px;
   margin-right: 10px;
-  font-size: 14px;
+  /* 16px: anything smaller makes iOS zoom the page on focus */
+  font-size: 1rem;
   outline: none;
   background: rgba(0, 0, 0, 0.2);
   color: var(--color-text);
@@ -1498,7 +1646,7 @@ body:has(.chat-widget) .back-to-top-link {
 }
 
 .chat-input::placeholder {
-  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 
 .chat-send-button,
@@ -1681,17 +1829,17 @@ body:has(.chat-widget) .back-to-top-link {
 .package-header h3 {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 1.6rem;
-  line-height: 1.1;
+  font-size: var(--step-h4);
+  line-height: var(--leading-snug);
 }
 
 .package-price {
   margin: 0.75rem 0 0;
   font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-size: var(--step-h2);
   font-weight: 700;
   color: var(--color-accent);
-  letter-spacing: -0.03em;
+  letter-spacing: var(--tracking-tight);
 }
 
 .package-meta,
@@ -1795,8 +1943,8 @@ body:has(.chat-widget) .back-to-top-link {
 
 .case-study-prose {
   max-width: 44rem;
-  font-size: clamp(1rem, 1.6vw, 1.1rem);
-  line-height: 1.75;
+  font-size: var(--step-lede);
+  line-height: var(--leading-body);
 }
 
 /* CMS Markdown (components/markdown) */
@@ -1812,16 +1960,16 @@ body:has(.chat-widget) .back-to-top-link {
   margin: 2.5rem 0 1rem;
   color: var(--color-text);
   font-family: var(--font-heading);
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: var(--step-h3);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 .prose h3 {
   margin: 2rem 0 0.75rem;
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
-  line-height: 1.2;
+  font-size: var(--step-h4);
+  line-height: var(--leading-snug);
   color: var(--color-text);
 }
 
@@ -2160,7 +2308,7 @@ a.chat-option {
 .faq-answer p {
   margin: 0 0 1rem;
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: var(--leading-body);
 }
 
 .faq-answer p:last-child {
@@ -2214,7 +2362,7 @@ a.chat-option {
 .testimonial-quote {
   margin: 0;
   font-size: 1.05rem;
-  line-height: 1.65;
+  line-height: var(--leading-body);
 }
 
 .testimonial-attribution {
@@ -2361,9 +2509,9 @@ a.chat-option {
 .hero-tagline {
   margin: 1rem 0 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: var(--step-h3);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
   color: var(--color-accent);
 }
 
@@ -2402,14 +2550,14 @@ a.chat-option {
   font-family: var(--font-heading);
   font-size: clamp(2.6rem, 5vw, 3.6rem);
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--tracking-tight);
   color: var(--color-text);
 }
 
 .stat-value.is-long {
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: var(--step-h3);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 .stat-label {
@@ -2530,4 +2678,1073 @@ a.chat-option {
 /* auto-fill (not auto-fit) so one or two cards keep card width instead of stretching */
 .project-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+}
+
+/* Measure (direction A): running text stops at about 65 characters */
+.prose > p,
+.prose > ul,
+.prose > ol,
+.faq-answer,
+.case-study-prose > p,
+.spotlight-copy .bullet-list {
+  max-width: var(--measure);
+}
+
+/* ---------------------------------------------------------------
+   Home hero stance and proof line
+   --------------------------------------------------------------- */
+.hero-copy .lede {
+  color: var(--color-text);
+}
+
+.hero-stance {
+  max-width: var(--measure);
+  margin: -1rem 0 0;
+  color: var(--color-muted);
+}
+
+.hero-align-right .hero-stance {
+  margin-left: auto;
+}
+
+/* Facts already on the site, set as one quiet line under the action. Items
+   wrap whole, so any count or length holds. */
+.proof-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+  line-height: 1.4;
+}
+
+.hero-align-right .proof-line {
+  justify-content: flex-end;
+}
+
+.proof-line li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* A small ring as the marker, the brand's own shape */
+.proof-line li::before {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 50%;
+}
+
+.proof-line a {
+  color: var(--color-text);
+  text-underline-offset: 0.2em;
+}
+
+/* ---------------------------------------------------------------
+   section heading with its link on the baseline
+   --------------------------------------------------------------- */
+.section-heading-split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: last baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+
+.section-heading-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  color: var(--color-text);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.section-heading-link svg,
+.service-row-arrow svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms ease;
+}
+
+.section-heading-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* ---------------------------------------------------------------
+   services as ranked rows (tasks 16 and 17)
+   Number, name, one line, arrow; hairlines between. The whole row is the
+   name's link (stretched), so the link text is the service name.
+   --------------------------------------------------------------- */
+.service-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-color-strong);
+}
+
+.service-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem minmax(10rem, 19rem) minmax(0, 1fr) 2.75rem;
+  column-gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem) 0.75rem;
+  border-bottom: 1px solid var(--border-color-strong);
+  transition: background-color 180ms ease;
+}
+
+.service-row-index {
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  font-weight: 500;
+}
+
+.service-row-name {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--step-h4);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+}
+
+.service-row-name a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.service-row-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.service-row-name a:focus-visible {
+  outline: none;
+}
+
+.service-row:has(a:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.service-row-line,
+.service-row-fit {
+  grid-column: 3;
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.service-row-line {
+  grid-row: 1;
+  color: var(--color-muted);
+}
+
+.service-row-fit {
+  margin-top: 0.5rem;
+  color: var(--color-text);
+}
+
+.service-row-arrow {
+  grid-column: 4;
+  grid-row: 1;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border-color-strong);
+  border-radius: 50%;
+  color: var(--color-accent);
+  transition: border-color 180ms ease;
+}
+
+.service-row:hover,
+.service-row:focus-within {
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
+
+.service-row:hover .service-row-arrow,
+.service-row:focus-within .service-row-arrow {
+  border-color: var(--color-accent);
+}
+
+.service-row:hover .service-row-arrow svg,
+.service-row:focus-within .service-row-arrow svg {
+  transform: translateX(3px);
+}
+
+@media (max-width: 960px) {
+  .service-row {
+    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    row-gap: 0.4rem;
+  }
+
+  .service-row-line,
+  .service-row-fit {
+    grid-column: 2 / 4;
+    grid-row: auto;
+  }
+
+  .service-row-arrow {
+    grid-column: 3;
+  }
+}
+
+@media (max-width: 760px) {
+  .service-row {
+    padding-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-row,
+  .service-row-arrow,
+  .service-row-arrow svg,
+  .section-heading-link svg {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Home "Approach" ring diagram
+   Three steps on one horizontal axis. Each step's mark adds a ring, offset
+   along the axis in proportion to its radius, as in the logo. Labels are
+   HTML, so they wrap at any length.
+   --------------------------------------------------------------- */
+.approach-diagram {
+  margin: 0;
+  align-self: center;
+}
+
+.approach-steps {
+  --mark-height: clamp(3.75rem, 5vw, 4.5rem);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The shared axis, through the centre of every mark */
+.approach-steps::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--mark-height) / 2);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color-strong) 12%, var(--border-color-strong) 88%, transparent);
+}
+
+.approach-step {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+
+.approach-mark {
+  width: 100%;
+  height: var(--mark-height);
+  margin-bottom: 0.75rem;
+  overflow: visible;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--glow-color) 60%, transparent));
+}
+
+.approach-mark circle {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.approach-step-index {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  font-weight: 500;
+}
+
+.approach-step-label {
+  font-family: var(--font-heading);
+  font-size: var(--step-lede);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  overflow-wrap: break-word;
+}
+
+/* Approach copy: the first paragraph reads as a lede, the list at body size
+   with ring markers */
+.spotlight-copy .prose > p:first-child {
+  color: var(--color-text);
+  font-size: var(--step-lede);
+}
+
+.spotlight-copy .bullet-list {
+  padding-left: 0;
+  list-style: none;
+  color: var(--color-muted);
+  font-size: var(--step-body);
+}
+
+.spotlight-copy .bullet-list li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.spotlight-copy .bullet-list li + li {
+  margin-top: 0.5rem;
+}
+
+.spotlight-copy .bullet-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 50%;
+}
+
+@media (max-width: 960px) {
+  .approach-diagram {
+    margin-top: 1rem;
+  }
+}
+
+
+/* ---------------------------------------------------------------
+   testimonials, one featured quote and a compact list
+   The CMS marks the featured quote with .is-featured; the rest drop the card
+   and sit on hairlines in two columns. Any count or length holds.
+   --------------------------------------------------------------- */
+.testimonial-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 4vw, 3.5rem);
+  row-gap: 0;
+}
+
+.testimonial-card.is-featured {
+  grid-column: 1 / -1;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.75rem, 4vw, 3rem);
+}
+
+.testimonial-card.is-featured .testimonial-quote {
+  max-width: 34em;
+  color: var(--color-text);
+  font-size: var(--step-lede);
+  line-height: 1.5;
+}
+
+.testimonial-grid .testimonial-card:not(.is-featured) {
+  gap: 0.6rem;
+  padding: 1.25rem 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border-color-strong);
+  border-radius: 0;
+}
+
+.testimonial-grid .testimonial-card:not(.is-featured) .testimonial-star {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.testimonial-grid .testimonial-card:not(.is-featured) .testimonial-attribution {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.6rem;
+  font-size: var(--step-small);
+}
+
+.testimonial-grid .testimonial-card:not(.is-featured) .testimonial-project {
+  font-size: inherit;
+}
+
+.testimonial-grid .testimonial-card:not(.is-featured) .testimonial-project::before {
+  content: "· ";
+}
+
+@media (max-width: 760px) {
+  .testimonial-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------
+   proof beside a service page's CTA
+   --------------------------------------------------------------- */
+.cta-band:has(.cta-proof) {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas:
+    "copy proof"
+    "actions proof";
+  align-items: start;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  row-gap: 0;
+}
+
+.cta-band:has(.cta-proof) > div:first-child {
+  grid-area: copy;
+}
+
+.cta-band:has(.cta-proof) > .button-row {
+  grid-area: actions;
+}
+
+.cta-proof {
+  grid-area: proof;
+  align-self: center;
+  margin: 0;
+  padding-left: clamp(1.25rem, 3vw, 2rem);
+  border-left: 1px solid var(--border-color-strong);
+}
+
+.cta-proof-quote {
+  margin: 0;
+  color: var(--color-text);
+  line-height: var(--leading-body);
+}
+
+.cta-proof-source {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+.cta-proof-fact {
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: var(--step-lede);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+}
+
+@media (max-width: 960px) {
+  .cta-band:has(.cta-proof) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "actions"
+      "proof";
+    row-gap: 0;
+  }
+
+  .cta-proof {
+    margin-top: 2rem;
+    padding: 1.5rem 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--border-color-strong);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Web Design package ladder and Brand Audit
+   --------------------------------------------------------------- */
+.package-ladder {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  counter-reset: tier;
+}
+
+.package-ladder .package-card {
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+/* Step number above each tier, so the four read as one ladder */
+.package-ladder .package-header::before {
+  counter-increment: tier;
+  content: "0" counter(tier);
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+  font-weight: 500;
+}
+
+.package-ladder .package-price {
+  font-size: var(--step-h3);
+}
+
+.package-fee {
+  margin: 0.15rem 0 0;
+  color: var(--color-text);
+  font-size: var(--step-small);
+  font-weight: 700;
+}
+
+.package-header .package-meta {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+}
+
+/* Actions sit at the foot of every tier, whatever the list length */
+.package-ladder .package-actions {
+  margin-top: auto;
+}
+
+.package-ladder .package-actions .button {
+  width: 100%;
+}
+
+/* The Brand Audit: its own product, set wide under the ladder */
+.package-standalone {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.package-standalone .package-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  grid-template-areas:
+    "header includes"
+    "summary includes"
+    "actions addons"
+    "note addons";
+  align-content: start;
+  column-gap: clamp(2rem, 5vw, 4rem);
+  row-gap: 1rem;
+}
+
+.package-standalone .package-header { grid-area: header; }
+.package-standalone .package-summary { grid-area: summary; }
+.package-standalone .package-includes { grid-area: includes; }
+.package-standalone .package-add-ons { grid-area: addons; align-self: start; }
+.package-standalone .package-actions { grid-area: actions; margin-top: 0.5rem; }
+.package-standalone .package-note { grid-area: note; }
+
+.package-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+@media (max-width: 1100px) {
+  .package-ladder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .package-ladder,
+  .package-standalone .package-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .package-standalone .package-card {
+    grid-template-areas: "header" "summary" "includes" "addons" "actions" "note";
+  }
+}
+
+/* ---------------------------------------------------------------
+   service-page aside and the Voice AI demo control
+   --------------------------------------------------------------- */
+.split-grid-aside .split-body {
+  grid-column: 1 / span 7;
+}
+
+.split-aside {
+  grid-column: 9 / span 4;
+  grid-row: 2;
+  position: sticky;
+  top: calc(var(--header-height, 4rem) + 1.5rem);
+  align-self: start;
+}
+
+.button-call {
+  gap: 0.6rem;
+}
+
+.button-call svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+  flex: none;
+}
+
+.button-call-number {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.demo-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.demo-card-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--step-h4);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+}
+
+.demo-card-number {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: var(--step-h3);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.demo-card-number:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+.demo-card-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+.cta-proof-call {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.cta-proof-call .cta-proof-fact {
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .split-grid-aside .split-body,
+  .split-aside {
+    grid-column: 1 / -1;
+  }
+
+  /* On narrow screens the demo card comes before the long read, not after it */
+  .split-aside {
+    position: static;
+    grid-row: auto;
+    order: -1;
+  }
+
+  .split-grid-aside > :first-child {
+    order: -2;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Contact page, form on the first screen
+   --------------------------------------------------------------- */
+.hero-compact {
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+main > .hero-compact.section:first-child {
+  padding-top: calc(clamp(2rem, 4vw, 3.5rem) + var(--header-height, 4rem));
+}
+
+.hero-compact .display-title {
+  font-size: var(--step-h2);
+  line-height: var(--leading-tight);
+}
+
+.hero-compact .lede {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.section-contact-first {
+  padding-top: 0;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.contact-details {
+  display: grid;
+  gap: 0.15rem;
+  padding-top: 0.5rem;
+}
+
+.contact-details .contact-kicker {
+  margin: 1rem 0 0;
+}
+
+.contact-details .contact-kicker:first-child {
+  margin-top: 0;
+}
+
+.contact-detail {
+  margin: 0;
+  font-size: var(--step-lede);
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.contact-detail a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-text);
+  text-underline-offset: 0.2em;
+}
+
+.contact-detail-note {
+  margin: 0.35rem 0 0;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+.contact-directions {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-accent);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+/* Form fields: visible required marker and helper lines */
+.field-required {
+  margin-left: 0.4rem;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.field-help {
+  margin: -0.15rem 0 0;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+.form-next-step {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--step-small);
+}
+
+@media (max-width: 960px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A compact hero sits right above content that starts at the left edge */
+.hero-compact.hero-section .hero-align-right .hero-copy {
+  margin-left: 0;
+  text-align: left;
+}
+
+/* ---------------------------------------------------------------
+   Footer with page links and contact details
+   --------------------------------------------------------------- */
+.site-footer {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: clamp(2.5rem, 5vw, 4rem) 0 3rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+}
+
+.footer-id .footer-copy {
+  margin-top: 0.5rem;
+}
+
+.footer-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-nav a,
+.footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.footer-nav a:hover,
+.footer-contact a:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.footer-nav a[aria-current="page"] {
+  color: var(--color-text);
+}
+
+.footer-contact p,
+.footer-contact address {
+  margin: 0;
+  color: var(--color-muted);
+  font-style: normal;
+}
+
+.footer-contact address {
+  margin-top: 0.6rem;
+  line-height: 1.5;
+}
+
+.footer-note {
+  font-size: var(--step-small);
+}
+
+.footer-contact .footer-social {
+  margin-top: 1rem;
+  gap: 0.25rem;
+}
+
+/* Social icons as 44px targets */
+.footer-social a {
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-left: -0.75rem;
+  margin-right: 0.75rem;
+}
+
+@media (max-width: 960px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------
+   Accessibility sweep
+   --------------------------------------------------------------- */
+
+/* Skip link: off screen until it takes focus */
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 3000;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+main:focus {
+  outline: none;
+}
+
+/* One brand focus ring for everything (was the browser default) */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.button:focus-visible {
+  outline-offset: 3px;
+  box-shadow: 0 0 0 1px var(--color-surface);
+}
+
+/* 44px targets for text links that stand alone (Verify, Get directions, sample links) */
+.preview-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+/* Carousel: 44px arrows and dots; the dot stays small, its target doesn't */
+.project-carousel-button {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.project-carousel-button:hover:not(:disabled),
+.project-carousel-button:focus-visible {
+  color: var(--color-page-bottom);
+}
+
+.project-carousel-dots {
+  gap: 0;
+}
+
+.project-carousel-dot {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: none;
+  opacity: 1;
+}
+
+.project-carousel-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: -0.3rem 0 0 -0.3rem;
+  border-radius: 50%;
+  background: var(--color-muted);
+  opacity: 0.45;
+}
+
+.project-carousel-dot[aria-current="true"] {
+  background: none;
+}
+
+.project-carousel-dot[aria-current="true"]::before {
+  background: var(--color-accent);
+  opacity: 1;
+}
+
+.back-to-top-link {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+/* Floating controls on phones: the chat button tucks away while the
+   reader scrolls down or types in a form (scripts.js sets .is-scrolling-down),
+   and back-to-top is left out, so neither sits on what is being read. */
+@media (max-width: 760px) {
+  .chat-reopen-button {
+    transition: transform 200ms ease, opacity 200ms ease;
+  }
+
+  body.is-scrolling-down .chat-widget:not(.is-open) .chat-reopen-button,
+  body:has(main input:focus, main textarea:focus) .chat-widget:not(.is-open) .chat-reopen-button {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(150%);
+  }
+
+  .back-to-top-link,
+  body:has(.chat-widget) .back-to-top-link {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-reopen-button {
+    transition: opacity 1ms;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Form validation and states
+   One accent, so an error is marked three ways: a thicker cyan border, a
+   ring-and-bar icon, and the message itself (5.4:1 on the card).
+   --------------------------------------------------------------- */
+.contact-form-row input[aria-invalid="true"],
+.contact-form-row textarea[aria-invalid="true"] {
+  border: 2px solid var(--color-accent);
+}
+
+.contact-form-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.15rem 0 0;
+  color: var(--color-accent);
+  font-size: var(--step-small);
+  font-weight: 700;
+}
+
+.contact-form-error::before {
+  content: "!";
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.05rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.contact-form-status {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--step-lede);
+}
+
+.contact-form-status:focus {
+  outline: none;
+}
+
+/* 44px targets: the wordmark link and short standalone links */
+.site-brand {
+  min-height: 2.75rem;
+}
+
+.preview-link {
+  min-width: 2.75rem;
+}
+
+/* Web interface guidelines pass */
+html {
+  color-scheme: dark;
+}
+
+a,
+button,
+input,
+textarea,
+summary {
+  touch-action: manipulation;
+}
+
+/* Anchored sections clear the fixed header */
+main section[id] {
+  scroll-margin-top: calc(var(--header-height, 4rem) + 1rem);
 }

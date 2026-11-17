@@ -4,8 +4,9 @@
     <p class="eyebrow">Testimonials</p>
     <h2 class="section-title">What clients say</h2>
     <div class="testimonial-grid">
-      @foreach ($testimonials as $testimonial)
-      <figure class="surface-card testimonial-card">
+      @php($featured = $testimonials->sortByDesc(fn ($testimonial) => mb_strlen($testimonial->body))->first())
+      @foreach ($testimonials->sortByDesc(fn ($testimonial) => $testimonial->is($featured)) as $testimonial)
+      <figure @class(['surface-card', 'testimonial-card', 'is-featured' => $testimonial->is($featured)])>
         @if ($testimonial->rating)
         <div class="testimonial-stars" role="img" aria-label="Rated {{ $testimonial->rating }} out of 5">
           @for ($star = 1; $star <= 5; $star++)

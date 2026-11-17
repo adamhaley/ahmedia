@@ -1,10 +1,13 @@
 @props(['eyebrow' => 'Fixed-price packages', 'heading' => 'Packages', 'packages'])
-<section class="section" id="packages">
+<section class="section section-major" id="packages">
   <div class="container">
     <p class="eyebrow">{{ $eyebrow }}</p>
     <h2 class="section-title">{{ $heading }}</h2>
-    <div class="package-grid">
-      @foreach ($packages as $package)
+    {{-- Fixed-scope offers sold on Upwork stand apart from the ladder of build packages --}}
+    @foreach (['package-grid package-ladder' => $packages->whereNull('upwork_url'), 'package-standalone' => $packages->whereNotNull('upwork_url')] as $groupClass => $group)
+    @if ($group->isNotEmpty())
+    <div class="{{ $groupClass }}">
+      @foreach ($group as $package)
       <article class="surface-card package-card" id="{{ $package->slug }}">
         <header class="package-header">
           <h3>{{ $package->title }}</h3>
@@ -40,16 +43,19 @@
         </div>
         @endif
         <div class="button-row package-actions">
-          <a class="button button-primary" href="/#contact">Start a Project</a>
           @if ($package->upwork_url)
-          <a class="button button-secondary" href="{{ $package->upwork_url }}" rel="noopener" target="_blank">Order on Upwork</a>
+          <a class="button button-primary" href="{{ $package->upwork_url }}" rel="noopener" target="_blank">Order on Upwork</a>
+          @else
+          <a class="button button-primary" href="/#contact">Start a Project</a>
+          @endif
+          @if ($package->sample_document)
+          <a class="button button-secondary package-sample" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($package->sample_document) }}" target="_blank">Download a sample report (PDF)</a>
           @endif
         </div>
-        @if ($package->sample_document)
-        <a class="preview-link package-sample" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($package->sample_document) }}" target="_blank">Download a sample report (PDF)</a>
-        @endif
       </article>
       @endforeach
     </div>
+    @endif
+    @endforeach
   </div>
 </section>
