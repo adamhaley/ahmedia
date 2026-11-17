@@ -19,7 +19,6 @@
 
   <x-cta-band
     heading="Let's talk about your project"
-    copy="Tell us what you're building - we'll tell you honestly whether AI is the right tool for it."
     buttonLabel="Start a Project"
     buttonHref="/#contact"
   />

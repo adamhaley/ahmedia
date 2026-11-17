@@ -79,7 +79,6 @@
   <x-cta-band
     eyebrow="Start a project"
     heading="Have something like this in mind?"
-    copy="Tell us what you're building - we'll tell you honestly whether AI is the right tool for it."
   />
   @endif
 </x-layouts.site>
