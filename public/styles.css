@@ -890,6 +890,44 @@ main > .section:first-child {
   max-width: 48rem;
 }
 
+/* Optional side image (service pages): beside the body on desktop, under the heading on mobile */
+.split-grid-image .split-body {
+  grid-column: 1 / span 7;
+}
+
+.split-image {
+  grid-column: 9 / span 4;
+  grid-row: 2;
+  align-self: start;
+}
+
+.split-image-headless {
+  grid-row: 1;
+}
+
+.split-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .split-grid-image .split-body,
+  .split-image {
+    grid-column: 1 / -1;
+  }
+
+  .split-image {
+    grid-row: auto;
+    order: -1;
+  }
+
+  .split-grid-image > :first-child {
+    order: -2;
+  }
+}
+
 /* Reading width for the logo page's story (pages/logo) */
 .logo-story > * {
   max-width: 44rem;

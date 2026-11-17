@@ -10,6 +10,8 @@
   @php
     $segments = collect($page->bodySegments());
     $placed = $segments->pluck('section')->filter();
+    $firstText = $segments->filter(fn ($segment) => $segment->section === null)->keys()->first();
+    $sideImage = $page->hero_image ? \Illuminate\Support\Facades\Storage::disk('public')->url($page->hero_image) : null;
     $lastText = $segments->filter(fn ($segment) => $segment->section === null)->keys()->last();
   @endphp
 
@@ -23,6 +25,8 @@
     :heading="$loop->first ? $page->section_heading : null"
     :body="$segment->markdown"
     :bullets="$index === $lastText ? $page->bullets : []"
+    :image="$index === $firstText ? $sideImage : null"
+    :image-alt="$page->hero_heading ?: $page->title"
   />
   @endif
   @endforeach

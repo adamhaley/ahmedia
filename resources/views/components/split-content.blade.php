@@ -1,6 +1,6 @@
-@props(['eyebrow' => null, 'heading' => null, 'body' => null, 'bullets' => [], 'stacked' => false])
+@props(['eyebrow' => null, 'heading' => null, 'body' => null, 'bullets' => [], 'stacked' => false, 'image' => null, 'imageAlt' => ''])
 <section class="section">
-  <div @class(['container', 'split-grid', 'split-grid-stacked' => $stacked])>
+  <div @class(['container', 'split-grid', 'split-grid-stacked' => $stacked, 'split-grid-image' => $image])>
     @if ($eyebrow || $heading)
     <div>
       @if ($eyebrow)
@@ -23,5 +23,10 @@
       </ul>
       @endif
     </div>
+    @if ($image)
+    <aside @class(['split-image', 'split-image-headless' => ! ($eyebrow || $heading)])>
+      <img src="{{ $image }}" alt="{{ $imageAlt }}" loading="lazy">
+    </aside>
+    @endif
   </div>
 </section>
