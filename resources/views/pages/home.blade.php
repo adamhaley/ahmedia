@@ -4,26 +4,19 @@
     accent=".ai"
     :tagline="$tagline"
     :copy="$page->hero_subheading"
+    :stance="$services?->body"
     :ring-style="$page->heroRingStyle()"
     :actions="[
         ['label' => 'Start a Project', 'href' => '#contact', 'variant' => 'primary'],
-        ['label' => 'What We Do', 'href' => '#services', 'variant' => 'secondary'],
     ]"
   />
 
   @if ($services)
-  <x-feature-grid
+  <x-service-rows
     eyebrow="What We Do"
-    :link-cards="true"
     :title="$services->section_heading ?? 'Three ways we help businesses run on AI'"
-    :copy="$services->body"
-    :items="$services->children->map(fn ($child) => [
-        'title' => $child->title,
-        'copy' => $child->card_excerpt,
-        'href' => $child->url(),
-        'linkLabel' => 'Learn more',
-    ])->all()"
-    :actions="[['label' => 'View All Services', 'href' => $services->url(), 'variant' => 'secondary']]"
+    :services="$services->children"
+    :link="['label' => 'View All Services', 'href' => $services->url()]"
   />
   @endif
 
@@ -33,6 +26,7 @@
     :heading="$page->section_heading"
     :body="$page->body"
     :bullets="$page->bullets"
+    :steps="['Discover what works', 'Remove what\'s in the way', 'Add the multiplier']"
     :actions="collect($page->buttons ?? [])->map(fn ($button) => ['label' => $button['label'], 'href' => $button['url'], 'variant' => $button['style'] ?? 'secondary'])->all()"
   />
   @endif

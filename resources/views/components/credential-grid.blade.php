@@ -12,13 +12,13 @@
           <img src="{{ $disk->url($credential->certificate_image) }}" alt="{{ $credential->name }} certificate" loading="lazy" />
         </a>
         @elseif ($credential->badge_image)
-        <img class="credential-badge" src="{{ $disk->url($credential->badge_image) }}" alt="" loading="lazy" />
+        <img class="credential-badge" src="{{ $disk->url($credential->badge_image) }}" alt="{{ $credential->name }} badge" loading="lazy" />
         @endif
         <div>
           <h3 class="credential-name">{{ $credential->name }}</h3>
           <p class="credential-meta">{{ $credential->issuer }}@if ($credential->issued_on) · {{ $credential->issued_on->format('M Y') }}@endif</p>
           @if ($credential->url)
-          <a class="preview-link" href="{{ $credential->url }}" rel="noopener" target="_blank">Verify</a>
+          <a class="preview-link" href="{{ $credential->url }}" rel="noopener" target="_blank">Verify<span class="sr-only"> {{ $credential->name }} (opens in a new tab)</span></a>
           @endif
         </div>
       </article>

@@ -12,6 +12,30 @@
 
 .hero-has-rings .hero-copy {
   position: relative;
+  isolation: isolate;
+}
+
+/*
+ * Keeps ring strokes off the h1 and lede: a feathered scrim in the page
+ * colour sits between the rings and the copy. It follows the copy's own box,
+ * so it holds for any title or lede length, and the rings keep their axis.
+ */
+.hero-has-rings .hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: -1.5rem -2rem;
+  z-index: -1;
+  background: color-mix(in srgb, var(--color-page-top) 88%, transparent);
+  border-radius: 3rem;
+  filter: blur(1.5rem);
+  pointer-events: none;
+}
+
+/* Phones: the copy spans the width, so a lighter scrim keeps the rings in view */
+@media (max-width: 760px) {
+  .hero-has-rings .hero-copy::before {
+    background: color-mix(in srgb, var(--color-page-top) 72%, transparent);
+  }
 }
 
 /* Full-hero layer, so the rings fade out at the edges instead of being cut off */
