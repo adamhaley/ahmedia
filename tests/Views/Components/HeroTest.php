@@ -112,4 +112,14 @@ class HeroTest extends TestCase
 
         $response->assertOk()->assertDontSee('hero-back', false);
     }
+
+    #[Test]
+    public function it_draws_a_left_pointing_arrow_in_the_back_button(): void
+    {
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true]);
+
+        $response = $this->get('/approach');
+
+        $response->assertOk()->assertSee('M17 10H5M9 5l-5 5 5 5', false);
+    }
 }

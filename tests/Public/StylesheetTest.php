@@ -84,10 +84,23 @@ class StylesheetTest extends TestCase
         $joined = implode("\n", $bodies);
 
         $this->assertStringContainsString('color: var(--color-accent)', $joined);
-        $this->assertMatchesRegularExpression(
-            '/border:[^;]*(currentColor|var\(--color-accent\))/',
-            $joined,
-        );
+        $this->assertStringContainsString('border: 1px solid var(--border-color-strong)', $joined);
+    }
+
+    #[Test]
+    public function it_highlights_the_hero_back_button_border_on_hover_and_focus(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $bodies = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array('.hero-back:hover', $selectors, true) && in_array('.hero-back:focus-visible', $selectors, true)) {
+                $bodies[] = $body;
+            }
+        }
+
+        $this->assertNotEmpty($bodies);
+        $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
     /**

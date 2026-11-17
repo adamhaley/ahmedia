@@ -33,7 +33,7 @@
       <div class="button-row">
         @if ($back)
         <a class="hero-back" href="{{ route('page.home') }}" aria-label="Back to home">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M17 10H5M9 5l-5 5 5 5"/></svg>
         </a>
         @endif
         @foreach ($actions as $action)
