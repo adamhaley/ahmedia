@@ -43,15 +43,14 @@
         </div>
         @endif
         <div class="button-row package-actions">
-          @if ($package->upwork_url)
-          <a class="button button-primary" href="{{ $package->upwork_url }}" rel="noopener" target="_blank">Order on Upwork</a>
-          @else
           <a class="button button-primary" href="/#contact">Start a Project</a>
-          @endif
-          @if ($package->sample_document)
-          <a class="button button-secondary package-sample" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($package->sample_document) }}" target="_blank">Download a sample report (PDF)</a>
+          @if ($package->upwork_url)
+          <a class="button button-secondary" href="{{ $package->upwork_url }}" rel="noopener" target="_blank">Order on Upwork</a>
           @endif
         </div>
+        @if ($package->sample_document)
+        <a class="preview-link package-sample" href="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($package->sample_document) }}" target="_blank">Download a sample report (PDF)</a>
+        @endif
       </article>
       @endforeach
     </div>

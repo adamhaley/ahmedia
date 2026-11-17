@@ -3234,7 +3234,7 @@ a.chat-option {
 .package-standalone .package-includes { grid-area: includes; }
 .package-standalone .package-add-ons { grid-area: addons; align-self: start; }
 .package-standalone .package-actions { grid-area: actions; margin-top: 0.5rem; }
-.package-standalone .package-note { grid-area: note; }
+.package-standalone .package-sample { grid-area: note; }
 
 .package-note {
   margin: 0;
