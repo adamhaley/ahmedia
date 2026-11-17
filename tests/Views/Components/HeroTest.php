@@ -80,4 +80,36 @@ class HeroTest extends TestCase
 
         $response->assertOk()->assertSee('--mach: 1.5;', false)->assertSee('--axis-mobile: 350', false);
     }
+
+    #[Test]
+    public function it_shows_a_back_to_home_button_on_a_sub_page(): void
+    {
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true]);
+
+        $response = $this->get('/approach');
+
+        $response->assertOk()
+            ->assertSee('class="hero-back"', false)
+            ->assertSee('href="'.route('page.home').'"', false);
+    }
+
+    #[Test]
+    public function it_places_the_back_button_before_the_first_cta(): void
+    {
+        Page::query()->create(['title' => 'Approach', 'slug' => 'approach', 'template' => PageTemplate::Standard, 'is_published' => true, 'buttons' => [['label' => 'Start a Project', 'url' => '#contact', 'style' => 'primary']]]);
+
+        $response = $this->get('/approach');
+
+        $response->assertOk()->assertSeeInOrder(['class="hero-back"', 'Start a Project'], false);
+    }
+
+    #[Test]
+    public function it_shows_no_back_button_on_the_homepage(): void
+    {
+        Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()->assertDontSee('hero-back', false);
+    }
 }

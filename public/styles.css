@@ -563,6 +563,26 @@ a {
   transform: translateY(-1px);
 }
 
+.hero-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.hero-back:hover {
+  transform: translateY(-1px);
+  background: var(--color-strong-surface);
+}
+
 .button-primary {
   background: var(--color-text);
   color: var(--color-surface);
