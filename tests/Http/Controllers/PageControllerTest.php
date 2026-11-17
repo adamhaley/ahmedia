@@ -649,11 +649,11 @@ class PageControllerTest extends TestCase
     #[Test]
     public function it_shows_the_hero_points_under_the_button_with_links(): void
     {
-        $home = $this->homePage(['hero_points' => ['Seven five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);
+        $home = $this->homePage(['hero_points' => ['Five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);
 
         $response = $this->get($home->url());
 
-        $response->assertOk()->assertSeeInOrder(['proof-line', 'Seven five-star client reviews', '<a href="tel:+17653075537">(765) 307-5537</a>'], false);
+        $response->assertOk()->assertSeeInOrder(['proof-line', 'Five-star client reviews', '<a href="tel:+17653075537">(765) 307-5537</a>'], false);
     }
 
     #[Test]

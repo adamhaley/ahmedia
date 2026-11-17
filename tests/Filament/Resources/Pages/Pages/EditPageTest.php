@@ -42,13 +42,13 @@ class EditPageTest extends TestCase
 
         Livewire::actingAs($this->admin())
             ->test(EditPage::class, ['record' => $home->getKey()])
-            ->fillForm(['hero_points' => [['point' => 'Seven five-star client reviews'], ['point' => "n8n's Foundations pathway"]]])
+            ->fillForm(['hero_points' => [['point' => 'Five-star client reviews'], ['point' => "n8n's Foundations pathway"]]])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $undoRepeaterFake();
 
-        $this->assertSame(['Seven five-star client reviews', "n8n's Foundations pathway"], $home->fresh()->hero_points);
+        $this->assertSame(['Five-star client reviews', "n8n's Foundations pathway"], $home->fresh()->hero_points);
     }
 
     #[Test]
