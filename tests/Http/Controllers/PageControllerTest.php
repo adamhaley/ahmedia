@@ -15,6 +15,7 @@ use App\Models\ProjectImage;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -50,6 +51,27 @@ class PageControllerTest extends TestCase
         $response = $this->get($this->homePage()->url());
 
         $response->assertOk()->assertDontSee('proof-line', false);
+    }
+
+    #[Test]
+    public function it_shows_a_service_pages_side_image_in_an_aside(): void
+    {
+        $page = $this->servicePage(['section_heading' => 'Automation', 'hero_heading' => 'Automate it', 'hero_image' => 'pages/side.webp']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()
+            ->assertSee('<aside class="split-image">', false)
+            ->assertSee('src="'.Storage::disk('public')->url('pages/side.webp').'"', false)
+            ->assertSee('alt="Automate it"', false);
+    }
+
+    #[Test]
+    public function it_renders_no_side_image_aside_without_a_hero_image(): void
+    {
+        $response = $this->get($this->servicePage()->url());
+
+        $response->assertOk()->assertDontSee('split-image', false);
     }
 
     #[Test]
