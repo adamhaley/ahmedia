@@ -573,7 +573,7 @@ a {
   border-radius: 50%;
   border: 1px solid currentColor;
   background: transparent;
-  color: inherit;
+  color: var(--color-accent);
   text-decoration: none;
   transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
 }
