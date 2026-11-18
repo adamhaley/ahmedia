@@ -132,6 +132,24 @@ class StylesheetTest extends TestCase
         }
     }
 
+    #[Test]
+    public function it_outlines_the_primary_button_in_the_accent_colour(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $bodies = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array('.button-primary', $selectors, true)) {
+                $bodies[] = $body;
+            }
+        }
+
+        $this->assertNotEmpty($bodies);
+        $joined = implode("\n", $bodies);
+        $this->assertMatchesRegularExpression('/border:\s*[^;]*var\(--color-accent\)[^;]*;/', $joined);
+        $this->assertMatchesRegularExpression('/background:\s*var\(--color-button-primary\);/', $joined);
+    }
+
     /**
      * @return list<array{0: list<string>, 1: string}>
      */
