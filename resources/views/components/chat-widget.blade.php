@@ -1,7 +1,14 @@
 <div class="chat-widget">
   <script type="application/json" class="chat-faq-data">{!! \Illuminate\Support\Js::encode($chatFaqs) !!}</script>
-  <div class="chat-container">
-    <button class="chat-close-button" type="button" aria-label="Close chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+  <div class="chat-container" role="dialog" aria-label="AH Media assistant">
+    <div class="chat-header">
+      <span class="chat-header-mark" aria-hidden="true"></span>
+      <div class="chat-header-text">
+        <p class="chat-header-title">AH Media assistant</p>
+        <p class="chat-header-note">Answers from our FAQ</p>
+      </div>
+      <button class="chat-close-button" type="button" aria-label="Close chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+    </div>
     <div class="chat-messages" role="log" aria-label="Chat messages" aria-live="polite"></div>
     <div class="chat-input-row">
       <label class="sr-only" for="chat-input">Message the FAQ assistant</label>
