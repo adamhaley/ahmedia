@@ -103,6 +103,34 @@ class StylesheetTest extends TestCase
         $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
+    public static function primaryButtonSelectorProvider(): Generator
+    {
+        yield 'primary button' => ['.button-primary'];
+        yield 'masthead primary button' => ['.gradient-masthead .button-primary'];
+    }
+
+    #[Test]
+    #[DataProvider('primaryButtonSelectorProvider')]
+    public function it_draws_the_primary_button_in_neutral_grey(string $selector): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $this->assertStringContainsString('--color-button-primary: #d4d6d6;', $css);
+
+        $backgrounds = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array($selector, $selectors, true) && preg_match('/background:\s*([^;]+);/', $body, $m)) {
+                $backgrounds[] = trim($m[1]);
+            }
+        }
+
+        $this->assertNotEmpty($backgrounds);
+        foreach ($backgrounds as $background) {
+            $this->assertNotContains($background, ['var(--color-text)', '#fff', '#ffffff']);
+            $this->assertContains($background, ['var(--color-button-primary)', '#d4d6d6']);
+        }
+    }
+
     /**
      * @return list<array{0: list<string>, 1: string}>
      */
