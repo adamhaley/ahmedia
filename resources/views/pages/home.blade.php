@@ -27,7 +27,7 @@
     :heading="$page->section_heading"
     :body="$page->body"
     :bullets="$page->bullets"
-    :steps="['Discover what works', 'Remove what\'s in the way', 'Add the multiplier']"
+    :steps="$page->approach_steps ?: \App\Models\Page::DefaultApproachSteps"
     :actions="collect($page->buttons ?? [])->map(fn ($button) => ['label' => $button['label'], 'href' => $button['url'], 'variant' => $button['style'] ?? 'secondary'])->all()"
   />
   @endif
