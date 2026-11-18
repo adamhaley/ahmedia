@@ -317,13 +317,13 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_shows_active_credentials_on_the_about_page(): void
+    public function it_leaves_certifications_off_the_about_page(): void
     {
         Credential::factory()->create(['name' => 'N8N101 Essentials', 'issuer' => 'n8n']);
 
         $response = $this->get($this->aboutPage()->url());
 
-        $response->assertOk()->assertSee('N8N101 Essentials')->assertSee('n8n');
+        $response->assertOk()->assertDontSee('N8N101 Essentials');
     }
 
     #[Test]
@@ -337,19 +337,9 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_keeps_featured_credentials_out_of_the_badge_grid(): void
-    {
-        Credential::factory()->featured()->create();
-
-        $response = $this->get($this->aboutPage()->url());
-
-        $response->assertOk()->assertDontSee('id="credentials"', false);
-    }
-
-    #[Test]
     public function it_hides_inactive_credentials(): void
     {
-        Credential::factory()->inactive()->create(['name' => 'Retired Certificate']);
+        Credential::factory()->featured()->inactive()->create(['name' => 'Retired Certificate']);
 
         $response = $this->get($this->aboutPage()->url());
 
