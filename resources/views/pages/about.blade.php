@@ -1,5 +1,5 @@
 @php($disk = \Illuminate\Support\Facades\Storage::disk('public'))
-@php([$stats, $certifications] = $credentials->partition(fn ($credential) => $credential->is_featured))
+@php($stats = $credentials->where('is_featured', true))
 <x-layouts.site :page="$page">
   <x-hero
     :ring-style="$page->heroRingStyle()"
@@ -65,10 +65,6 @@
       </div>
     </div>
   </section>
-  @endif
-
-  @if ($certifications->isNotEmpty())
-  <x-credential-grid :credentials="$certifications" />
   @endif
 
   <x-cta-band
