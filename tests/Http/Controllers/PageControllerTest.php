@@ -736,11 +736,11 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_keeps_the_contact_hero_free_of_buttons_with_the_back_link_on_the_right(): void
+    public function it_keeps_the_contact_hero_free_of_buttons(): void
     {
         $response = $this->get($this->contactPage()->url());
 
-        $response->assertOk()->assertSee('button-row button-row-end', false);
+        $response->assertOk()->assertDontSee('hero-back', false);
     }
 
     #[Test]
