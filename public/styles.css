@@ -650,8 +650,8 @@ a {
   --color-muted: rgba(255, 255, 255, 0.82);
   --color-accent: #00ffff;
   --color-accent-2: #00cccc;
-  --color-button-primary: #d4d6d6;
-  --color-button-primary-text: #004a4a;
+  --color-button-primary: #6b7075;
+  --color-button-primary-text: #ffffff;
   --border-color: rgba(255, 255, 255, 0.15);
   --border-color-strong: rgba(255, 255, 255, 0.3);
   --neon-pink: #ff00ff;
