@@ -3487,20 +3487,24 @@ main > .hero-compact.section:first-child {
 
 /* Social links beside the contact details: round outlined buttons, like the hero back link */
 .contact-social {
-  gap: 0.6rem;
+  gap: 0.5rem;
   padding-top: 0.5rem;
 }
 
 .contact-details .contact-social a {
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 1.375rem;
+  height: 1.375rem;
   border: 1px solid var(--border-color-strong);
   margin: 0;
   border-radius: 50%;
   color: var(--color-accent);
   transition: border-color 180ms ease, color 180ms ease;
+}
+
+.contact-details .contact-social svg {
+  height: 0.65rem;
 }
 
 .contact-details .contact-social a:hover,
