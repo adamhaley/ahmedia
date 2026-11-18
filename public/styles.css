@@ -3485,9 +3485,28 @@ main > .hero-compact.section:first-child {
   margin-top: 0;
 }
 
-/* Social links beside the contact details reuse the footer's icon row */
+/* Social links beside the contact details: round outlined buttons, like the hero back link */
 .contact-social {
+  gap: 0.6rem;
   padding-top: 0.5rem;
+}
+
+.contact-details .contact-social a {
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border-color-strong);
+  margin: 0;
+  border-radius: 50%;
+  color: var(--color-accent);
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.contact-details .contact-social a:hover,
+.contact-details .contact-social a:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-text);
 }
 
 /* Contact details on Contact, and the portrait column on About, stay in view
