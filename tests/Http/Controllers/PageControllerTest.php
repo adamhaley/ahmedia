@@ -59,6 +59,14 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_links_the_favicons(): void
+    {
+        $response = $this->get($this->homePage()->url());
+
+        $response->assertOk()->assertSee(['href="/favicon.svg"', 'href="/apple-touch-icon.png"'], false);
+    }
+
+    #[Test]
     public function it_leaves_out_the_hero_points_when_there_are_none(): void
     {
         $response = $this->get($this->homePage()->url());
