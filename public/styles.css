@@ -631,6 +631,29 @@ a {
   box-shadow: inset 0 1px 0 #ffffff, inset 0 -3px 8px rgba(0, 120, 120, 0.14), 0 6px 26px rgba(0, 255, 255, 0.34);
 }
 
+/* The back-to-top triangle turned to point forward, punched out in the page colour;
+   it leans right on hover as the back button leans left */
+.button-arrow {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-left: 0.4rem;
+  margin-right: -0.2rem;
+  fill: var(--color-page-top);
+  transition: transform 180ms ease;
+}
+
+.button:hover .button-arrow,
+.button:focus-visible .button-arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-arrow {
+    transition: none;
+  }
+}
+
 .button-secondary {
   background: var(--color-strong-surface);
   color: var(--color-text);
