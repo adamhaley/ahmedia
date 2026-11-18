@@ -11,6 +11,7 @@ use App\Filament\Resources\Pages\RelationManagers\ChildPagesRelationManager;
 use App\Filament\Resources\Pages\RelationManagers\PackagesRelationManager;
 use App\Models\DopplerRingStyle;
 use App\Models\Page;
+use App\Models\Testimonial;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -223,6 +224,24 @@ class PageResource extends Resource
                         ->placeholder(Page::DefaultCtaCopy)
                         ->rows(2)
                         ->columnSpanFull(),
+                    Select::make('cta_testimonial_id')
+                        ->label('Quote beside the button')
+                        ->relationship('ctaTestimonial', 'name')
+                        ->getOptionLabelFromRecordUsing(fn (Testimonial $testimonial): string => "{$testimonial->name} ({$testimonial->project})")
+                        ->placeholder('No quote')
+                        ->helperText('A client quote shown next to the call to action. Hidden if the testimonial is turned off.')
+                        ->columnSpanFull(),
+                ]),
+
+            Section::make('Side card')
+                ->description('A small card in the right column beside the page body, which stays in view as visitors scroll. Leave the title empty to hide it.')
+                ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Service)
+                ->columns(2)
+                ->schema([
+                    TextInput::make('side_card.title')->label('Title')->placeholder('Hear it for yourself'),
+                    TextInput::make('side_card.note')->label('Note'),
+                    TextInput::make('side_card.link_label')->label('Link text')->placeholder('(765) 307-5537'),
+                    TextInput::make('side_card.link_url')->label('Link')->placeholder('tel:+17653075537'),
                 ]),
 
             Section::make('Search engines')->collapsed()->schema([

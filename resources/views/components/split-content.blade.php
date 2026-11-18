@@ -1,6 +1,9 @@
-@props(['eyebrow' => null, 'heading' => null, 'body' => null, 'bullets' => [], 'stacked' => false, 'image' => null, 'imageAlt' => ''])
+@props(['eyebrow' => null, 'heading' => null, 'body' => null, 'bullets' => [], 'stacked' => false, 'image' => null, 'imageAlt' => '', 'card' => null])
 <section class="section">
-  <div @class(['container', 'split-grid', 'split-grid-stacked' => $stacked, 'split-grid-image' => $image])>
+@php
+  $card = filled($card['title'] ?? null) ? $card : null;
+@endphp
+  <div @class(['container', 'split-grid', 'split-grid-stacked' => $stacked, 'split-grid-image' => $image && ! $card, 'split-grid-aside' => $card])>
     @if ($eyebrow || $heading)
     <div>
       @if ($eyebrow)
@@ -23,9 +26,22 @@
       </ul>
       @endif
     </div>
-    @if ($image)
-    <aside @class(['split-image', 'split-image-headless' => ! ($eyebrow || $heading)])>
+    @if ($image || $card)
+    <aside @class(['split-image' => ! $card, 'split-aside' => $card, 'split-image-headless' => ! ($eyebrow || $heading)])>
+      @if ($image)
       <img src="{{ $image }}" alt="{{ $imageAlt }}" loading="lazy">
+      @endif
+      @if ($card)
+      <div class="surface-card demo-card">
+        <p class="demo-card-title">{{ $card['title'] }}</p>
+        @if (filled($card['link_label'] ?? null) && filled($card['link_url'] ?? null))
+        <a class="demo-card-number" href="{{ $card['link_url'] }}">{{ $card['link_label'] }}</a>
+        @endif
+        @if (filled($card['note'] ?? null))
+        <p class="demo-card-note">{{ $card['note'] }}</p>
+        @endif
+      </div>
+      @endif
     </aside>
     @endif
   </div>

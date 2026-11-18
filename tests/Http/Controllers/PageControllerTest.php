@@ -727,6 +727,72 @@ class PageControllerTest extends TestCase
         $response->assertOk()->assertSee(Page::DefaultCtaCopy);
     }
 
+    #[Test]
+    public function it_offers_start_a_project_in_every_hero_by_default(): void
+    {
+        $response = $this->get($this->aboutPage()->url());
+
+        $response->assertOk()->assertSeeInOrder(['hero-section', 'hero-back', 'Start a Project'], false);
+    }
+
+    #[Test]
+    public function it_keeps_the_contact_hero_free_of_buttons_with_the_back_link_on_the_right(): void
+    {
+        $response = $this->get($this->contactPage()->url());
+
+        $response->assertOk()->assertSee('button-row button-row-end', false);
+    }
+
+    #[Test]
+    public function it_shows_the_chosen_quote_beside_the_call_to_action(): void
+    {
+        $testimonial = Testimonial::factory()->create(['body' => 'Worked first time.', 'name' => 'Ronnie A.', 'project' => 'n8n workflow automation']);
+        $page = $this->servicePage(['cta_heading' => 'Ready?', 'cta_testimonial_id' => $testimonial->id]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['cta-proof', 'Worked first time.', 'Ronnie A.', 'n8n workflow automation'], false);
+    }
+
+    #[Test]
+    public function it_hides_the_quote_when_its_testimonial_is_turned_off(): void
+    {
+        $testimonial = Testimonial::factory()->inactive()->create(['body' => 'Switched off.']);
+        $page = $this->servicePage(['cta_heading' => 'Ready?', 'cta_testimonial_id' => $testimonial->id]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('Switched off.');
+    }
+
+    #[Test]
+    public function it_shows_the_side_card_beside_the_service_body(): void
+    {
+        $page = $this->servicePage([
+            'section_heading' => 'Fewer missed calls',
+            'body' => 'Your AI receptionist answers on a real phone number.',
+            'side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'A demo receptionist.'],
+        ]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['split-aside', 'Hear it for yourself', 'href="tel:+17653075537"', 'A demo receptionist.'], false);
+    }
+
+    #[Test]
+    public function it_leaves_out_a_side_card_without_a_title(): void
+    {
+        $page = $this->servicePage([
+            'section_heading' => 'Fewer missed calls',
+            'body' => 'Your AI receptionist answers on a real phone number.',
+            'side_card' => ['note' => 'A demo receptionist.'],
+        ]);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertDontSee('demo-card', false);
+    }
+
     private function caseStudiesPage(): Page
     {
         return Page::query()->create(['title' => 'Case Studies', 'slug' => 'case-studies', 'template' => PageTemplate::CaseStudiesIndex, 'is_published' => true]);

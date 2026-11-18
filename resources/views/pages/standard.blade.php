@@ -10,7 +10,7 @@
     :eyebrow="$page->section_eyebrow"
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"
-    :actions="collect($page->buttons ?? [])->map(fn ($button) => ['label' => $button['label'], 'href' => $button['url'], 'variant' => $button['style'] ?? 'secondary'])->all()"
+    :actions="collect($page->buttons ?? [])->map(fn ($button) => ['label' => $button['label'], 'href' => $button['url'], 'variant' => $button['style'] ?? 'secondary'])->all() ?: null"
   />
 
   @if ($page->section_heading)
@@ -25,6 +25,7 @@
     :eyebrow="$page->cta_eyebrow"
     :heading="$page->cta_heading"
     :copy="$page->cta_copy"
+    :testimonial="$page->ctaTestimonial"
     :buttonLabel="$page->cta_button_label"
     buttonHref="/#contact"
   />

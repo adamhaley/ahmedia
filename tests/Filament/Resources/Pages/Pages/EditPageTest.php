@@ -52,6 +52,20 @@ class EditPageTest extends TestCase
     }
 
     #[Test]
+    public function it_saves_the_side_card_on_a_service_page(): void
+    {
+        $page = Page::query()->create(['title' => 'Voice AI', 'slug' => 'voice-ai', 'template' => PageTemplate::Service, 'is_published' => true]);
+
+        Livewire::actingAs($this->admin())
+            ->test(EditPage::class, ['record' => $page->getKey()])
+            ->fillForm(['side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'A demo receptionist.']])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('Hear it for yourself', $page->fresh()->side_card['title']);
+    }
+
+    #[Test]
     public function it_shows_no_rings_as_chosen_when_editing_a_page_with_rings_off(): void
     {
         $page = $this->childOfPageWithRings();
