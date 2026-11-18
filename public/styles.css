@@ -3485,6 +3485,49 @@ main > .hero-compact.section:first-child {
   margin-top: 0;
 }
 
+/* Social links beside the contact details: round outlined buttons, like the hero back link */
+.contact-social {
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.contact-details .contact-social a {
+  align-items: center;
+  justify-content: center;
+  width: 2.0625rem;
+  height: 2.0625rem;
+  border: 1px solid var(--border-color-strong);
+  margin: 0;
+  border-radius: 50%;
+  color: var(--color-accent);
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.contact-details .contact-social svg {
+  height: 0.9rem;
+}
+
+.contact-details .contact-social a:hover,
+.contact-details .contact-social a:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* Contact details on Contact, and the portrait column on About, stay in view
+   while the longer column beside them scrolls past (desktop only) */
+@media (min-width: 961px) {
+  .contact-layout > .contact-details,
+  .about-aside {
+    position: sticky;
+    top: calc(var(--header-height, 4rem) + 1.5rem);
+    align-self: start;
+  }
+}
+
+.about-aside .contact-details {
+  margin-top: 1.5rem;
+}
+
 .contact-detail {
   margin: 0;
   font-size: var(--step-lede);
