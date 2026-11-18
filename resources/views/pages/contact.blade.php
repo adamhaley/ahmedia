@@ -12,21 +12,7 @@
   />
   <x-contact-form heading="Send a message" copy="">
     <x-slot:aside>
-      <aside class="contact-details" aria-label="Contact details">
-        @if ($settings->contact_email)
-        <p class="contact-kicker">Email</p>
-        <p class="contact-detail"><a href="mailto:{{ $settings->contact_email }}">{{ $settings->contact_email }}</a></p>
-        @endif
-        @if ($settings->phone)
-        <p class="contact-kicker">Phone</p>
-        <p class="contact-detail"><a href="tel:{{ preg_replace('/[^\d+]/', '', $settings->phone) }}">{{ $settings->phone }}</a></p>
-        @endif
-        @if ($settings->address)
-        <p class="contact-kicker">Visit</p>
-        <address class="contact-detail">{!! preg_replace('/, /', '<br />', e($settings->address), 1) !!}</address>
-        <a class="contact-directions" href="https://www.google.com/maps/search/?api=1&amp;query={{ urlencode($settings->address) }}" rel="noopener" target="_blank">Get directions<span class="sr-only"> to {{ $settings->address }} (opens in a new tab)</span></a>
-        @endif
-      </aside>
+      <x-contact-details :settings="$settings" />
     </x-slot:aside>
   </x-contact-form>
 

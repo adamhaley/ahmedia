@@ -442,6 +442,17 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_the_contact_details_and_socials_under_the_about_portrait(): void
+    {
+        SiteSetting::current()->update(['contact_email' => 'adam@example.com', 'instagram_url' => 'https://instagram.com/ahmedia.ai']);
+        $page = $this->aboutPage(['section_heading' => 'Adam Haley', 'body' => 'The story.']);
+
+        $response = $this->get($page->url());
+
+        $response->assertOk()->assertSeeInOrder(['about-aside', 'Adam Haley', 'contact-details', 'adam@example.com', 'https://instagram.com/ahmedia.ai', 'The story.'], false);
+    }
+
+    #[Test]
     public function it_lists_published_posts_newest_first_on_the_blog_index(): void
     {
         Post::factory()->create(['title' => 'Older post', 'published_at' => now()->subWeek()]);

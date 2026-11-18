@@ -3485,6 +3485,26 @@ main > .hero-compact.section:first-child {
   margin-top: 0;
 }
 
+/* Social links beside the contact details reuse the footer's icon row */
+.contact-social {
+  padding-top: 0.5rem;
+}
+
+/* Contact details on Contact, and the portrait column on About, stay in view
+   while the longer column beside them scrolls past (desktop only) */
+@media (min-width: 961px) {
+  .contact-layout > .contact-details,
+  .about-aside {
+    position: sticky;
+    top: calc(var(--header-height, 4rem) + 1.5rem);
+    align-self: start;
+  }
+}
+
+.about-aside .contact-details {
+  margin-top: 1.5rem;
+}
+
 .contact-detail {
   margin: 0;
   font-size: var(--step-lede);

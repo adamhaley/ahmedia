@@ -40,7 +40,7 @@
   @if ($page->section_heading || $page->body)
   <section class="section">
     <div class="container split-grid">
-      <div>
+      <div class="about-aside">
         @if ($page->circle_image)
         <figure class="spotlight-media-circle about-portrait">
           <img src="{{ $disk->url($page->circle_image) }}" alt="{{ $page->circle_image_alt }}" />
@@ -49,6 +49,7 @@
         @if ($page->section_heading)
         <h2 class="section-title">{{ $page->section_heading }}</h2>
         @endif
+        <x-contact-details :settings="$settings" :address="false" />
       </div>
       <div class="split-body">
         @if ($page->body)

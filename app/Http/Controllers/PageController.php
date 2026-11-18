@@ -48,6 +48,7 @@ class PageController extends Controller
             ],
             PageTemplate::About => [
                 'credentials' => Credential::query()->active()->get(),
+                'settings' => SiteSetting::current(),
             ],
             PageTemplate::ServicesIndex => [
                 'page' => $page->load(['children' => fn ($query) => $query->where('is_published', true)]),
