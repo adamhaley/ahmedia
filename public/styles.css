@@ -556,7 +556,7 @@ a {
   border: 0;
   text-decoration: none;
   font-weight: 700;
-  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .button:hover {
@@ -600,9 +600,35 @@ a {
 }
 
 .button-primary {
-  background: var(--color-button-primary);
-  border: 1px solid var(--color-accent);
-  color: var(--color-button-primary-text);
+  /* Cyan glass: the accent tinted over whatever sits behind it (Adam, 2026-11-18) */
+  background: var(--button-glass);
+  border: 1px solid rgba(0, 255, 255, 0.55);
+  color: var(--color-text);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 18px rgba(0, 255, 255, 0.16);
+}
+
+.button-primary:hover,
+.button-primary:focus-visible {
+  background: var(--button-glass-hover);
+  border-color: var(--color-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 24px rgba(0, 255, 255, 0.3);
+}
+
+.hero-section .button-primary {
+  /* The hero's one action is pearl: white, with a cyan sheen that echoes the rings */
+  background: var(--button-pearl);
+  border-color: rgba(0, 255, 255, 0.45);
+  color: var(--color-page-bottom);
+  box-shadow: inset 0 1px 0 #ffffff, inset 0 -3px 8px rgba(0, 120, 120, 0.18), 0 4px 16px rgba(0, 255, 255, 0.18);
+}
+
+.hero-section .button-primary:hover,
+.hero-section .button-primary:focus-visible {
+  background: var(--button-pearl);
+  border-color: var(--color-accent);
+  box-shadow: inset 0 1px 0 #ffffff, inset 0 -3px 8px rgba(0, 120, 120, 0.14), 0 6px 26px rgba(0, 255, 255, 0.34);
 }
 
 .button-secondary {
@@ -651,8 +677,9 @@ a {
   --color-muted: rgba(255, 255, 255, 0.82);
   --color-accent: #00ffff;
   --color-accent-2: #00cccc;
-  --color-button-primary: #6b7075;
-  --color-button-primary-text: #ffffff;
+  --button-glass: linear-gradient(180deg, rgba(0, 255, 255, 0.2) 0%, rgba(0, 255, 255, 0.08) 100%);
+  --button-glass-hover: linear-gradient(180deg, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0.14) 100%);
+  --button-pearl: radial-gradient(120% 140% at 30% 0%, #ffffff 0%, #eefcfc 45%, #cfeaea 100%);
   --border-color: rgba(255, 255, 255, 0.15);
   --border-color-strong: rgba(255, 255, 255, 0.3);
   --neon-pink: #ff00ff;
@@ -1503,8 +1530,8 @@ main > .section:first-child {
 }
 
 .gradient-masthead .button-primary {
-  background: var(--color-button-primary);
-  color: var(--color-button-primary-text);
+  background: var(--button-pearl);
+  color: var(--color-page-bottom);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
