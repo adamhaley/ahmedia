@@ -67,6 +67,26 @@ class PageControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_shows_the_approach_steps_from_the_cms(): void
+    {
+        $home = $this->homePage(['section_heading' => 'Intelligence on tap', 'approach_steps' => ['Listen first', 'Then build']]);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSeeInOrder(['approach-steps', 'Listen first', 'Then build']);
+    }
+
+    #[Test]
+    public function it_falls_back_to_the_default_approach_steps(): void
+    {
+        $home = $this->homePage(['section_heading' => 'Intelligence on tap']);
+
+        $response = $this->get($home->url());
+
+        $response->assertOk()->assertSeeInOrder(Page::DefaultApproachSteps);
+    }
+
+    #[Test]
     public function it_shows_a_service_pages_side_image_in_an_aside(): void
     {
         $page = $this->servicePage(['section_heading' => 'Automation', 'hero_heading' => 'Automate it', 'hero_image' => 'pages/side.webp']);

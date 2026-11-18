@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property list<string>|null $bullets
+ * @property list<string>|null $approach_steps
  * @property list<string>|null $hero_points
  * @property array{title?: ?string, link_label?: ?string, link_url?: ?string, note?: ?string}|null $side_card
  * @property list<array<string, string>>|null $buttons
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'parent_id', 'title', 'slug', 'template', 'doppler_ring_style_id', 'hide_doppler_rings', 'sort_order', 'is_published', 'show_in_nav', 'nav_anchor',
     'meta_title', 'meta_description', 'hero_heading', 'hero_subheading', 'hero_points', 'hero_image', 'side_card', 'og_image',
-    'section_eyebrow', 'section_heading', 'body', 'bullets', 'buttons', 'circle_image', 'circle_image_alt',
+    'section_eyebrow', 'section_heading', 'body', 'bullets', 'approach_steps', 'buttons', 'circle_image', 'circle_image_alt',
     'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_copy', 'cta_button_label', 'cta_testimonial_id',
 ])]
 class Page extends Model
@@ -31,6 +32,7 @@ class Page extends Model
         return [
             'template' => PageTemplate::class,
             'bullets' => 'array',
+            'approach_steps' => 'array',
             'hero_points' => 'array',
             'side_card' => 'array',
             'buttons' => 'array',
@@ -108,6 +110,9 @@ class Page extends Model
     }
 
     /** The supporting line under a page's call-to-action heading when the CMS leaves it empty. */
+    /** The homepage approach diagram's steps while its field is empty */
+    public const DefaultApproachSteps = ['Discover what works', "Remove what's in the way", 'Add the multiplier'];
+
     public const DefaultCtaCopy = "Tell us about the bottleneck. You work directly with Adam, and we'll tell you honestly whether AI is the right tool for it.";
 
     /**

@@ -169,6 +169,14 @@ class PageResource extends Resource
                                 ->simple(TextInput::make('bullet')->required())
                                 ->reorderable()
                                 ->defaultItems(0),
+                            Repeater::make('approach_steps')
+                                ->label('Approach steps')
+                                ->helperText('The numbered steps in the rings diagram beside this section; each adds a ring. Up to 4. Leave empty for: '.implode(', ', Page::DefaultApproachSteps).'.')
+                                ->simple(TextInput::make('step')->required())
+                                ->reorderable()
+                                ->maxItems(4)
+                                ->defaultItems(0)
+                                ->visible(fn (Get $get): bool => self::template($get) === PageTemplate::Home),
                             Repeater::make('buttons')
                                 ->schema([
                                     TextInput::make('label')->required(),

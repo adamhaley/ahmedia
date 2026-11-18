@@ -52,6 +52,23 @@ class EditPageTest extends TestCase
     }
 
     #[Test]
+    public function it_saves_the_approach_steps_on_the_home_page(): void
+    {
+        $home = Page::query()->create(['title' => 'AH Media', 'template' => PageTemplate::Home, 'is_published' => true]);
+        $undoRepeaterFake = Repeater::fake();
+
+        Livewire::actingAs($this->admin())
+            ->test(EditPage::class, ['record' => $home->getKey()])
+            ->fillForm(['approach_steps' => [['step' => 'Listen first'], ['step' => 'Then build']]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $undoRepeaterFake();
+
+        $this->assertSame(['Listen first', 'Then build'], $home->fresh()->approach_steps);
+    }
+
+    #[Test]
     public function it_saves_the_side_card_on_a_service_page(): void
     {
         $page = Page::query()->create(['title' => 'Voice AI', 'slug' => 'voice-ai', 'template' => PageTemplate::Service, 'is_published' => true]);

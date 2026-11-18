@@ -57,6 +57,7 @@ class AhmediaContentSeeder extends Seeder
                     'Custom chat and RAG assistants trained on your own content',
                     'Static-first frontends that stay fast and cheap to run',
                 ],
+                'approach_steps' => Page::DefaultApproachSteps,
             ]
         );
 
