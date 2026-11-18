@@ -8,6 +8,7 @@
     :copy="$page->hero_subheading"
     compact
     :actions="[]"
+    :back="false"
   />
   <x-contact-form heading="Send a message" copy="">
     <x-slot:aside>
