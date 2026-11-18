@@ -103,20 +103,18 @@ class StylesheetTest extends TestCase
         $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
-    public static function primaryButtonSelectorProvider(): Generator
+    public static function primaryButtonFinishProvider(): Generator
     {
-        yield 'primary button' => ['.button-primary'];
-        yield 'masthead primary button' => ['.gradient-masthead .button-primary'];
+        yield 'primary button is cyan glass' => ['.button-primary', 'var(--button-glass)'];
+        yield 'hero primary button is pearl' => ['.hero-section .button-primary', 'var(--button-pearl)'];
+        yield 'masthead primary button is pearl' => ['.gradient-masthead .button-primary', 'var(--button-pearl)'];
     }
 
     #[Test]
-    #[DataProvider('primaryButtonSelectorProvider')]
-    public function it_draws_the_primary_button_in_neutral_grey(string $selector): void
+    #[DataProvider('primaryButtonFinishProvider')]
+    public function it_finishes_the_primary_button_in_glass_or_pearl(string $selector, string $background): void
     {
         $css = (string) file_get_contents(public_path('styles.css'));
-
-        $this->assertStringContainsString('--color-button-primary: #6b7075;', $css);
-        $this->assertStringContainsString('--color-button-primary-text: #ffffff;', $css);
 
         $backgrounds = [];
         foreach ($this->rules($css) as [$selectors, $body]) {
@@ -125,29 +123,22 @@ class StylesheetTest extends TestCase
             }
         }
 
-        $this->assertNotEmpty($backgrounds);
-        foreach ($backgrounds as $background) {
-            $this->assertNotContains($background, ['var(--color-text)', '#fff', '#ffffff']);
-            $this->assertContains($background, ['var(--color-button-primary)', '#6b7075']);
-        }
+        $this->assertSame([$background], $backgrounds);
     }
 
     #[Test]
-    public function it_outlines_the_primary_button_in_the_accent_colour(): void
+    public function it_lights_the_primary_button_border_on_hover_and_focus(): void
     {
         $css = (string) file_get_contents(public_path('styles.css'));
 
         $bodies = [];
         foreach ($this->rules($css) as [$selectors, $body]) {
-            if (in_array('.button-primary', $selectors, true)) {
+            if (in_array('.button-primary:hover', $selectors, true) && in_array('.button-primary:focus-visible', $selectors, true)) {
                 $bodies[] = $body;
             }
         }
 
-        $this->assertNotEmpty($bodies);
-        $joined = implode("\n", $bodies);
-        $this->assertMatchesRegularExpression('/border:\s*[^;]*var\(--color-accent\)[^;]*;/', $joined);
-        $this->assertMatchesRegularExpression('/background:\s*var\(--color-button-primary\);/', $joined);
+        $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
     /**
