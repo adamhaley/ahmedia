@@ -111,7 +111,7 @@ class Page extends Model
 
     /** The supporting line under a page's call-to-action heading when the CMS leaves it empty. */
     /** The homepage approach diagram's steps while its field is empty */
-    public const DefaultApproachSteps = ['Discover what works', "Remove what's in the way", 'Add the multiplier'];
+    public const DefaultApproachSteps = ['Discover what works', "Remove what's in the way", 'Install the multiplier'];
 
     public const DefaultCtaCopy = "Tell us about the bottleneck. You work directly with Adam, and we'll tell you honestly whether AI is the right tool for it.";
 
