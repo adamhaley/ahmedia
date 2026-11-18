@@ -600,8 +600,9 @@ a {
 }
 
 .button-primary {
-  background: var(--color-text);
-  color: var(--color-surface);
+  background: var(--color-button-primary);
+  border: 1px solid var(--color-accent);
+  color: var(--color-button-primary-text);
 }
 
 .button-secondary {
@@ -650,6 +651,8 @@ a {
   --color-muted: rgba(255, 255, 255, 0.82);
   --color-accent: #00ffff;
   --color-accent-2: #00cccc;
+  --color-button-primary: #6b7075;
+  --color-button-primary-text: #ffffff;
   --border-color: rgba(255, 255, 255, 0.15);
   --border-color-strong: rgba(255, 255, 255, 0.3);
   --neon-pink: #ff00ff;
@@ -1500,8 +1503,8 @@ main > .section:first-child {
 }
 
 .gradient-masthead .button-primary {
-  background: #fff;
-  color: var(--color-accent);
+  background: var(--color-button-primary);
+  color: var(--color-button-primary-text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }

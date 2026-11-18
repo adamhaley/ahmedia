@@ -26,6 +26,19 @@ class PageControllerTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
+    public function it_keeps_the_services_body_off_the_home_hero_but_on_the_services_page(): void
+    {
+        $body = 'Each engagement starts with a real bottleneck, not a technology mandate.';
+        $services = Page::query()->create(['title' => 'Services', 'slug' => 'services', 'template' => PageTemplate::ServicesIndex, 'is_published' => true, 'body' => $body]);
+
+        $home = $this->get($this->homePage()->url());
+        $index = $this->get($services->url());
+
+        $home->assertOk()->assertDontSee($body, false)->assertDontSee('hero-stance', false);
+        $index->assertOk()->assertSee($body, false);
+    }
+
+    #[Test]
     public function it_shows_the_hero_points_under_the_button_with_links(): void
     {
         $home = $this->homePage(['hero_points' => ['Five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);

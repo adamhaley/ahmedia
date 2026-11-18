@@ -103,6 +103,53 @@ class StylesheetTest extends TestCase
         $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
+    public static function primaryButtonSelectorProvider(): Generator
+    {
+        yield 'primary button' => ['.button-primary'];
+        yield 'masthead primary button' => ['.gradient-masthead .button-primary'];
+    }
+
+    #[Test]
+    #[DataProvider('primaryButtonSelectorProvider')]
+    public function it_draws_the_primary_button_in_neutral_grey(string $selector): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $this->assertStringContainsString('--color-button-primary: #6b7075;', $css);
+        $this->assertStringContainsString('--color-button-primary-text: #ffffff;', $css);
+
+        $backgrounds = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array($selector, $selectors, true) && preg_match('/background:\s*([^;]+);/', $body, $m)) {
+                $backgrounds[] = trim($m[1]);
+            }
+        }
+
+        $this->assertNotEmpty($backgrounds);
+        foreach ($backgrounds as $background) {
+            $this->assertNotContains($background, ['var(--color-text)', '#fff', '#ffffff']);
+            $this->assertContains($background, ['var(--color-button-primary)', '#6b7075']);
+        }
+    }
+
+    #[Test]
+    public function it_outlines_the_primary_button_in_the_accent_colour(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $bodies = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array('.button-primary', $selectors, true)) {
+                $bodies[] = $body;
+            }
+        }
+
+        $this->assertNotEmpty($bodies);
+        $joined = implode("\n", $bodies);
+        $this->assertMatchesRegularExpression('/border:\s*[^;]*var\(--color-accent\)[^;]*;/', $joined);
+        $this->assertMatchesRegularExpression('/background:\s*var\(--color-button-primary\);/', $joined);
+    }
+
     /**
      * @return list<array{0: list<string>, 1: string}>
      */
