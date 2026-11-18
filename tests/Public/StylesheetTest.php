@@ -115,7 +115,8 @@ class StylesheetTest extends TestCase
     {
         $css = (string) file_get_contents(public_path('styles.css'));
 
-        $this->assertStringContainsString('--color-button-primary: #d4d6d6;', $css);
+        $this->assertStringContainsString('--color-button-primary: #6b7075;', $css);
+        $this->assertStringContainsString('--color-button-primary-text: #ffffff;', $css);
 
         $backgrounds = [];
         foreach ($this->rules($css) as [$selectors, $body]) {
@@ -127,7 +128,7 @@ class StylesheetTest extends TestCase
         $this->assertNotEmpty($backgrounds);
         foreach ($backgrounds as $background) {
             $this->assertNotContains($background, ['var(--color-text)', '#fff', '#ffffff']);
-            $this->assertContains($background, ['var(--color-button-primary)', '#d4d6d6']);
+            $this->assertContains($background, ['var(--color-button-primary)', '#6b7075']);
         }
     }
 
