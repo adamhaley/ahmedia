@@ -1,5 +1,7 @@
-@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => [], 'points' => [], 'ringStyle' => null, 'compact' => false, 'back' => true])
+@props(['eyebrow' => null, 'title', 'accent' => null, 'tagline' => null, 'copy' => null, 'stance' => null, 'actions' => null, 'points' => [], 'ringStyle' => null, 'compact' => false, 'back' => true])
 @php
+  // Every hero offers "Start a Project" unless a page passes its own actions ([] for none)
+  $actions ??= [['label' => 'Start a Project', 'href' => '/#contact', 'variant' => 'primary']];
   $rings = $ringStyle?->settings;
   $pin = $rings?->motion === \App\Enums\HeroRingsMotion::Scroll;
 @endphp
@@ -30,7 +32,7 @@
       <p class="hero-stance">{{ $stance }}</p>
       @endif
       @if ($back || count($actions))
-      <div class="button-row">
+      <div @class(['button-row', 'button-row-end' => ! count($actions)])>
         @if ($back)
         <a class="hero-back" href="{{ route('page.home') }}" aria-label="Back to home">
           <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M17 10H5M9 5l-5 5 5 5"/></svg>

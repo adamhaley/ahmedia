@@ -7,6 +7,7 @@
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"
     compact
+    :actions="[]"
   />
   <x-contact-form heading="Send a message" copy="">
     <x-slot:aside>

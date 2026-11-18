@@ -31,6 +31,7 @@
     :eyebrow="$page->cta_eyebrow"
     :heading="$page->cta_heading"
     :copy="$page->cta_copy"
+    :testimonial="$page->ctaTestimonial"
     :buttonLabel="$page->cta_button_label"
     buttonHref="/#contact"
   />

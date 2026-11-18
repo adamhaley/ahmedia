@@ -4,7 +4,6 @@
     :eyebrow="$page->section_eyebrow"
     :title="$page->hero_heading ?: $page->title"
     :copy="$page->hero_subheading"
-    :actions="[['label' => 'Start a Project', 'href' => '/#contact', 'variant' => 'primary']]"
   />
 
   @php
@@ -26,6 +25,7 @@
     :body="$segment->markdown"
     :bullets="$index === $lastText ? $page->bullets : []"
     :image="$index === $firstText ? $sideImage : null"
+    :card="$index === $firstText ? $page->side_card : null"
     :image-alt="$page->hero_heading ?: $page->title"
   />
   @endif
@@ -42,6 +42,7 @@
     :eyebrow="$page->cta_eyebrow"
     :heading="$page->cta_heading"
     :copy="$page->cta_copy"
+    :testimonial="$page->ctaTestimonial"
     :buttonLabel="$page->cta_button_label"
     buttonHref="/#contact"
   />

@@ -1,4 +1,4 @@
-@props(['eyebrow' => null, 'heading', 'copy' => null, 'buttonLabel' => null, 'buttonHref' => '/#contact', 'buttonVariant' => 'primary', 'id' => null])
+@props(['eyebrow' => null, 'heading', 'copy' => null, 'buttonLabel' => null, 'buttonHref' => '/#contact', 'buttonVariant' => 'primary', 'id' => null, 'testimonial' => null])
 @php
   // On subpages, "Start a Project" opens the contact form right here instead
   // of sending visitors to the homepage form (public/scripts.js wires every
@@ -21,6 +21,12 @@
       <div class="button-row">
         <a class="button button-{{ $buttonVariant }}" href="{{ $buttonHref }}" @if ($revealsContactForm) aria-controls="cta-contact-form" aria-expanded="{{ $contactFormOpen ? 'true' : 'false' }}" @endif>{{ $buttonLabel ?: 'Start a Project' }}</a>
       </div>
+      @if ($testimonial?->is_active)
+      <figure class="cta-proof">
+        <blockquote class="cta-proof-quote">“{{ $testimonial->body }}”</blockquote>
+        <figcaption class="cta-proof-source"><span class="testimonial-name">{{ $testimonial->name }}</span>@if ($testimonial->project) · {{ $testimonial->project }}@endif</figcaption>
+      </figure>
+      @endif
     </div>
   </div>
   @if ($revealsContactForm)
