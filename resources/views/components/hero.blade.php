@@ -39,7 +39,7 @@
         </a>
         @endif
         @foreach ($actions as $action)
-        <a class="button button-{{ $action['variant'] ?? 'secondary' }}" href="{{ $action['href'] }}">{{ $action['label'] }}</a>
+        <a class="button button-{{ $action['variant'] ?? 'secondary' }}" href="{{ $action['href'] }}">{{ $action['label'] }}@if (($action['variant'] ?? 'secondary') === 'primary')<svg class="button-arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M17 10L9 17.5V2.5L17 10Z"/></svg>@endif</a>
         @endforeach
       </div>
       @endif
