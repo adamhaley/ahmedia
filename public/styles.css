@@ -3494,8 +3494,8 @@ main > .hero-compact.section:first-child {
 .contact-details .contact-social a {
   align-items: center;
   justify-content: center;
-  width: 1.375rem;
-  height: 1.375rem;
+  width: 2.0625rem;
+  height: 2.0625rem;
   border: 1px solid var(--border-color-strong);
   margin: 0;
   border-radius: 50%;
@@ -3504,7 +3504,7 @@ main > .hero-compact.section:first-child {
 }
 
 .contact-details .contact-social svg {
-  height: 0.65rem;
+  height: 0.9rem;
 }
 
 .contact-details .contact-social a:hover,
