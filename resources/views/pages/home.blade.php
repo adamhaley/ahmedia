@@ -5,7 +5,6 @@
     accent=".ai"
     :tagline="$tagline"
     :copy="$page->hero_subheading"
-    :stance="$services?->body"
     :points="$page->hero_points"
     :ring-style="$page->heroRingStyle()"
     :actions="[
