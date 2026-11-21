@@ -162,22 +162,26 @@ class StylesheetTest extends TestCase
     }
 
     #[Test]
-    public function it_never_hides_back_to_top_in_a_max_width_media_query(): void
+    public function it_hides_back_to_top_with_the_chat_button_on_phones(): void
     {
         $css = (string) file_get_contents(public_path('styles.css'));
 
-        $offenders = [];
+        $found = false;
         foreach ($this->rules($css) as [$selectors, $body, $media]) {
-            if ($media === null || ! str_contains($media, 'max-width')) {
+            if ($media === null || ! str_contains($media, 'max-width: 760px')) {
                 continue;
             }
-            $targetsLink = array_filter($selectors, fn (string $s): bool => str_contains($s, '.back-to-top-link'));
-            if ($targetsLink !== [] && preg_match('/display:\s*none/', $body) === 1) {
-                $offenders[] = $media.' '.implode(', ', $selectors);
+            $hidesChat = array_filter($selectors, fn (string $s): bool => str_contains($s, '.is-scrolling-down') && str_contains($s, '.chat-reopen-button'));
+            if ($hidesChat === []) {
+                continue;
             }
+            $found = true;
+            $listsLink = array_filter($selectors, fn (string $s): bool => str_ends_with($s, '.back-to-top-link'));
+            $this->assertNotEmpty($listsLink);
+            $this->assertDoesNotMatchRegularExpression('/display:\s*none/', $body);
         }
 
-        $this->assertSame([], $offenders);
+        $this->assertTrue($found);
     }
 
     #[Test]
