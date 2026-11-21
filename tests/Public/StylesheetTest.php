@@ -141,16 +141,115 @@ class StylesheetTest extends TestCase
         $this->assertStringContainsString('border-color: var(--color-accent)', implode("\n", $bodies));
     }
 
+    #[Test]
+    public function it_keeps_right_aligned_heroes_right_aligned_on_phones(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $offenders = [];
+        foreach ($this->rules($css) as [$selectors, , $media]) {
+            if ($media === null || ! str_contains($media, '(max-width: 760px)')) {
+                continue;
+            }
+            foreach (['.hero-align-right .hero-copy', '.hero-align-right .button-row'] as $target) {
+                if (in_array($target, $selectors, true)) {
+                    $offenders[] = $target;
+                }
+            }
+        }
+
+        $this->assertSame([], $offenders);
+    }
+
+    #[Test]
+    public function it_never_hides_back_to_top_in_a_max_width_media_query(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $offenders = [];
+        foreach ($this->rules($css) as [$selectors, $body, $media]) {
+            if ($media === null || ! str_contains($media, 'max-width')) {
+                continue;
+            }
+            $targetsLink = array_filter($selectors, fn (string $s): bool => str_contains($s, '.back-to-top-link'));
+            if ($targetsLink !== [] && preg_match('/display:\s*none/', $body) === 1) {
+                $offenders[] = $media.' '.implode(', ', $selectors);
+            }
+        }
+
+        $this->assertSame([], $offenders);
+    }
+
+    #[Test]
+    public function it_centres_back_to_top_above_the_chat_button(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $bodies = [];
+        foreach ($this->rules($css) as [$selectors, $body, $media]) {
+            if ($media === null && in_array('body:has(.chat-widget) .back-to-top-link', $selectors, true)) {
+                $bodies[] = $body;
+            }
+        }
+        $joined = implode("\n", $bodies);
+
+        $this->assertNotEmpty($bodies);
+        $this->assertMatchesRegularExpression('/right:\s*23px;/', $joined);
+        $this->assertMatchesRegularExpression('/bottom:\s*82px;/', $joined);
+    }
+
     /**
-     * @return list<array{0: list<string>, 1: string}>
+     * Walks the CSS character by character, tracking brace depth and the
+     * at-rule preludes that enclose each style rule.
+     *
+     * @return list<array{0: list<string>, 1: string, 2: string|null}> selectors, body, enclosing media query (null at top level)
      */
     private function rules(string $css): array
     {
-        preg_match_all('/([^{}]+)\{([^{}]*)\}/', $css, $matches, PREG_SET_ORDER);
+        $css = (string) preg_replace('~/\*.*?\*/~s', '', $css);
+        $rules = [];
+        $atRules = [];
+        $prelude = '';
+        $body = '';
+        $inBody = false;
 
-        return array_map(
-            fn (array $m): array => [array_map('trim', explode(',', $m[1])), $m[2]],
-            $matches,
-        );
+        foreach (str_split($css) as $char) {
+            if ($inBody) {
+                if ($char === '}') {
+                    $media = null;
+                    foreach (array_reverse($atRules) as $atRule) {
+                        if (str_starts_with($atRule, '@media')) {
+                            $media = $atRule;
+                            break;
+                        }
+                    }
+                    $rules[] = [array_map('trim', explode(',', $prelude)), $body, $media];
+                    $prelude = '';
+                    $body = '';
+                    $inBody = false;
+                } else {
+                    $body .= $char;
+                }
+
+                continue;
+            }
+
+            if ($char === '{') {
+                $prelude = trim((string) preg_replace('/\s+/', ' ', $prelude));
+                if (str_starts_with($prelude, '@')) {
+                    $atRules[] = $prelude;
+                    $prelude = '';
+                } else {
+                    $inBody = true;
+                }
+            } elseif ($char === '}') {
+                array_pop($atRules);
+                $prelude = '';
+            } else {
+                $prelude .= $char;
+            }
+        }
+
+        return $rules;
     }
 }
