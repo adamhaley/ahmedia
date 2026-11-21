@@ -790,18 +790,6 @@ main > .section:first-child {
   justify-content: flex-end;
 }
 
-/* Phones: hero copy reads from the left edge like everything below it */
-@media (max-width: 760px) {
-  .hero-align-right .hero-copy {
-    margin-left: 0;
-    text-align: left;
-  }
-
-  .hero-align-right .button-row {
-    justify-content: flex-start;
-  }
-}
-
 /* Header logo mark: four nested rings frozen mid-cycle, travelling right */
 .site-brand {
   display: inline-flex;
@@ -1714,12 +1702,12 @@ main > .section:first-child {
  * site-configured data-position="left", since the two floating controls
  * should never compete for opposite corners or collide when both exist).
  * Offset math: chat-reopen-button is 50px tall, bottom: 20px -> its top
- * edge sits at 70px; add a 12px gap for 82px. Right offset (25px) centers
- * back-to-top-link's 40px box against the chat button's 50px box.
+ * edge sits at 70px; add a 12px gap for 82px. Right offset (23px) centers
+ * back-to-top-link's 44px box (2.75rem) against the chat button's 50px box.
  */
 body:has(.chat-widget) .back-to-top-link {
   left: auto;
-  right: 25px;
+  right: 23px;
   bottom: 82px;
 }
 
@@ -3931,29 +3919,32 @@ main:focus {
   height: 2.75rem;
 }
 
-/* Floating controls on phones: the chat button tucks away while the
-   reader scrolls down or types in a form (scripts.js sets .is-scrolling-down),
-   and back-to-top is left out, so neither sits on what is being read. */
+/* Floating controls on phones: the chat button and the back-to-top arrow
+   tuck away together while the reader scrolls down or types in a form
+   (scripts.js sets .is-scrolling-down), and the arrow also hides while the
+   chat panel is open, since the chat button is hidden then too. The arrow
+   keeps its .in/.visible threshold, so near the top the chat button may
+   show alone. Pages without a chat widget are unaffected. */
 @media (max-width: 760px) {
-  .chat-reopen-button {
+  .chat-reopen-button,
+  .back-to-top-link {
     transition: transform 200ms ease, opacity 200ms ease;
   }
 
   body.is-scrolling-down .chat-widget:not(.is-open) .chat-reopen-button,
-  body:has(main input:focus, main textarea:focus) .chat-widget:not(.is-open) .chat-reopen-button {
+  body:has(main input:focus, main textarea:focus) .chat-widget:not(.is-open) .chat-reopen-button,
+  body.is-scrolling-down:has(.chat-widget:not(.is-open)) .back-to-top-link,
+  body:has(main input:focus, main textarea:focus):has(.chat-widget:not(.is-open)) .back-to-top-link,
+  body:has(.chat-widget.is-open) .back-to-top-link {
     opacity: 0;
     pointer-events: none;
     transform: translateY(150%);
   }
-
-  .back-to-top-link,
-  body:has(.chat-widget) .back-to-top-link {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chat-reopen-button {
+  .chat-reopen-button,
+  .back-to-top-link {
     transition: opacity 1ms;
   }
 
