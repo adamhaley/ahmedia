@@ -618,18 +618,18 @@ a {
 }
 
 .hero-section .button-primary {
-  /* The hero's one action is pearl: white, with a cyan sheen that echoes the rings */
-  background: var(--button-pearl);
-  border-color: rgba(0, 255, 255, 0.45);
+  /* The hero's one action is warm sand (--color-accent-3), set against the cyan rings */
+  background: var(--color-accent-3);
+  border-color: color-mix(in srgb, var(--color-accent-3) 70%, #000000);
   color: var(--color-page-bottom);
-  box-shadow: inset 0 1px 0 #ffffff, inset 0 -3px 8px rgba(0, 120, 120, 0.18), 0 4px 16px rgba(0, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-accent-3) 60%, #ffffff), inset 0 -3px 8px color-mix(in srgb, var(--color-accent-3) 75%, #000000), 0 4px 16px color-mix(in srgb, var(--color-accent-3) 35%, transparent);
 }
 
 .hero-section .button-primary:hover,
 .hero-section .button-primary:focus-visible {
-  background: var(--button-pearl);
-  border-color: var(--color-accent);
-  box-shadow: inset 0 1px 0 #ffffff, inset 0 -3px 8px rgba(0, 120, 120, 0.14), 0 6px 26px rgba(0, 255, 255, 0.34);
+  background: var(--color-accent-3);
+  border-color: color-mix(in srgb, var(--color-accent-3) 80%, #ffffff);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-accent-3) 60%, #ffffff), inset 0 -3px 8px color-mix(in srgb, var(--color-accent-3) 65%, #000000), 0 6px 26px color-mix(in srgb, var(--color-accent-3) 55%, transparent);
 }
 
 /* The back-to-top triangle turned to point forward, punched out in the page colour;
@@ -701,6 +701,7 @@ a {
   --color-muted: rgba(255, 255, 255, 0.82);
   --color-accent: #00ffff;
   --color-accent-2: #00cccc;
+  --color-accent-3: #d9a876; /* warm sand, third brand colour (2026-11-21) */
   --button-glass: linear-gradient(180deg, rgba(0, 255, 255, 0.2) 0%, rgba(0, 255, 255, 0.08) 100%);
   --button-glass-hover: linear-gradient(180deg, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0.14) 100%);
   --button-pearl: radial-gradient(120% 140% at 30% 0%, #ffffff 0%, #eefcfc 45%, #cfeaea 100%);

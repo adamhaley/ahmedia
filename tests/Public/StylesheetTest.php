@@ -44,6 +44,32 @@ class StylesheetTest extends TestCase
         $this->assertStringContainsString("{$token}: {$value};", $matches[1] ?? '');
     }
 
+    #[Test]
+    public function it_defines_the_third_accent_colour_in_the_last_root(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        preg_match_all('/:root\s*\{([^}]*)\}/', $css, $matches);
+
+        $this->assertStringContainsString('--color-accent-3: #d9a876;', end($matches[1]));
+    }
+
+    #[Test]
+    public function it_fills_the_hero_primary_button_with_the_third_accent_on_hover_and_focus(): void
+    {
+        $css = (string) file_get_contents(public_path('styles.css'));
+
+        $bodies = [];
+        foreach ($this->rules($css) as [$selectors, $body]) {
+            if (in_array('.hero-section .button-primary:hover', $selectors, true) && in_array('.hero-section .button-primary:focus-visible', $selectors, true)) {
+                $bodies[] = $body;
+            }
+        }
+
+        $this->assertNotEmpty($bodies);
+        $this->assertStringContainsString('background: var(--color-accent-3)', implode("\n", $bodies));
+    }
+
     public static function roundedSelectorProvider(): Generator
     {
         yield 'button' => ['.button'];
@@ -106,7 +132,7 @@ class StylesheetTest extends TestCase
     public static function primaryButtonFinishProvider(): Generator
     {
         yield 'primary button is cyan glass' => ['.button-primary', 'var(--button-glass)'];
-        yield 'hero primary button is pearl' => ['.hero-section .button-primary', 'var(--button-pearl)'];
+        yield 'hero primary button is warm sand' => ['.hero-section .button-primary', 'var(--color-accent-3)'];
         yield 'masthead primary button is pearl' => ['.gradient-masthead .button-primary', 'var(--button-pearl)'];
     }
 
