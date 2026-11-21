@@ -698,8 +698,9 @@
   }
 })();
 
-// Phones: tuck the floating chat button away while the reader scrolls down
-// and bring it back on any scroll up, or near the end of the page.
+// Phones: tuck both floating controls (chat button and back-to-top arrow)
+// away while the reader scrolls down and bring them back on any scroll up,
+// or near the end of the page.
 // styles.css only acts on .is-scrolling-down below 760px.
 (function () {
   let lastY = window.scrollY;

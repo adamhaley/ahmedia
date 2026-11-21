@@ -3919,16 +3919,23 @@ main:focus {
   height: 2.75rem;
 }
 
-/* Floating controls on phones: the chat button tucks away while the
-   reader scrolls down or types in a form (scripts.js sets .is-scrolling-down).
-   Back-to-top stays visible and stacks above the chat button. */
+/* Floating controls on phones: the chat button and the back-to-top arrow
+   tuck away together while the reader scrolls down or types in a form
+   (scripts.js sets .is-scrolling-down), and the arrow also hides while the
+   chat panel is open, since the chat button is hidden then too. The arrow
+   keeps its .in/.visible threshold, so near the top the chat button may
+   show alone. Pages without a chat widget are unaffected. */
 @media (max-width: 760px) {
-  .chat-reopen-button {
+  .chat-reopen-button,
+  .back-to-top-link {
     transition: transform 200ms ease, opacity 200ms ease;
   }
 
   body.is-scrolling-down .chat-widget:not(.is-open) .chat-reopen-button,
-  body:has(main input:focus, main textarea:focus) .chat-widget:not(.is-open) .chat-reopen-button {
+  body:has(main input:focus, main textarea:focus) .chat-widget:not(.is-open) .chat-reopen-button,
+  body.is-scrolling-down:has(.chat-widget:not(.is-open)) .back-to-top-link,
+  body:has(main input:focus, main textarea:focus):has(.chat-widget:not(.is-open)) .back-to-top-link,
+  body:has(.chat-widget.is-open) .back-to-top-link {
     opacity: 0;
     pointer-events: none;
     transform: translateY(150%);
@@ -3936,7 +3943,8 @@ main:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chat-reopen-button {
+  .chat-reopen-button,
+  .back-to-top-link {
     transition: opacity 1ms;
   }
 
