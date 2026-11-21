@@ -790,18 +790,6 @@ main > .section:first-child {
   justify-content: flex-end;
 }
 
-/* Phones: hero copy reads from the left edge like everything below it */
-@media (max-width: 760px) {
-  .hero-align-right .hero-copy {
-    margin-left: 0;
-    text-align: left;
-  }
-
-  .hero-align-right .button-row {
-    justify-content: flex-start;
-  }
-}
-
 /* Header logo mark: four nested rings frozen mid-cycle, travelling right */
 .site-brand {
   display: inline-flex;
@@ -1714,12 +1702,12 @@ main > .section:first-child {
  * site-configured data-position="left", since the two floating controls
  * should never compete for opposite corners or collide when both exist).
  * Offset math: chat-reopen-button is 50px tall, bottom: 20px -> its top
- * edge sits at 70px; add a 12px gap for 82px. Right offset (25px) centers
- * back-to-top-link's 40px box against the chat button's 50px box.
+ * edge sits at 70px; add a 12px gap for 82px. Right offset (23px) centers
+ * back-to-top-link's 44px box (2.75rem) against the chat button's 50px box.
  */
 body:has(.chat-widget) .back-to-top-link {
   left: auto;
-  right: 25px;
+  right: 23px;
   bottom: 82px;
 }
 
@@ -3932,8 +3920,8 @@ main:focus {
 }
 
 /* Floating controls on phones: the chat button tucks away while the
-   reader scrolls down or types in a form (scripts.js sets .is-scrolling-down),
-   and back-to-top is left out, so neither sits on what is being read. */
+   reader scrolls down or types in a form (scripts.js sets .is-scrolling-down).
+   Back-to-top stays visible and stacks above the chat button. */
 @media (max-width: 760px) {
   .chat-reopen-button {
     transition: transform 200ms ease, opacity 200ms ease;
@@ -3944,11 +3932,6 @@ main:focus {
     opacity: 0;
     pointer-events: none;
     transform: translateY(150%);
-  }
-
-  .back-to-top-link,
-  body:has(.chat-widget) .back-to-top-link {
-    display: none;
   }
 }
 
