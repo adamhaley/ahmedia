@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!--
+  AH Media living style guide. Development only: served at /styleguide
+  by a route that exists only when APP_ENV=local (routes/web.php), and
+  kept out of public/ so production never ships it.
+
+  It loads the site's real stylesheets, so every change to
+  public/styles.css shows here first. Swatch and type values are read
+  from the live CSS custom properties, never typed in by hand.
+
+  To trial a branding change: write it in the "Trial" <style> block at
+  the end of <head>, review it here, then move it into public/styles.css
+  and empty the block again.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Style guide | AH Media.ai</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/doppler-rings.css" />
+    <style>
+      /* The guide's own layout; everything else comes from the site CSS */
+      .sg-header { padding: 1.25rem 0; border-bottom: var(--border-subtle); }
+      .sg-header .container { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+      .sg-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-family: var(--font-mono); font-size: var(--step-small); text-transform: uppercase; letter-spacing: 0.08em; }
+      .sg-nav a { color: var(--color-muted); text-decoration: none; }
+      .sg-nav a:hover { color: var(--color-accent); }
+      .sg-block { border-top: var(--border-subtle); }
+      .sg-block > .container > .section-title { margin-bottom: 2rem; }
+      .sg-note { color: var(--color-muted); max-width: var(--measure); margin: 0 0 2rem; }
+      .sg-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-muted); letter-spacing: 0.04em; }
+      .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 1rem; }
+      .sg-swatch { border: var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; background: var(--color-page-bottom); }
+      .sg-swatch-chip { height: 6rem; }
+      .sg-swatch-meta { padding: 0.75rem; display: grid; gap: 0.15rem; }
+      .sg-swatch-meta strong { font-size: 0.95rem; }
+      .sg-swatch-meta .sg-label { word-break: break-all; }
+      .sg-type-row { display: grid; grid-template-columns: 12rem 1fr; gap: 1.5rem; align-items: baseline; padding: 1.25rem 0; border-bottom: var(--border-subtle); }
+      .sg-type-row > :last-child { margin: 0; }
+      .sg-fonts { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+      .sg-font { padding: 1.5rem; }
+      .sg-font-sample { font-size: 3.5rem; line-height: 1; margin: 0.75rem 0 1rem; }
+      .sg-font p { margin: 0.25rem 0; }
+      .sg-stack { display: grid; gap: 1.5rem; }
+      .sg-demo { padding: 2rem; }
+      .sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+      .sg-specimen { display: grid; gap: 0.5rem; justify-items: start; }
+      .sg-scale { display: grid; gap: 0.75rem; }
+      .sg-scale-bar { height: 0.75rem; border-radius: 999px; background: var(--color-accent); opacity: 0.6; }
+      .sg-radius { width: 6rem; height: 6rem; background: var(--color-strong-surface); border: 1px solid var(--border-color-strong); }
+      .sg-rings-frame { position: relative; height: 22rem; overflow: hidden; border-radius: var(--radius-lg); border: var(--border-subtle); }
+      .sg-rings-frame .doppler-rings { position: absolute; inset: 0; width: 100%; height: 100%; }
+      @media (max-width: 760px) {
+        .sg-type-row { grid-template-columns: 1fr; gap: 0.5rem; }
+      }
+    </style>
+    <style id="trial">
+      /* Trial: branding changes under review. Empty once promoted to public/styles.css. */
+    </style>
+  </head>
+  <body>
+    <header class="sg-header">
+      <div class="container">
+        <span class="site-brand">
+          <svg class="doppler-rings is-frozen brand-mark" viewBox="0 0 50 60" aria-hidden="true" style="--rings: 4">
+            <circle r="1" style="--i: 0; --phase: 0; --size: 0"/>
+            <circle r="1" style="--i: 1; --phase: 0; --size: 0"/>
+            <circle r="1" style="--i: 2; --phase: 0; --size: 0"/>
+            <circle r="1" style="--i: 3; --phase: 0; --size: 0"/>
+          </svg>
+          AH Media
+        </span>
+        <nav class="sg-nav" aria-label="Style guide">
+          <a href="#colour">Colour</a>
+          <a href="#type">Type</a>
+          <a href="#motif">Motif</a>
+          <a href="#buttons">Buttons</a>
+          <a href="#components">Components</a>
+          <a href="#forms">Forms</a>
+          <a href="#layout">Layout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero, as on the homepage -->
+      <section class="section hero-section hero-has-rings">
+        <div class="hero-rings">
+          <div class="container hero-rings-frame">
+            <svg class="doppler-rings" viewBox="0 0 1000 600" preserveAspectRatio="xMaxYMin slice" style="--mach: 2.8; --rings: 8; --period: 39s; --reach: 300; --stroke: 2; --glow: 12; --direction: -1; --source-x: 880px; --axis: 225; --axis-mobile: 330" aria-hidden="true" focusable="false">
+              <circle r="1" style="--i: 0; --phase: -0.488; --size: -0.482" />
+              <circle r="1" style="--i: 1; --phase: 0.199; --size: 0.024" />
+              <circle r="1" style="--i: 2; --phase: -0.034; --size: -0.286" />
+              <circle r="1" style="--i: 3; --phase: 0.23; --size: -0.266" />
+              <circle r="1" style="--i: 4; --phase: 0.264; --size: 0.02" />
+              <circle r="1" style="--i: 5; --phase: -0.132; --size: -0.227" />
+              <circle r="1" style="--i: 6; --phase: -0.204; --size: 0.526" />
+              <circle r="1" style="--i: 7; --phase: 0.378; --size: -0.34" />
+            </svg>
+          </div>
+        </div>
+        <div class="container hero-grid hero-grid-solo hero-align-right">
+          <div class="hero-copy">
+            <p class="eyebrow">Living style guide</p>
+            <h1 class="display-title">AH Media<span class="text-accent">.ai</span></h1>
+            <p class="hero-tagline">Use AI, Stay Human</p>
+            <p class="lede">Colour, type, motif and components, rendered from the site's own stylesheet.</p>
+            <div class="button-row">
+              <a class="hero-back" href="#" aria-label="Back">
+                <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M17 10H5M9 5l-5 5 5 5"/></svg>
+              </a>
+              <a class="button button-primary" href="#colour">Start a Project<svg class="button-arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M17 10L9 17.5V2.5L17 10Z"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Colour: values are filled in from the live custom properties -->
+      <section class="section sg-block" id="colour">
+        <div class="container">
+          <p class="eyebrow">Foundations</p>
+          <h2 class="section-title">Colour</h2>
+          <p class="sg-note">Deep teal ground, white type, one electric cyan accent. The accent can be overridden in the admin (Site settings).</p>
+          <div class="sg-swatches" data-swatches="--color-page-top --color-page-bottom --color-surface --color-strong-surface --color-text --color-muted --color-accent --color-accent-2 --border-color --border-color-strong"></div>
+          <h3 class="sg-label" style="margin: 2.5rem 0 1rem">Fills</h3>
+          <div class="sg-swatches" data-swatches="--button-glass --button-glass-hover --button-pearl"></div>
+          <h3 class="sg-label" style="margin: 2.5rem 0 1rem">Defined in styles.css but used nowhere</h3>
+          <div class="sg-swatches" data-swatches="--neon-pink --neon-purple"></div>
+        </div>
+      </section>
+
+      <!-- Type -->
+      <section class="section sg-block" id="type">
+        <div class="container">
+          <p class="eyebrow">Foundations</p>
+          <h2 class="section-title">Typography</h2>
+          <p class="sg-note">Headings and the wordmark in Arial; Gantari carries the copy; IBM Plex Mono for eyebrows and indexes. Sizes are fluid between 390px and 1440px: resize the window to see the computed values change.</p>
+          <div class="sg-fonts">
+            <div class="surface-card sg-font">
+              <span class="sg-label" data-token="--font-heading"></span>
+              <p class="sg-font-sample" style="font-family: var(--font-heading); font-weight: 700">Aa</p>
+              <p style="font-family: var(--font-heading)">Headings, wordmark</p>
+            </div>
+            <div class="surface-card sg-font">
+              <span class="sg-label" data-token="--font-body"></span>
+              <p class="sg-font-sample" style="font-family: var(--font-body)">Aa</p>
+              <p>Body copy, buttons, forms (variable weight 100 to 900)</p>
+            </div>
+            <div class="surface-card sg-font">
+              <span class="sg-label" data-token="--font-mono"></span>
+              <p class="sg-font-sample" style="font-family: var(--font-mono); font-weight: 500">Aa</p>
+              <p style="font-family: var(--font-mono); font-size: var(--step-small)">Eyebrows, indexes (500 only)</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 2.5rem">
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".display-title">.display-title</span>
+              <p class="display-title">AH Media<span class="text-accent">.ai</span></p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".hero-tagline">.hero-tagline</span>
+              <p class="hero-tagline">Use AI, Stay Human</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".section-title">.section-title (h2)</span>
+              <h2 class="section-title">Agentic Systems, Brand Expansion, Consulting</h2>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label">--step-h3</span>
+              <p style="font-family: var(--font-heading); font-size: var(--step-h3); line-height: var(--leading-snug); font-weight: 700">Remove what's in the way</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label">--step-h4</span>
+              <p style="font-family: var(--font-heading); font-size: var(--step-h4); line-height: var(--leading-snug); font-weight: 700">Install the multiplier</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".eyebrow">.eyebrow</span>
+              <p class="eyebrow">What we do</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".lede">.lede</span>
+              <p class="lede">Agentic Systems, Brand Expansion, Consulting. A lede is one or two sentences, set larger and muted.</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label" data-size=".sg-body">body</span>
+              <p class="sg-body" style="max-width: var(--measure)">Body copy runs in Gantari at the body step, with a measure of about 65 characters. First we discover your existing processes and find what makes you tick. We uncover what already works, and we don't mess with that.</p>
+            </div>
+            <div class="sg-type-row">
+              <span class="sg-label">--step-small</span>
+              <p style="font-size: var(--step-small); color: var(--color-muted)">Small print: helper lines, captions, meta.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Motif -->
+      <section class="section sg-block" id="motif">
+        <div class="container">
+          <p class="eyebrow">Identity</p>
+          <h2 class="section-title">Doppler rings</h2>
+          <p class="sg-note">Eccentric circles travelling along one horizon, growing and fading. Frozen small, four rings make the logo mark. Styles are edited in the admin (Doppler rings); this is the homepage arrangement.</p>
+          <div class="sg-row" style="margin-bottom: 1.5rem">
+            <svg class="doppler-rings is-frozen brand-mark" viewBox="0 0 50 60" aria-hidden="true" style="--rings: 4">
+              <circle r="1" style="--i: 0; --phase: 0; --size: 0"/>
+              <circle r="1" style="--i: 1; --phase: 0; --size: 0"/>
+              <circle r="1" style="--i: 2; --phase: 0; --size: 0"/>
+              <circle r="1" style="--i: 3; --phase: 0; --size: 0"/>
+            </svg>
+            <span class="site-brand">AH Media</span>
+            <img src="/favicon.svg" width="48" height="48" alt="Favicon" />
+          </div>
+          <div class="sg-rings-frame">
+            <svg class="doppler-rings" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" style="--mach: 2.8; --rings: 8; --period: 39s; --reach: 300; --stroke: 2; --glow: 12; --direction: -1; --source-x: 880px; --axis: 300; --axis-mobile: 300" aria-hidden="true" focusable="false">
+              <circle r="1" style="--i: 0; --phase: -0.488; --size: -0.482" />
+              <circle r="1" style="--i: 1; --phase: 0.199; --size: 0.024" />
+              <circle r="1" style="--i: 2; --phase: -0.034; --size: -0.286" />
+              <circle r="1" style="--i: 3; --phase: 0.23; --size: -0.266" />
+              <circle r="1" style="--i: 4; --phase: 0.264; --size: 0.02" />
+              <circle r="1" style="--i: 5; --phase: -0.132; --size: -0.227" />
+              <circle r="1" style="--i: 6; --phase: -0.204; --size: 0.526" />
+              <circle r="1" style="--i: 7; --phase: 0.378; --size: -0.34" />
+            </svg>
+          </div>
+          <h3 class="sg-label" style="margin: 2.5rem 0 1rem">Approach marks</h3>
+          <figure class="approach-diagram" style="margin: 0">
+            <ol class="approach-steps">
+              <li class="approach-step">
+                <svg class="approach-mark" viewBox="0 0 120 60" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false"><circle cx="91.2" cy="30" r="6"/><circle cx="84.8" cy="30" r="14"/></svg>
+                <span class="approach-step-index" aria-hidden="true">01</span>
+                <span class="approach-step-label">Discover what works</span>
+              </li>
+              <li class="approach-step">
+                <svg class="approach-mark" viewBox="0 0 120 60" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false"><circle cx="91.2" cy="30" r="6"/><circle cx="84.8" cy="30" r="14"/><circle cx="78.4" cy="30" r="22"/></svg>
+                <span class="approach-step-index" aria-hidden="true">02</span>
+                <span class="approach-step-label">Remove what's in the way</span>
+              </li>
+              <li class="approach-step">
+                <svg class="approach-mark" viewBox="0 0 120 60" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false"><circle cx="91.2" cy="30" r="6"/><circle cx="84.8" cy="30" r="14"/><circle cx="78.4" cy="30" r="22"/><circle cx="73.6" cy="30" r="28"/></svg>
+                <span class="approach-step-index" aria-hidden="true">03</span>
+                <span class="approach-step-label">Install the multiplier</span>
+              </li>
+            </ol>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Buttons and links -->
+      <section class="section sg-block" id="buttons">
+        <div class="container">
+          <p class="eyebrow">Actions</p>
+          <h2 class="section-title">Buttons and links</h2>
+          <div class="sg-stack">
+            <div class="sg-row">
+              <div class="sg-specimen">
+                <a class="button button-primary" href="#buttons">Primary: cyan glass</a>
+                <span class="sg-label">.button-primary</span>
+              </div>
+              <div class="sg-specimen">
+                <a class="button button-secondary" href="#buttons">Secondary</a>
+                <span class="sg-label">.button-secondary</span>
+              </div>
+              <div class="sg-specimen">
+                <a class="hero-back" href="#buttons" aria-label="Back"><svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d="M17 10H5M9 5l-5 5 5 5"/></svg></a>
+                <span class="sg-label">.hero-back</span>
+              </div>
+            </div>
+            <section class="hero-section" style="padding: 0">
+              <div class="sg-specimen">
+                <a class="button button-primary" href="#buttons">Start a Project<svg class="button-arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M17 10L9 17.5V2.5L17 10Z"/></svg></a>
+                <span class="sg-label">.hero-section .button-primary: pearl, the hero's one action</span>
+              </div>
+            </section>
+            <div class="sg-row">
+              <div class="sg-specimen">
+                <a class="section-heading-link" href="#buttons">View All Services<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3 10h12M11 5l5 5-5 5"/></svg></a>
+                <span class="sg-label">.section-heading-link</span>
+              </div>
+              <div class="sg-specimen">
+                <a class="preview-link" href="#buttons">Read the case study</a>
+                <span class="sg-label">.preview-link</span>
+              </div>
+              <div class="sg-specimen">
+                <p style="margin: 0">Inline <a href="#buttons">text link</a> in body copy.</p>
+                <span class="sg-label">a</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Components -->
+      <section class="section sg-block" id="components">
+        <div class="container">
+          <p class="eyebrow">Components</p>
+          <h2 class="section-title">Cards, lists and bands</h2>
+
+          <h3 class="sg-label" style="margin: 2rem 0 1rem">Service rows (x-service-rows)</h3>
+          <ol class="service-rows">
+            <li class="service-row">
+              <span class="service-row-index" aria-hidden="true">01</span>
+              <h3 class="service-row-name"><a href="#components">Automations</a></h3>
+              <p class="service-row-line">n8n workflows that connect the tools you already use, built by a certified n8n developer.</p>
+              <span class="service-row-arrow" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><path d="M3 10h12M11 5l5 5-5 5"/></svg></span>
+            </li>
+            <li class="service-row">
+              <span class="service-row-index" aria-hidden="true">02</span>
+              <h3 class="service-row-name"><a href="#components">Second Brain</a></h3>
+              <p class="service-row-line">A folder of plain files, LLM agents that work in it, and deterministic scripts that keep it honest.</p>
+              <span class="service-row-arrow" aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false"><path d="M3 10h12M11 5l5 5-5 5"/></svg></span>
+            </li>
+          </ol>
+
+          <h3 class="sg-label" style="margin: 3rem 0 1rem">Feature cards (x-feature-grid)</h3>
+          <div class="feature-grid">
+            <article class="surface-card feature-card">
+              <p class="feature-index">01</p>
+              <h3>Feature card</h3>
+              <p>A surface card with a mono index, a heading and a short line of copy.</p>
+              <ul class="case-study-tags feature-tags"><li>n8n</li><li>Laravel</li></ul>
+              <a class="preview-link" href="#components">Learn more</a>
+            </article>
+            <article class="surface-card feature-card">
+              <p class="feature-index">02</p>
+              <h3>Longer heading that wraps onto two lines</h3>
+              <p>Layouts hold any copy length, so cards are shown with uneven text.</p>
+            </article>
+            <article class="surface-card feature-card">
+              <p class="feature-index">03</p>
+              <h3>Third card</h3>
+              <p>Short.</p>
+            </article>
+          </div>
+
+          <h3 class="sg-label" style="margin: 3rem 0 1rem">Bullet list</h3>
+          <div class="spotlight-copy">
+            <ul class="bullet-list">
+              <li>Custom chat and RAG assistants trained on your own content</li>
+              <li>Static-first frontends that stay fast, searchable and cheap to run</li>
+            </ul>
+          </div>
+
+          <h3 class="sg-label" style="margin: 3rem 0 1rem">Testimonial (x-testimonials)</h3>
+          <div class="testimonial-grid">
+            <figure class="surface-card testimonial-card">
+              <div class="testimonial-stars" role="img" aria-label="Rated 5 out of 5">
+                <svg class="testimonial-star is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"/></svg>
+                <svg class="testimonial-star is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"/></svg>
+                <svg class="testimonial-star is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"/></svg>
+                <svg class="testimonial-star is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"/></svg>
+                <svg class="testimonial-star is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95z"/></svg>
+              </div>
+              <blockquote class="testimonial-quote">“Exceptional work! Strong understanding of the tools and technology.”</blockquote>
+              <figcaption class="testimonial-attribution">
+                <span class="testimonial-name">M. L.</span>
+                <span class="testimonial-project">WordPress post automation</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA band, as x-cta-band renders it -->
+      <section class="section">
+        <div class="container">
+          <div class="surface-card cta-band">
+            <div>
+              <p class="eyebrow">CTA band</p>
+              <h2 class="section-title">Let's talk about what you're building</h2>
+              <p class="section-copy">Send a few details and we'll get back to you.</p>
+            </div>
+            <div class="button-row">
+              <a class="button button-primary" href="#forms">Start a Project</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forms -->
+      <section class="section sg-block" id="forms">
+        <div class="container">
+          <p class="eyebrow">Forms</p>
+          <h2 class="section-title">Contact form</h2>
+          <form class="contact-form surface-card" style="margin-top: 2rem" onsubmit="return false" novalidate>
+            <div class="contact-form-row">
+              <label for="sg-name">Name <span class="field-required">Required</span></label>
+              <input id="sg-name" type="text" placeholder="Your name" />
+            </div>
+            <div class="contact-form-row">
+              <label for="sg-email">Email <span class="field-required">Required</span></label>
+              <input id="sg-email" type="email" placeholder="you@example.com" aria-describedby="sg-email-help" />
+              <p class="field-help" id="sg-email-help">Only used to reply to you.</p>
+            </div>
+            <div class="contact-form-row">
+              <label for="sg-message">Message <span class="field-required">Required</span></label>
+              <textarea id="sg-message" rows="4" placeholder="What's getting in the way?"></textarea>
+            </div>
+            <button class="button button-primary" type="submit">Send message</button>
+            <p class="form-next-step">We reply within 24 hours.</p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Layout tokens -->
+      <section class="section sg-block" id="layout">
+        <div class="container">
+          <p class="eyebrow">Foundations</p>
+          <h2 class="section-title">Space, radius and layout</h2>
+          <div class="sg-scale" data-spacing="--gutter --section-space --section-space-major --container-width --measure"></div>
+          <div class="sg-row" style="margin-top: 2.5rem">
+            <div class="sg-specimen"><div class="sg-radius" style="border-radius: var(--radius-sm)"></div><span class="sg-label" data-token="--radius-sm">--radius-sm</span></div>
+            <div class="sg-specimen"><div class="sg-radius" style="border-radius: var(--radius-md)"></div><span class="sg-label" data-token="--radius-md">--radius-md</span></div>
+            <div class="sg-specimen"><div class="sg-radius" style="border-radius: var(--radius-lg)"></div><span class="sg-label" data-token="--radius-lg">--radius-lg</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Reads every value from the live CSS, so the guide never drifts from public/styles.css
+      (function () {
+        const root = getComputedStyle(document.documentElement);
+        const token = (name) => root.getPropertyValue(name).trim();
+
+        document.querySelectorAll('[data-swatches]').forEach((grid) => {
+          grid.dataset.swatches.split(' ').forEach((name) => {
+            const swatch = document.createElement('div');
+            swatch.className = 'sg-swatch';
+            swatch.innerHTML = '<div class="sg-swatch-chip"></div><div class="sg-swatch-meta"><strong></strong><span class="sg-label"></span></div>';
+            swatch.querySelector('.sg-swatch-chip').style.background = 'var(' + name + ')';
+            swatch.querySelector('strong').textContent = name;
+            swatch.querySelector('.sg-label').textContent = token(name);
+            grid.append(swatch);
+          });
+        });
+
+        document.querySelectorAll('[data-token]').forEach((label) => {
+          label.textContent = label.dataset.token + ': ' + token(label.dataset.token);
+        });
+
+        // Fluid sizes: show what each step computes to at the current width
+        function showSizes() {
+          document.querySelectorAll('[data-size]').forEach((label) => {
+            const sample = label.nextElementSibling;
+            const style = getComputedStyle(sample);
+            label.dataset.name ??= label.textContent;
+            label.textContent = label.dataset.name + ' · ' + Math.round(parseFloat(style.fontSize)) + 'px / ' + style.fontWeight;
+          });
+
+          document.querySelectorAll('[data-spacing]').forEach((scale) => {
+            scale.replaceChildren();
+            scale.dataset.spacing.split(' ').forEach((name) => {
+              const row = document.createElement('div');
+              const probe = document.createElement('div');
+              probe.className = 'sg-scale-bar';
+              probe.style.width = 'min(100%, var(' + name + '))';
+              row.append(probe);
+              row.insertAdjacentHTML('beforeend', '<span class="sg-label"></span>');
+              scale.append(row);
+              row.lastChild.textContent = name + ': ' + token(name) + ' = ' + Math.round(probe.getBoundingClientRect().width) + 'px';
+            });
+          });
+        }
+
+        document.fonts.ready.then(showSizes);
+        addEventListener('resize', showSizes);
+      })();
+    </script>
+    <script src="/doppler-rings.js"></script>
+  </body>
+</html>
