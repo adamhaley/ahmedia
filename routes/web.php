@@ -24,6 +24,11 @@ Route::get('/preview/{token}', function (string $token) {
     return redirect('/')->withCookie(cookie('coming_soon_bypass', 'granted', 60 * 24 * 365));
 })->name('coming-soon.preview');
 
+// Living style guide (resources/styleguide): local development only, never routed in production
+if (app()->isLocal()) {
+    Route::get('/styleguide', fn () => response()->file(resource_path('styleguide/index.html')))->name('styleguide');
+}
+
 Route::get('/case-studies/{slug}', CaseStudyController::class)->name('case-studies.show');
 Route::get('/blog/{slug}', PostController::class)->name('posts.show');
 
