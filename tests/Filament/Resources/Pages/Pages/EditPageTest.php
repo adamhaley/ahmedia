@@ -75,7 +75,7 @@ class EditPageTest extends TestCase
 
         Livewire::actingAs($this->admin())
             ->test(EditPage::class, ['record' => $page->getKey()])
-            ->fillForm(['side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'A demo receptionist.']])
+            ->fillForm(['side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'Our AI receptionist.']])
             ->call('save')
             ->assertHasNoFormErrors();
 

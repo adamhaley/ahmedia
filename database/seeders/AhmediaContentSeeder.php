@@ -47,7 +47,7 @@ class AhmediaContentSeeder extends Seeder
                     'You work directly with the person building your system',
                     'Five-star client reviews',
                     "n8n's Foundations pathway",
-                    'Demo receptionist: [(765) 307-5537](tel:+17653075537)',
+                    'Call our AI receptionist: [(765) 307-5537](tel:+17653075537)',
                 ],
                 'section_eyebrow' => 'Approach',
                 'section_heading' => "Static where it's simple, AI where it earns its keep",
