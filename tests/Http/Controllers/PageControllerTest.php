@@ -41,7 +41,7 @@ class PageControllerTest extends TestCase
     #[Test]
     public function it_shows_the_hero_points_under_the_button_with_links(): void
     {
-        $home = $this->homePage(['hero_points' => ['Five-star client reviews', 'Demo receptionist: [(765) 307-5537](tel:+17653075537)']]);
+        $home = $this->homePage(['hero_points' => ['Five-star client reviews', 'Call our AI receptionist: [(765) 307-5537](tel:+17653075537)']]);
 
         $response = $this->get($home->url());
 
@@ -813,12 +813,12 @@ class PageControllerTest extends TestCase
         $page = $this->servicePage([
             'section_heading' => 'Fewer missed calls',
             'body' => 'Your AI receptionist answers on a real phone number.',
-            'side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'A demo receptionist.'],
+            'side_card' => ['title' => 'Hear it for yourself', 'link_label' => '(765) 307-5537', 'link_url' => 'tel:+17653075537', 'note' => 'Our AI receptionist.'],
         ]);
 
         $response = $this->get($page->url());
 
-        $response->assertOk()->assertSeeInOrder(['split-aside', 'Hear it for yourself', 'href="tel:+17653075537"', 'A demo receptionist.'], false);
+        $response->assertOk()->assertSeeInOrder(['split-aside', 'Hear it for yourself', 'href="tel:+17653075537"', 'Our AI receptionist.'], false);
     }
 
     #[Test]
@@ -827,7 +827,7 @@ class PageControllerTest extends TestCase
         $page = $this->servicePage([
             'section_heading' => 'Fewer missed calls',
             'body' => 'Your AI receptionist answers on a real phone number.',
-            'side_card' => ['note' => 'A demo receptionist.'],
+            'side_card' => ['note' => 'Our AI receptionist.'],
         ]);
 
         $response = $this->get($page->url());
