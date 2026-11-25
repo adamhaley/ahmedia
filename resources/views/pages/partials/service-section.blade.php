@@ -1,4 +1,4 @@
-{{-- One section of a service page, by token name (Page::SectionToken). `projects` renders every
+{{-- One section of a service page, by token (Prism CMS core's Page::bodySegments()). `projects` renders every
      project type the body doesn't place on its own with `projects:<type>`. --}}
 @if ($section === 'credentials' && $credentials->isNotEmpty())
 <x-credential-grid :credentials="$credentials" />

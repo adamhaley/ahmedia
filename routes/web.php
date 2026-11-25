@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\Chat\AskChatQuestionController;
 use App\Http\Controllers\Chat\StoreChatLeadController;
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StoreContactSubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -44,5 +43,4 @@ Route::permanentRedirect('/services/ai-consulting', '/services/consultations');
 Route::permanentRedirect('/services/custom-programming', '/services/automations');
 Route::permanentRedirect('/services/website-design', '/services/web-design-and-branding');
 
-Route::get('/', PageController::class)->name('page.home');
-Route::fallback(PageController::class)->name('page.show');
+// Prism CMS core registers `/` (page.home) and the catch-all page route (page.show).
