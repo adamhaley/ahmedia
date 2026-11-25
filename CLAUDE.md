@@ -37,20 +37,19 @@ Adam edits content in the Filament admin at `/admin` (Google OAuth, allow-listed
 
 ## Content seeding (how content reaches production)
 
-`DatabaseSeeder` runs `AhmediaContentSeeder` (pages), `PackageAndCaseStudyContentSeeder`
-(packages, case studies; copies images and sample PDFs from
-`database/seeders/content/` to the public disk), `FaqContentSeeder` (FAQs from
-`database/seeders/data/faqs.php` plus the `/faq/` page), `TestimonialContentSeeder` and
-`ProjectContentSeeder` (n8n workflow cards on `services/automations`, from
-`database/seeders/data/projects.php`; covers are 1920px WebP renders made by the n8n repo's
-`screenshots/capture.py`, copied from `database/seeders/content/projects/`). Each seeder **only runs against an empty
-table** (`Page::exists()` / `Package::exists() || CaseStudy::exists()`, the same gate as
-dreamworldcirque's `ContentSeeder`), so re-running `php artisan db:seed --force` is always safe and
-never overwrites CMS edits. Content changes after first launch are made in the admin, or by a
-targeted one-off update, never by re-seeding. Run `php artisan storage:link` once per
-environment. The source of truth for pricing and package copy is the second brain
-(`llm-wiki/wiki/projects/ahmedia/reference.md`); the gallery and PDF sources live in
-`consultations/upwork-gallery/`.
+Content lives in the CMS; the repo holds a snapshot of it. `php artisan content:export` writes
+`database/seeders/content/snapshot.json` (the content tables, all columns, JSON columns as raw
+strings, published posts only) and copies every public-disk file those rows reference into
+`database/seeders/content/` at the same relative paths, removing unreferenced ones (`--path=`
+writes elsewhere, for the server). `.scripts/pull-content.sh` runs that export on the server and
+rsyncs the result into the repo (the server needs this code deployed first). `DatabaseSeeder`
+runs `ContentSnapshotSeeder`, which inserts each table's rows with their original ids **only when
+that table is empty** and copies missing files to the public disk, so re-running
+`php artisan db:seed --force` is always safe and never overwrites CMS edits. The snapshot is
+refreshed on demand when Adam runs the export, not kept in sync; never hand-edit it, and make
+content changes in the admin or by a targeted one-off update, never by re-seeding. Run
+`php artisan storage:link` once per environment. Pricing and package copy are sourced from the
+second brain (`llm-wiki/wiki/projects/ahmedia/reference.md`).
 
 ## Frontend
 

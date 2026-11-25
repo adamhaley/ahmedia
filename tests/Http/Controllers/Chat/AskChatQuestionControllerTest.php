@@ -6,7 +6,9 @@ use App\Enums\FaqMatchOutcome;
 use App\Http\Controllers\Chat\AskChatQuestionController;
 use App\Models\ChatQuery;
 use App\Models\FaqItem;
+use Database\Seeders\ContentSnapshotSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -72,9 +74,8 @@ class AskChatQuestionControllerTest extends TestCase
     #[Test]
     public function it_answers_directly_when_only_one_faq_qualifies(): void
     {
-        foreach (require database_path('seeders/data/faqs.php') as $index => $item) {
-            FaqItem::factory()->create([...$item, 'sort_order' => $index]);
-        }
+        Storage::fake('public');
+        $this->seed(ContentSnapshotSeeder::class);
 
         $faq = FaqItem::query()
             ->where('question', 'My website has been hacked. Can you help?')

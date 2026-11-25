@@ -4,9 +4,9 @@ namespace Tests\Services\Faq;
 
 use App\Enums\FaqMatchOutcome;
 use App\Services\Faq\FaqMatchingService;
-use Database\Seeders\FaqContentSeeder;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 /**
  * The tuning harness for the chatbot, run against the real seeded AH Media
- * FAQs (database/seeders/data/faqs.php). When a keyword list or a matching
+ * FAQs (the faq_items in database/seeders/content/snapshot.json). When a keyword list or a matching
  * threshold changes, this is the test that says whether real visitor
  * phrasing still lands on the right answer.
  */
@@ -27,7 +27,8 @@ class FaqCorpusMatchingTest extends TestCase
     {
         parent::setUp();
 
-        $this->seed(FaqContentSeeder::class);
+        $snapshot = json_decode(file_get_contents(database_path('seeders/content/snapshot.json')), true, flags: JSON_THROW_ON_ERROR);
+        DB::table('faq_items')->insert($snapshot['faq_items']);
     }
 
     #[Test]
