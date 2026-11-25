@@ -7,7 +7,11 @@
   />
 
   @php
-    $segments = collect($page->bodySegments());
+    // Each token line names a section, `credentials` or `projects:workflow` say
+    $segments = collect($page->bodySegments())->map(fn ($segment) => (object) [
+      'markdown' => $segment->markdown,
+      'section' => $segment->isToken() ? $segment->token.($segment->argument ? ':'.$segment->argument : '') : null,
+    ]);
     $placed = $segments->pluck('section')->filter();
     $firstText = $segments->filter(fn ($segment) => $segment->section === null)->keys()->first();
     $sideImage = $page->hero_image ? \Illuminate\Support\Facades\Storage::disk('public')->url($page->hero_image) : null;

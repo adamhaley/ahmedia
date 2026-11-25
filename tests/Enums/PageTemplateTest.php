@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Http\Controllers;
+namespace Tests\Enums;
 
 use App\Enums\PageTemplate;
 use App\Enums\ProjectType;
-use App\Http\Controllers\PageController;
 use App\Models\CaseStudy;
 use App\Models\Credential;
 use App\Models\Package;
@@ -20,8 +19,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-#[CoversClass(PageController::class)]
-class PageControllerTest extends TestCase
+#[CoversClass(PageTemplate::class)]
+class PageTemplateTest extends TestCase
 {
     use RefreshDatabase;
 

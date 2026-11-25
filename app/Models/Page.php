@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Data\BodySegment;
-use App\Enums\PageTemplate;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use PrismCms\Models\Page as PrismPage;
 
 /**
+ * ahmedia's pages: Prism CMS core's page tree plus the rings, hero points, side card, approach steps
+ * and CTA testimonial.
+ *
  * @property list<string>|null $bullets
  * @property list<string>|null $approach_steps
  * @property list<string>|null $hero_points
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'section_eyebrow', 'section_heading', 'body', 'bullets', 'approach_steps', 'buttons', 'circle_image', 'circle_image_alt',
     'card_excerpt', 'card_image', 'cta_eyebrow', 'cta_heading', 'cta_copy', 'cta_button_label', 'cta_testimonial_id',
 ])]
-class Page extends Model
+class Page extends PrismPage
 {
     /**
      * @return array<string, string>
@@ -30,14 +31,10 @@ class Page extends Model
     protected function casts(): array
     {
         return [
-            'template' => PageTemplate::class,
-            'bullets' => 'array',
+            ...parent::casts(),
             'approach_steps' => 'array',
             'hero_points' => 'array',
             'side_card' => 'array',
-            'buttons' => 'array',
-            'is_published' => 'boolean',
-            'show_in_nav' => 'boolean',
             'hide_doppler_rings' => 'boolean',
         ];
     }
@@ -64,33 +61,6 @@ class Page extends Model
         return $this->dopplerRingStyle ?? $this->parent?->heroRingStyle();
     }
 
-    protected static function booted(): void
-    {
-        static::saving(function (Page $page): void {
-            $page->path = $page->template === PageTemplate::Home
-                ? ''
-                : ltrim(($page->parent?->path ?? '').'/'.$page->slug, '/');
-        });
-
-        static::saved(function (Page $page): void {
-            if ($page->wasChanged('path')) {
-                $page->children->each(fn (Page $child): bool => $child->setRelation('parent', $page)->save());
-            }
-        });
-    }
-
-    /** @return BelongsTo<Page, $this> */
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(Page::class, 'parent_id');
-    }
-
-    /** @return HasMany<Page, $this> */
-    public function children(): HasMany
-    {
-        return $this->hasMany(Page::class, 'parent_id')->orderBy('sort_order');
-    }
-
     /** @return HasMany<Package, $this> */
     public function packages(): HasMany
     {
@@ -109,48 +79,15 @@ class Page extends Model
         return $this->hasMany(Project::class)->orderBy('sort_order');
     }
 
-    /** The supporting line under a page's call-to-action heading when the CMS leaves it empty. */
     /** The homepage approach diagram's steps while its field is empty */
     public const DefaultApproachSteps = ['Discover what works', "Remove what's in the way", 'Install the multiplier'];
 
+    /** The supporting line under a page's call-to-action heading when the CMS leaves it empty. */
     public const DefaultCtaCopy = "Tell us about the bottleneck. You work directly with Adam, and we'll tell you honestly whether AI is the right tool for it.";
 
-    /**
-     * A line holding only a section token places that section in the body: `[[credentials]]`,
-     * `[[packages]]`, `[[projects]]` (every type) or `[[projects:workflow]]` (one type). Anything
-     * else in double brackets, typos included, stays visible as text.
-     */
-    public const SectionToken = '/^[ \t]*\[\[(credentials|packages|projects(?::[a-z-]+)?)\]\][ \t]*$/m';
-
-    /**
-     * The body split at its section tokens. The first segment is always Markdown, possibly
-     * empty, so the section heading always has a place.
-     *
-     * @return list<BodySegment>
-     */
-    public function bodySegments(): array
-    {
-        $parts = preg_split(self::SectionToken, (string) $this->body, -1, PREG_SPLIT_DELIM_CAPTURE);
-        $segments = [];
-        foreach ($parts as $index => $part) {
-            if ($index % 2 === 1) {
-                $segments[] = new BodySegment(section: $part);
-            } elseif ($index === 0 || trim($part) !== '') {
-                $segments[] = new BodySegment(markdown: trim($part));
-            }
-        }
-
-        return $segments;
-    }
-
+    /** ahmedia's page URLs have no trailing slash. */
     public function url(): string
     {
         return $this->path === '' ? '/' : '/'.$this->path;
-    }
-
-    /** @return list<int> */
-    public function descendantIds(): array
-    {
-        return $this->children->flatMap(fn (Page $child): array => [$child->id, ...$child->descendantIds()])->all();
     }
 }

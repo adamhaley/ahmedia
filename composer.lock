@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da214ed090a78580f64885a9f2687131",
+    "content-hash": "5f0cb007a91abca6eff17bb5338446fb",
     "packages": [
+        {
+            "name": "adamhaley/prism-cms-core",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adamhaley/prism-cms-core.git",
+                "reference": "65cc8c2c88654c986435add22520b9e787a34c54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adamhaley/prism-cms-core/zipball/65cc8c2c88654c986435add22520b9e787a34c54",
+                "reference": "65cc8c2c88654c986435add22520b9e787a34c54",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "laravel/framework": "^13.0",
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.27",
+                "orchestra/testbench": "^11.0",
+                "phpunit/phpunit": "^12.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PrismCms\\PrismCmsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PrismCms\\": "src/",
+                    "PrismCms\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Haley"
+                }
+            ],
+            "description": "Prism CMS core: a page tree, catch-all page routing and a Filament page editor for Laravel sites.",
+            "keywords": [
+                "cms",
+                "filament",
+                "laravel",
+                "prism-cms"
+            ],
+            "support": {
+                "issues": "https://github.com/adamhaley/prism-cms-core/issues",
+                "source": "https://github.com/adamhaley/prism-cms-core/tree/v0.1.0"
+            },
+            "time": "2026-11-25T19:22:32+00:00"
+        },
         {
             "name": "anourvalar/eloquent-serialize",
             "version": "1.3.12",
